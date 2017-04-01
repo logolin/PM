@@ -1,0 +1,151 @@
+<style>.input-group-btn .dropdown-toggle {border-radius: 4px;}
+.dropdown-menu {min-width: 120px;}
+.dropdown-menu.colors {padding: 5px; width: 205px}
+.dropdown-menu.buttons {padding: 5px; padding-bottom: 0; padding-right: 0;}
+.dropdown-menu.buttons > li {margin-bottom: 5px; display: block; float: left; width: 33.333333%; padding-right: 5px}
+.table.table-form{margin-bottom:0px;}
+</style>
+<script>
+/**
+ * Get all blocks.
+ * 
+ * @param  string|int $moduleID 
+ * @access public
+ * @return void
+ */
+function getBlocks(moduleID)
+{
+    var moduleBlock = $('#modules').parent().parent().next();
+    $(moduleBlock).hide();
+
+    $('#blockParam').empty();
+    if(moduleID == '') return false;
+
+    if(moduleID.indexOf('hiddenBlock') != -1)
+    {
+        getNotSourceParams('html', moduleID.replace('hiddenBlock', ''));
+        return true;
+    }
+    if(moduleID == 'html' || moduleID == 'dynamic' || moduleID == 'flowchart')
+    {
+        getNotSourceParams(moduleID, blockID);
+        return true;
+    }
+
+    $.get(createLink('block', 'main', 'module=' + moduleID + '&id=' + blockID), {mode:'getblocklist'}, function(data)
+    {
+        $(moduleBlock).html(data);
+        $(moduleBlock).show();
+        $.ajustModalPosition();
+    })
+}
+
+/**
+ * Get rss and html params.
+ * 
+ * @param  string $type 
+ * @access public
+ * @return void
+ */
+function getNotSourceParams(type, blockID)
+{
+    blockID = typeof(blockID) == 'undefined' ? 0 : blockID;
+    $.get(createLink('block', 'set', 'id=' + blockID + '&type=' + type), function(data)
+    {
+        $('#blockParam').html(data);
+        $.ajustModalPosition();
+    });
+}
+
+/**
+ * Get block params.
+ * 
+ * @param  string $type 
+ * @param  int    $moduleID 
+ * @access public
+ * @return void
+ */
+function getBlockParams(type, moduleID)
+{
+    $('#blockParam').empty();
+    $.get(createLink('block', 'set', 'id=' + blockID + '&type=' + type + '&source=' + moduleID), function(data)
+    {
+        $('#blockParam').html(data);
+        $.ajustModalPosition();
+    });
+}
+
+$(function()
+{
+    $('#modules').change(function(){getBlocks($(this).val())});
+    if($('#modules').size() > 0) getBlocks($('#modules').val());
+
+    $(document).on('click', '.dropdown-menu.buttons .btn', function()
+    {
+        var $this = $(this);
+        var group = $this.closest('.input-group-btn');
+        group.find('.dropdown-toggle').removeClass().addClass('btn dropdown-toggle btn-' + $this.data('id'));
+        group.find('input[name^="params[color]"]').val($this.data('id'));
+    });
+})
+
+</script>
+<form method='post' id='blockForm' target='hiddenwin' class='form form-horizontal' action='/block-set-558-plan-product.html'>
+  <table class='table table-form'>
+    <tbody>
+      <tr>
+  <th class='w-100px'>区块名称</th>
+  <td><input type='text' name='title' id='title' value='计划列表1' class='form-control' />
+</td>
+</tr>
+<tr>
+  <th>外观</th>
+  <td>
+    <div class='w-240px'>
+      <div class='input-group'>
+        <span class='input-group-addon'>宽度</span>
+        <select name='grid' id='grid' class='form-control'>
+<option value='6'>1/2</option>
+<option value='4'>1/3</option>
+<option value='8'>2/3</option>
+<option value='3'>1/4</option>
+<option value='9'>3/4</option>
+<option value='12' selected='selected'>100%</option>
+</select>
+        <div class='input-group-btn block'>
+                    <button type='button' class="btn btn-default dropdown-toggle" data-toggle='dropdown'>
+            颜色 <span class='caret'></span>
+          </button>
+          <input type='hidden' name='params[color]' id='params[color]' value='default'  />
+          <div class='dropdown-menu buttons pull-right'>
+            <li><button type='button' data-id='default' class='btn btn-block btn-default'>&nbsp;</li>
+            <li><button type='button' data-id='primary' class='btn btn-block btn-primary'>&nbsp;</li>
+            <li><button type='button' data-id='warning' class='btn btn-block btn-warning'>&nbsp;</li>
+            <li><button type='button' data-id='danger' class='btn btn-block btn-danger'>&nbsp;</li>
+            <li><button type='button' data-id='success' class='btn btn-block btn-success'>&nbsp;</li>
+            <li><button type='button' data-id='info' class='btn btn-block btn-info'>&nbsp;</li>
+          </div>
+        </div>
+      </div>
+    </div>
+  </td>
+</tr>
+            <tr>
+        <th>数量</th>
+        <td>
+        <input type='text' name='params[num]' id='params[num]' value='20' class='form-control'  />
+        </td>
+      </tr>
+          </tbody>
+    <tfoot>
+      <tr><th></th><td> <button type='submit' id='submit' class='btn btn-primary'  data-loading='稍候...'>保存</button></td></tr>
+    </tfoot>
+  </table>
+</form>
+<script>
+$(function()
+{
+    options = $('#moduleBlock').find("option").text();
+    if($('#title').val() == '') $('#title').val($('#moduleBlock').find("option:selected").text());
+})
+</script>

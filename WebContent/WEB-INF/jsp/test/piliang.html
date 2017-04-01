@@ -1,0 +1,2043 @@
+
+<!DOCTYPE html>
+<html lang='zh-cn'>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name="renderer" content="webkit"> 
+  <title>点觉CTM::批量添加 - 禅道</title>
+<script language='Javascript'>var config={"webRoot":"\/","appName":"","cookieLife":30,"requestType":"PATH_INFO","requestFix":"-","moduleVar":"m","methodVar":"f","viewVar":"t","defaultView":"html","themeRoot":"\/theme\/","currentModule":"bug","currentMethod":"batchcreate","clientLang":"zh-cn","requiredFields":"","router":"\/index.php","save":"\u4fdd\u5b58","runMode":"","timeout":30000,"pingInterval":""};
+var lang={"submitting":"\u7a0d\u5019...","save":"\u4fdd\u5b58","timeout":"\u8fde\u63a5\u8d85\u65f6\uff0c\u8bf7\u68c0\u67e5\u7f51\u7edc\u73af\u5883\uff0c\u6216\u91cd\u8bd5\uff01"};
+
+</script>
+<script src='http://cdn.zentao.net/8.2.4/js/all.js?v=8.2.4' type='text/javascript'></script>
+<link rel='stylesheet' href='http://cdn.zentao.net/8.2.4/theme/default/zh-cn.default.css?v=8.2.4' type='text/css' media='screen' />
+<style>.ke-toolbar .ke-outline[data-name='savetemplate'] {display: none}
+#modulemenu .nav #dropMenu #searchResult .closed{text-decoration:none;}
+textarea {height:16px}
+.w-220px {width:220px}
+.chosen-container .chosen-drop {min-width: 300px; border-top: 1px solid #ddd!important}
+</style><link rel='icon' href='/favicon.ico' type='image/x-icon' />
+<link rel='shortcut icon' href='/favicon.ico' type='image/x-icon' />
+<!--[if lt IE 9]>
+<script src='http://cdn.zentao.net/8.2.4/js/html5shiv/min.js?v=8.2.4' type='text/javascript'></script>
+<script src='http://cdn.zentao.net/8.2.4/js/respond/min.js?v=8.2.4' type='text/javascript'></script>
+<![endif]-->
+<!--[if lt IE 10]>
+<script src='http://cdn.zentao.net/8.2.4/js/jquery/placeholder/min.js?v=8.2.4' type='text/javascript'></script>
+<![endif]-->
+</head>
+<body>
+<script>
+var noResultsMatch       = '没有匹配结果';
+var chooseUsersToMail    = '选择要发信通知的用户...';
+var defaultChosenOptions = {no_results_text: noResultsMatch, width:'100%', allow_single_deselect: true, disable_search_threshold: 1, placeholder_text_single: ' ', placeholder_text_multiple: ' ', search_contains: true};
+$(document).ready(function()
+{
+    $("#mailto").attr('data-placeholder', chooseUsersToMail);
+    $("#mailto, .chosen, #productID").chosen(defaultChosenOptions).on('chosen:showing_dropdown', function()
+    {
+        var $this = $(this);
+        var $chosen = $this.next('.chosen-container').removeClass('chosen-up');
+        var $drop = $chosen.find('.chosen-drop');
+        $chosen.toggleClass('chosen-up', $drop.height() + $drop.offset().top - $(document).scrollTop() > $(window).height());
+    });
+});
+</script>
+<header id='header'>
+  
+  <nav id='mainmenu'>
+    <ul class='nav'>
+<li  data-id='my'><a href='/my/' ><i class="icon-home"></i><span> 我的地盘</span></a></li>
+<li  data-id='product'><a href='/product/' >产品</a></li>
+<li class='active' data-id='qa'><a href='/qa/' class='active'>测试</a></li>
+<li  data-id='project'><a href='/project/' >项目</a></li>
+<li  data-id='doc'><a href='/doc/' >文档</a></li>
+<li  data-id='report'><a href='/report/' >统计</a></li>
+<li  data-id='admin'><a href='/admin/' >后台</a></li>
+<li  data-id='company'><a href='/company/' >组织</a></li>
+<li class='custom-item'><a href='/custom-ajaxMenu-bug-batchcreate.html?onlybody=yes' data-toggle='modal' data-type='iframe' title='自定义导航' data-icon='cog' data-width='80%'><i class='icon icon-cog'></i></a></li></ul>
+<div class='input-group input-group-sm' id='searchbox'><div class='input-group-btn' id='typeSelector'><button type='button' class='btn dropdown-toggle' data-toggle='dropdown'><span id='searchTypeName'>Bug</span> <span class='caret'></span></button><input type='hidden' name='searchType' id='searchType' value='bug'  />
+<ul class='dropdown-menu'><li><a href='javascript:;' data-value='bug'>Bug</a></li><li><a href='javascript:;' data-value='story'>需求</a></li><li><a href='javascript:;' data-value='task'>任务</a></li><li><a href='javascript:;' data-value='testcase'>用例</a></li><li><a href='javascript:;' data-value='project'>项目</a></li><li><a href='javascript:;' data-value='product'>产品</a></li><li><a href='javascript:;' data-value='user'>用户</a></li><li><a href='javascript:;' data-value='build'>版本</a></li><li><a href='javascript:;' data-value='release'>发布</a></li><li><a href='javascript:;' data-value='productplan'>产品计划</a></li><li><a href='javascript:;' data-value='testtask'>测试版本</a></li><li><a href='javascript:;' data-value='doc'>文档</a></li></ul></div><input type='text' name='searchQuery' id='searchQuery' value='' onclick='this.value=""' onkeydown='if(event.keyCode==13) shortcut()' class='form-control' placeholder='编号(ctrl+g)' />
+<div id='objectSwitcher' class='input-group-btn'><a href='javascript:shortcut();' class='btn'>GO! </a></div></div>
+  </nav>
+  <nav id="modulemenu">
+    <ul class='nav'>
+<li data-id='product'><a id='currentItem' href="javascript:showDropMenu('product', '21', 'bug', 'browse', '')">点觉CTM <span class='icon-caret-down'></span></a><div id='dropMenu'><i class='icon icon-spin icon-spinner'></i></div></li>
+<li class='right ' data-id='index'><a href='/qa-index-no-21.html' ><i class='icon-home'></i>测试主页</a>
+</li>
+<li class=' active' data-id='bug'><a href='/bug-browse-21.html' >Bug</a>
+</li>
+<li class=' ' data-id='testcase'><a href='/testcase-browse-21.html' >用例</a>
+</li>
+<li class=' ' data-id='testtask'><a href='/testtask-browse-21.html' >版本</a>
+</li>
+</ul>
+  </nav>
+</header>
+
+<div id='wrap'>
+  <div class='outer'>
+<div id='titlebar'>
+  <div class='heading'>
+    <span class='prefix'><i class='icon-bug'></i></span>
+    <strong>
+      <small class='text-muted'><i class='icon-plus-sign'></i></small>
+      Bug::批量添加          </strong>
+    <div class='actions'>
+             <button type='button' class='btn btn-default' data-toggle='myModal'>粘贴文本 </button>      <button type="button" class="btn btn-default" data-toggle="customModal"><i class='icon icon-cog'></i> </button>
+    </div>
+  </div>
+</div>
+<form class='form-condensed' class='form-condensed' method='post' target='hiddenwin'>
+  <table class='table table-fixed table-form with-border'>
+    <thead>
+      <tr>
+        <th class='w-50px'>  ID</th> 
+        <th class='w-120px'> 所属模块</th>
+        <th class='w-130px'>所属项目</th>
+        <th>影响版本 <span class='required'></span></th>
+        <th>Bug标题 <span class='required'></span></th>
+        <th class=''>          重现步骤</th>
+        <th class='w-100px'>   类型</th>
+        <th class='w-80px hidden'>     优先级</th>
+        <th class='w-80px'>严重程度</th>
+        <th class='w-120px'>     操作系统</th>
+        <th class='w-100px'>浏览器</th>
+        <th class=' hidden'>      关键词</th>
+      </tr>
+    </thead>
+    <tbody>
+                                          <tr class='text-center'>
+        <td>1</td>
+        <td class='text-left'  style='overflow:visible'><select name='modules[0]' id='modules0' class='form-control chosen'>
+<option value='0' selected='selected'>/</option>
+<option value='ditto'>同上</option>
+</select>
+</td>
+        <td class='text-left' style='overflow:visible'><select name='projects[0]' id='projects0' class='form-control chosen' onchange='loadProjectBuilds(21, this.value, 0)'>
+<option value=''></option>
+<option value='22'>33332555</option>
+<option value='ditto'>同上</option>
+</select>
+</td>
+        <td class='text-left' style='overflow:visible' id='buildBox0'><select name='openedBuilds[0][]' id='openedBuilds0' class='form-control chosen' multiple>
+<option value='trunk'>Trunk</option>
+</select>
+</td>
+        <td style='overflow:visible'>
+          <div class='input-group'>
+          <input type='hidden' name='color[0]' id='color[0]' value='' data-provide='colorpicker' data-wrapper='input-group-btn fix-border-right' data-pull-menu-right='false' data-btn-tip='颜色标签' data-update-text='#title\[0\]' />
+          <input type='text' name='title[0]' id='title[0]' value='' class=form-control />
+          </div>
+        </td>
+        <td class=''>   <textarea name='stepses[0]' id='stepses[0]' rows='1' class='form-control autosize'></textarea>
+</td>
+        <td class=''>    <select name='types[0]' id='types0' class='form-control'>
+<option value='' selected='selected'></option>
+<option value='codeerror'>代码错误</option>
+<option value='interface'>界面优化</option>
+<option value='designdefect'>设计缺陷</option>
+<option value='config'>配置相关</option>
+<option value='install'>安装部署</option>
+<option value='security'>安全相关</option>
+<option value='performance'>性能问题</option>
+<option value='standard'>标准规范</option>
+<option value='automation'>测试脚本</option>
+<option value='others'>其他</option>
+<option value='ditto'>同上</option>
+</select>
+</td>
+        <td class='hidden'>     <select name='pris[0]' id='pris0' class='form-control'>
+<option value='0' selected='selected'></option>
+<option value='7'>7</option>
+<option value='3'>中</option>
+<option value='1'>紧急</option>
+<option value='2'>高</option>
+<option value='4'>低</option>
+<option value='5'>5</option>
+<option value='6'>6</option>
+<option value='ditto'>同上</option>
+</select>
+</td>
+        <td class=''><select name='severities[0]' id='severities0' class='form-control'>
+<option value='3'>一般</option>
+<option value='1'>致命</option>
+<option value='2'>严重</option>
+<option value='4'>普通</option>
+<option value='5'>5</option>
+<option value='7'>7</option>
+<option value='6'>不严重</option>
+</select>
+</td>
+        <td class=''>      <select name='oses[0]' id='oses0' class='form-control'>
+<option value='' selected='selected'></option>
+<option value='all'>全部</option>
+<option value='windows'>Windows</option>
+<option value='win8'>Windows 8</option>
+<option value='win7'>Windows 7</option>
+<option value='vista'>Windows Vista</option>
+<option value='winxp'>Windows XP</option>
+<option value='win2012'>Windows 2012</option>
+<option value='win2008'>Windows 2008</option>
+<option value='win2003'>Windows 2003</option>
+<option value='win2000'>Windows 2000</option>
+<option value='android'>Android</option>
+<option value='ios'>IOS</option>
+<option value='wp8'>WP8</option>
+<option value='wp7'>WP7</option>
+<option value='symbian'>Symbian</option>
+<option value='linux'>Linux</option>
+<option value='freebsd'>FreeBSD</option>
+<option value='osx'>OS X</option>
+<option value='unix'>Unix</option>
+<option value='others'>其他</option>
+<option value='ditto'>同上</option>
+</select>
+</td>
+        <td class=''> <select name='browsers[0]' id='browsers0' class='form-control'>
+<option value='' selected='selected'></option>
+<option value='all'>全部</option>
+<option value='ie'>IE系列</option>
+<option value='ie11'>IE11</option>
+<option value='ie10'>IE10</option>
+<option value='ie9'>IE9</option>
+<option value='ie8'>IE8</option>
+<option value='ie7'>IE7</option>
+<option value='ie6'>IE6</option>
+<option value='chrome'>chrome</option>
+<option value='firefox'>firefox系列</option>
+<option value='firefox4'>firefox4</option>
+<option value='firefox3'>firefox3</option>
+<option value='firefox2'>firefox2</option>
+<option value='opera'>opera系列</option>
+<option value='oprea11'>opera11</option>
+<option value='oprea10'>opera10</option>
+<option value='opera9'>opera9</option>
+<option value='safari'>safari</option>
+<option value='maxthon'>傲游</option>
+<option value='uc'>UC</option>
+<option value='other'>其他</option>
+<option value='ditto'>同上</option>
+</select>
+</td>
+        <td class='hidden'><input type='text' name='keywords[0]' id='keywords[0]' value='' class=form-control />
+</td>
+      </tr>
+                  <tr class='text-center'>
+        <td>2</td>
+        <td class='text-left'  style='overflow:visible'><select name='modules[1]' id='modules1' class='form-control chosen'>
+<option value='0'>/</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='text-left' style='overflow:visible'><select name='projects[1]' id='projects1' class='form-control chosen' onchange='loadProjectBuilds(21, this.value, 1)'>
+<option value=''></option>
+<option value='22'>33332555</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='text-left' style='overflow:visible' id='buildBox1'><select name='openedBuilds[1][]' id='openedBuilds1' class='form-control chosen' multiple>
+<option value='trunk'>Trunk</option>
+</select>
+</td>
+        <td style='overflow:visible'>
+          <div class='input-group'>
+          <input type='hidden' name='color[1]' id='color[1]' value='' data-provide='colorpicker' data-wrapper='input-group-btn fix-border-right' data-pull-menu-right='false' data-btn-tip='颜色标签' data-update-text='#title\[1\]' />
+          <input type='text' name='title[1]' id='title[1]' value='' class=form-control />
+          </div>
+        </td>
+        <td class=''>   <textarea name='stepses[1]' id='stepses[1]' rows='1' class='form-control autosize'></textarea>
+</td>
+        <td class=''>    <select name='types[1]' id='types1' class='form-control'>
+<option value=''></option>
+<option value='codeerror'>代码错误</option>
+<option value='interface'>界面优化</option>
+<option value='designdefect'>设计缺陷</option>
+<option value='config'>配置相关</option>
+<option value='install'>安装部署</option>
+<option value='security'>安全相关</option>
+<option value='performance'>性能问题</option>
+<option value='standard'>标准规范</option>
+<option value='automation'>测试脚本</option>
+<option value='others'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='hidden'>     <select name='pris[1]' id='pris1' class='form-control'>
+<option value='0'></option>
+<option value='7'>7</option>
+<option value='3'>中</option>
+<option value='1'>紧急</option>
+<option value='2'>高</option>
+<option value='4'>低</option>
+<option value='5'>5</option>
+<option value='6'>6</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class=''><select name='severities[1]' id='severities1' class='form-control'>
+<option value='3'>一般</option>
+<option value='1'>致命</option>
+<option value='2'>严重</option>
+<option value='4'>普通</option>
+<option value='5'>5</option>
+<option value='7'>7</option>
+<option value='6'>不严重</option>
+</select>
+</td>
+        <td class=''>      <select name='oses[1]' id='oses1' class='form-control'>
+<option value=''></option>
+<option value='all'>全部</option>
+<option value='windows'>Windows</option>
+<option value='win8'>Windows 8</option>
+<option value='win7'>Windows 7</option>
+<option value='vista'>Windows Vista</option>
+<option value='winxp'>Windows XP</option>
+<option value='win2012'>Windows 2012</option>
+<option value='win2008'>Windows 2008</option>
+<option value='win2003'>Windows 2003</option>
+<option value='win2000'>Windows 2000</option>
+<option value='android'>Android</option>
+<option value='ios'>IOS</option>
+<option value='wp8'>WP8</option>
+<option value='wp7'>WP7</option>
+<option value='symbian'>Symbian</option>
+<option value='linux'>Linux</option>
+<option value='freebsd'>FreeBSD</option>
+<option value='osx'>OS X</option>
+<option value='unix'>Unix</option>
+<option value='others'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class=''> <select name='browsers[1]' id='browsers1' class='form-control'>
+<option value=''></option>
+<option value='all'>全部</option>
+<option value='ie'>IE系列</option>
+<option value='ie11'>IE11</option>
+<option value='ie10'>IE10</option>
+<option value='ie9'>IE9</option>
+<option value='ie8'>IE8</option>
+<option value='ie7'>IE7</option>
+<option value='ie6'>IE6</option>
+<option value='chrome'>chrome</option>
+<option value='firefox'>firefox系列</option>
+<option value='firefox4'>firefox4</option>
+<option value='firefox3'>firefox3</option>
+<option value='firefox2'>firefox2</option>
+<option value='opera'>opera系列</option>
+<option value='oprea11'>opera11</option>
+<option value='oprea10'>opera10</option>
+<option value='opera9'>opera9</option>
+<option value='safari'>safari</option>
+<option value='maxthon'>傲游</option>
+<option value='uc'>UC</option>
+<option value='other'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='hidden'><input type='text' name='keywords[1]' id='keywords[1]' value='' class=form-control />
+</td>
+      </tr>
+                  <tr class='text-center'>
+        <td>3</td>
+        <td class='text-left'  style='overflow:visible'><select name='modules[2]' id='modules2' class='form-control chosen'>
+<option value='0'>/</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='text-left' style='overflow:visible'><select name='projects[2]' id='projects2' class='form-control chosen' onchange='loadProjectBuilds(21, this.value, 2)'>
+<option value=''></option>
+<option value='22'>33332555</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='text-left' style='overflow:visible' id='buildBox2'><select name='openedBuilds[2][]' id='openedBuilds2' class='form-control chosen' multiple>
+<option value='trunk'>Trunk</option>
+</select>
+</td>
+        <td style='overflow:visible'>
+          <div class='input-group'>
+          <input type='hidden' name='color[2]' id='color[2]' value='' data-provide='colorpicker' data-wrapper='input-group-btn fix-border-right' data-pull-menu-right='false' data-btn-tip='颜色标签' data-update-text='#title\[2\]' />
+          <input type='text' name='title[2]' id='title[2]' value='' class=form-control />
+          </div>
+        </td>
+        <td class=''>   <textarea name='stepses[2]' id='stepses[2]' rows='1' class='form-control autosize'></textarea>
+</td>
+        <td class=''>    <select name='types[2]' id='types2' class='form-control'>
+<option value=''></option>
+<option value='codeerror'>代码错误</option>
+<option value='interface'>界面优化</option>
+<option value='designdefect'>设计缺陷</option>
+<option value='config'>配置相关</option>
+<option value='install'>安装部署</option>
+<option value='security'>安全相关</option>
+<option value='performance'>性能问题</option>
+<option value='standard'>标准规范</option>
+<option value='automation'>测试脚本</option>
+<option value='others'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='hidden'>     <select name='pris[2]' id='pris2' class='form-control'>
+<option value='0'></option>
+<option value='7'>7</option>
+<option value='3'>中</option>
+<option value='1'>紧急</option>
+<option value='2'>高</option>
+<option value='4'>低</option>
+<option value='5'>5</option>
+<option value='6'>6</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class=''><select name='severities[2]' id='severities2' class='form-control'>
+<option value='3'>一般</option>
+<option value='1'>致命</option>
+<option value='2'>严重</option>
+<option value='4'>普通</option>
+<option value='5'>5</option>
+<option value='7'>7</option>
+<option value='6'>不严重</option>
+</select>
+</td>
+        <td class=''>      <select name='oses[2]' id='oses2' class='form-control'>
+<option value=''></option>
+<option value='all'>全部</option>
+<option value='windows'>Windows</option>
+<option value='win8'>Windows 8</option>
+<option value='win7'>Windows 7</option>
+<option value='vista'>Windows Vista</option>
+<option value='winxp'>Windows XP</option>
+<option value='win2012'>Windows 2012</option>
+<option value='win2008'>Windows 2008</option>
+<option value='win2003'>Windows 2003</option>
+<option value='win2000'>Windows 2000</option>
+<option value='android'>Android</option>
+<option value='ios'>IOS</option>
+<option value='wp8'>WP8</option>
+<option value='wp7'>WP7</option>
+<option value='symbian'>Symbian</option>
+<option value='linux'>Linux</option>
+<option value='freebsd'>FreeBSD</option>
+<option value='osx'>OS X</option>
+<option value='unix'>Unix</option>
+<option value='others'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class=''> <select name='browsers[2]' id='browsers2' class='form-control'>
+<option value=''></option>
+<option value='all'>全部</option>
+<option value='ie'>IE系列</option>
+<option value='ie11'>IE11</option>
+<option value='ie10'>IE10</option>
+<option value='ie9'>IE9</option>
+<option value='ie8'>IE8</option>
+<option value='ie7'>IE7</option>
+<option value='ie6'>IE6</option>
+<option value='chrome'>chrome</option>
+<option value='firefox'>firefox系列</option>
+<option value='firefox4'>firefox4</option>
+<option value='firefox3'>firefox3</option>
+<option value='firefox2'>firefox2</option>
+<option value='opera'>opera系列</option>
+<option value='oprea11'>opera11</option>
+<option value='oprea10'>opera10</option>
+<option value='opera9'>opera9</option>
+<option value='safari'>safari</option>
+<option value='maxthon'>傲游</option>
+<option value='uc'>UC</option>
+<option value='other'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='hidden'><input type='text' name='keywords[2]' id='keywords[2]' value='' class=form-control />
+</td>
+      </tr>
+                  <tr class='text-center'>
+        <td>4</td>
+        <td class='text-left'  style='overflow:visible'><select name='modules[3]' id='modules3' class='form-control chosen'>
+<option value='0'>/</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='text-left' style='overflow:visible'><select name='projects[3]' id='projects3' class='form-control chosen' onchange='loadProjectBuilds(21, this.value, 3)'>
+<option value=''></option>
+<option value='22'>33332555</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='text-left' style='overflow:visible' id='buildBox3'><select name='openedBuilds[3][]' id='openedBuilds3' class='form-control chosen' multiple>
+<option value='trunk'>Trunk</option>
+</select>
+</td>
+        <td style='overflow:visible'>
+          <div class='input-group'>
+          <input type='hidden' name='color[3]' id='color[3]' value='' data-provide='colorpicker' data-wrapper='input-group-btn fix-border-right' data-pull-menu-right='false' data-btn-tip='颜色标签' data-update-text='#title\[3\]' />
+          <input type='text' name='title[3]' id='title[3]' value='' class=form-control />
+          </div>
+        </td>
+        <td class=''>   <textarea name='stepses[3]' id='stepses[3]' rows='1' class='form-control autosize'></textarea>
+</td>
+        <td class=''>    <select name='types[3]' id='types3' class='form-control'>
+<option value=''></option>
+<option value='codeerror'>代码错误</option>
+<option value='interface'>界面优化</option>
+<option value='designdefect'>设计缺陷</option>
+<option value='config'>配置相关</option>
+<option value='install'>安装部署</option>
+<option value='security'>安全相关</option>
+<option value='performance'>性能问题</option>
+<option value='standard'>标准规范</option>
+<option value='automation'>测试脚本</option>
+<option value='others'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='hidden'>     <select name='pris[3]' id='pris3' class='form-control'>
+<option value='0'></option>
+<option value='7'>7</option>
+<option value='3'>中</option>
+<option value='1'>紧急</option>
+<option value='2'>高</option>
+<option value='4'>低</option>
+<option value='5'>5</option>
+<option value='6'>6</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class=''><select name='severities[3]' id='severities3' class='form-control'>
+<option value='3'>一般</option>
+<option value='1'>致命</option>
+<option value='2'>严重</option>
+<option value='4'>普通</option>
+<option value='5'>5</option>
+<option value='7'>7</option>
+<option value='6'>不严重</option>
+</select>
+</td>
+        <td class=''>      <select name='oses[3]' id='oses3' class='form-control'>
+<option value=''></option>
+<option value='all'>全部</option>
+<option value='windows'>Windows</option>
+<option value='win8'>Windows 8</option>
+<option value='win7'>Windows 7</option>
+<option value='vista'>Windows Vista</option>
+<option value='winxp'>Windows XP</option>
+<option value='win2012'>Windows 2012</option>
+<option value='win2008'>Windows 2008</option>
+<option value='win2003'>Windows 2003</option>
+<option value='win2000'>Windows 2000</option>
+<option value='android'>Android</option>
+<option value='ios'>IOS</option>
+<option value='wp8'>WP8</option>
+<option value='wp7'>WP7</option>
+<option value='symbian'>Symbian</option>
+<option value='linux'>Linux</option>
+<option value='freebsd'>FreeBSD</option>
+<option value='osx'>OS X</option>
+<option value='unix'>Unix</option>
+<option value='others'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class=''> <select name='browsers[3]' id='browsers3' class='form-control'>
+<option value=''></option>
+<option value='all'>全部</option>
+<option value='ie'>IE系列</option>
+<option value='ie11'>IE11</option>
+<option value='ie10'>IE10</option>
+<option value='ie9'>IE9</option>
+<option value='ie8'>IE8</option>
+<option value='ie7'>IE7</option>
+<option value='ie6'>IE6</option>
+<option value='chrome'>chrome</option>
+<option value='firefox'>firefox系列</option>
+<option value='firefox4'>firefox4</option>
+<option value='firefox3'>firefox3</option>
+<option value='firefox2'>firefox2</option>
+<option value='opera'>opera系列</option>
+<option value='oprea11'>opera11</option>
+<option value='oprea10'>opera10</option>
+<option value='opera9'>opera9</option>
+<option value='safari'>safari</option>
+<option value='maxthon'>傲游</option>
+<option value='uc'>UC</option>
+<option value='other'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='hidden'><input type='text' name='keywords[3]' id='keywords[3]' value='' class=form-control />
+</td>
+      </tr>
+                  <tr class='text-center'>
+        <td>5</td>
+        <td class='text-left'  style='overflow:visible'><select name='modules[4]' id='modules4' class='form-control chosen'>
+<option value='0'>/</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='text-left' style='overflow:visible'><select name='projects[4]' id='projects4' class='form-control chosen' onchange='loadProjectBuilds(21, this.value, 4)'>
+<option value=''></option>
+<option value='22'>33332555</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='text-left' style='overflow:visible' id='buildBox4'><select name='openedBuilds[4][]' id='openedBuilds4' class='form-control chosen' multiple>
+<option value='trunk'>Trunk</option>
+</select>
+</td>
+        <td style='overflow:visible'>
+          <div class='input-group'>
+          <input type='hidden' name='color[4]' id='color[4]' value='' data-provide='colorpicker' data-wrapper='input-group-btn fix-border-right' data-pull-menu-right='false' data-btn-tip='颜色标签' data-update-text='#title\[4\]' />
+          <input type='text' name='title[4]' id='title[4]' value='' class=form-control />
+          </div>
+        </td>
+        <td class=''>   <textarea name='stepses[4]' id='stepses[4]' rows='1' class='form-control autosize'></textarea>
+</td>
+        <td class=''>    <select name='types[4]' id='types4' class='form-control'>
+<option value=''></option>
+<option value='codeerror'>代码错误</option>
+<option value='interface'>界面优化</option>
+<option value='designdefect'>设计缺陷</option>
+<option value='config'>配置相关</option>
+<option value='install'>安装部署</option>
+<option value='security'>安全相关</option>
+<option value='performance'>性能问题</option>
+<option value='standard'>标准规范</option>
+<option value='automation'>测试脚本</option>
+<option value='others'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='hidden'>     <select name='pris[4]' id='pris4' class='form-control'>
+<option value='0'></option>
+<option value='7'>7</option>
+<option value='3'>中</option>
+<option value='1'>紧急</option>
+<option value='2'>高</option>
+<option value='4'>低</option>
+<option value='5'>5</option>
+<option value='6'>6</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class=''><select name='severities[4]' id='severities4' class='form-control'>
+<option value='3'>一般</option>
+<option value='1'>致命</option>
+<option value='2'>严重</option>
+<option value='4'>普通</option>
+<option value='5'>5</option>
+<option value='7'>7</option>
+<option value='6'>不严重</option>
+</select>
+</td>
+        <td class=''>      <select name='oses[4]' id='oses4' class='form-control'>
+<option value=''></option>
+<option value='all'>全部</option>
+<option value='windows'>Windows</option>
+<option value='win8'>Windows 8</option>
+<option value='win7'>Windows 7</option>
+<option value='vista'>Windows Vista</option>
+<option value='winxp'>Windows XP</option>
+<option value='win2012'>Windows 2012</option>
+<option value='win2008'>Windows 2008</option>
+<option value='win2003'>Windows 2003</option>
+<option value='win2000'>Windows 2000</option>
+<option value='android'>Android</option>
+<option value='ios'>IOS</option>
+<option value='wp8'>WP8</option>
+<option value='wp7'>WP7</option>
+<option value='symbian'>Symbian</option>
+<option value='linux'>Linux</option>
+<option value='freebsd'>FreeBSD</option>
+<option value='osx'>OS X</option>
+<option value='unix'>Unix</option>
+<option value='others'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class=''> <select name='browsers[4]' id='browsers4' class='form-control'>
+<option value=''></option>
+<option value='all'>全部</option>
+<option value='ie'>IE系列</option>
+<option value='ie11'>IE11</option>
+<option value='ie10'>IE10</option>
+<option value='ie9'>IE9</option>
+<option value='ie8'>IE8</option>
+<option value='ie7'>IE7</option>
+<option value='ie6'>IE6</option>
+<option value='chrome'>chrome</option>
+<option value='firefox'>firefox系列</option>
+<option value='firefox4'>firefox4</option>
+<option value='firefox3'>firefox3</option>
+<option value='firefox2'>firefox2</option>
+<option value='opera'>opera系列</option>
+<option value='oprea11'>opera11</option>
+<option value='oprea10'>opera10</option>
+<option value='opera9'>opera9</option>
+<option value='safari'>safari</option>
+<option value='maxthon'>傲游</option>
+<option value='uc'>UC</option>
+<option value='other'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='hidden'><input type='text' name='keywords[4]' id='keywords[4]' value='' class=form-control />
+</td>
+      </tr>
+                  <tr class='text-center'>
+        <td>6</td>
+        <td class='text-left'  style='overflow:visible'><select name='modules[5]' id='modules5' class='form-control chosen'>
+<option value='0'>/</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='text-left' style='overflow:visible'><select name='projects[5]' id='projects5' class='form-control chosen' onchange='loadProjectBuilds(21, this.value, 5)'>
+<option value=''></option>
+<option value='22'>33332555</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='text-left' style='overflow:visible' id='buildBox5'><select name='openedBuilds[5][]' id='openedBuilds5' class='form-control chosen' multiple>
+<option value='trunk'>Trunk</option>
+</select>
+</td>
+        <td style='overflow:visible'>
+          <div class='input-group'>
+          <input type='hidden' name='color[5]' id='color[5]' value='' data-provide='colorpicker' data-wrapper='input-group-btn fix-border-right' data-pull-menu-right='false' data-btn-tip='颜色标签' data-update-text='#title\[5\]' />
+          <input type='text' name='title[5]' id='title[5]' value='' class=form-control />
+          </div>
+        </td>
+        <td class=''>   <textarea name='stepses[5]' id='stepses[5]' rows='1' class='form-control autosize'></textarea>
+</td>
+        <td class=''>    <select name='types[5]' id='types5' class='form-control'>
+<option value=''></option>
+<option value='codeerror'>代码错误</option>
+<option value='interface'>界面优化</option>
+<option value='designdefect'>设计缺陷</option>
+<option value='config'>配置相关</option>
+<option value='install'>安装部署</option>
+<option value='security'>安全相关</option>
+<option value='performance'>性能问题</option>
+<option value='standard'>标准规范</option>
+<option value='automation'>测试脚本</option>
+<option value='others'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='hidden'>     <select name='pris[5]' id='pris5' class='form-control'>
+<option value='0'></option>
+<option value='7'>7</option>
+<option value='3'>中</option>
+<option value='1'>紧急</option>
+<option value='2'>高</option>
+<option value='4'>低</option>
+<option value='5'>5</option>
+<option value='6'>6</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class=''><select name='severities[5]' id='severities5' class='form-control'>
+<option value='3'>一般</option>
+<option value='1'>致命</option>
+<option value='2'>严重</option>
+<option value='4'>普通</option>
+<option value='5'>5</option>
+<option value='7'>7</option>
+<option value='6'>不严重</option>
+</select>
+</td>
+        <td class=''>      <select name='oses[5]' id='oses5' class='form-control'>
+<option value=''></option>
+<option value='all'>全部</option>
+<option value='windows'>Windows</option>
+<option value='win8'>Windows 8</option>
+<option value='win7'>Windows 7</option>
+<option value='vista'>Windows Vista</option>
+<option value='winxp'>Windows XP</option>
+<option value='win2012'>Windows 2012</option>
+<option value='win2008'>Windows 2008</option>
+<option value='win2003'>Windows 2003</option>
+<option value='win2000'>Windows 2000</option>
+<option value='android'>Android</option>
+<option value='ios'>IOS</option>
+<option value='wp8'>WP8</option>
+<option value='wp7'>WP7</option>
+<option value='symbian'>Symbian</option>
+<option value='linux'>Linux</option>
+<option value='freebsd'>FreeBSD</option>
+<option value='osx'>OS X</option>
+<option value='unix'>Unix</option>
+<option value='others'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class=''> <select name='browsers[5]' id='browsers5' class='form-control'>
+<option value=''></option>
+<option value='all'>全部</option>
+<option value='ie'>IE系列</option>
+<option value='ie11'>IE11</option>
+<option value='ie10'>IE10</option>
+<option value='ie9'>IE9</option>
+<option value='ie8'>IE8</option>
+<option value='ie7'>IE7</option>
+<option value='ie6'>IE6</option>
+<option value='chrome'>chrome</option>
+<option value='firefox'>firefox系列</option>
+<option value='firefox4'>firefox4</option>
+<option value='firefox3'>firefox3</option>
+<option value='firefox2'>firefox2</option>
+<option value='opera'>opera系列</option>
+<option value='oprea11'>opera11</option>
+<option value='oprea10'>opera10</option>
+<option value='opera9'>opera9</option>
+<option value='safari'>safari</option>
+<option value='maxthon'>傲游</option>
+<option value='uc'>UC</option>
+<option value='other'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='hidden'><input type='text' name='keywords[5]' id='keywords[5]' value='' class=form-control />
+</td>
+      </tr>
+                  <tr class='text-center'>
+        <td>7</td>
+        <td class='text-left'  style='overflow:visible'><select name='modules[6]' id='modules6' class='form-control chosen'>
+<option value='0'>/</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='text-left' style='overflow:visible'><select name='projects[6]' id='projects6' class='form-control chosen' onchange='loadProjectBuilds(21, this.value, 6)'>
+<option value=''></option>
+<option value='22'>33332555</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='text-left' style='overflow:visible' id='buildBox6'><select name='openedBuilds[6][]' id='openedBuilds6' class='form-control chosen' multiple>
+<option value='trunk'>Trunk</option>
+</select>
+</td>
+        <td style='overflow:visible'>
+          <div class='input-group'>
+          <input type='hidden' name='color[6]' id='color[6]' value='' data-provide='colorpicker' data-wrapper='input-group-btn fix-border-right' data-pull-menu-right='false' data-btn-tip='颜色标签' data-update-text='#title\[6\]' />
+          <input type='text' name='title[6]' id='title[6]' value='' class=form-control />
+          </div>
+        </td>
+        <td class=''>   <textarea name='stepses[6]' id='stepses[6]' rows='1' class='form-control autosize'></textarea>
+</td>
+        <td class=''>    <select name='types[6]' id='types6' class='form-control'>
+<option value=''></option>
+<option value='codeerror'>代码错误</option>
+<option value='interface'>界面优化</option>
+<option value='designdefect'>设计缺陷</option>
+<option value='config'>配置相关</option>
+<option value='install'>安装部署</option>
+<option value='security'>安全相关</option>
+<option value='performance'>性能问题</option>
+<option value='standard'>标准规范</option>
+<option value='automation'>测试脚本</option>
+<option value='others'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='hidden'>     <select name='pris[6]' id='pris6' class='form-control'>
+<option value='0'></option>
+<option value='7'>7</option>
+<option value='3'>中</option>
+<option value='1'>紧急</option>
+<option value='2'>高</option>
+<option value='4'>低</option>
+<option value='5'>5</option>
+<option value='6'>6</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class=''><select name='severities[6]' id='severities6' class='form-control'>
+<option value='3'>一般</option>
+<option value='1'>致命</option>
+<option value='2'>严重</option>
+<option value='4'>普通</option>
+<option value='5'>5</option>
+<option value='7'>7</option>
+<option value='6'>不严重</option>
+</select>
+</td>
+        <td class=''>      <select name='oses[6]' id='oses6' class='form-control'>
+<option value=''></option>
+<option value='all'>全部</option>
+<option value='windows'>Windows</option>
+<option value='win8'>Windows 8</option>
+<option value='win7'>Windows 7</option>
+<option value='vista'>Windows Vista</option>
+<option value='winxp'>Windows XP</option>
+<option value='win2012'>Windows 2012</option>
+<option value='win2008'>Windows 2008</option>
+<option value='win2003'>Windows 2003</option>
+<option value='win2000'>Windows 2000</option>
+<option value='android'>Android</option>
+<option value='ios'>IOS</option>
+<option value='wp8'>WP8</option>
+<option value='wp7'>WP7</option>
+<option value='symbian'>Symbian</option>
+<option value='linux'>Linux</option>
+<option value='freebsd'>FreeBSD</option>
+<option value='osx'>OS X</option>
+<option value='unix'>Unix</option>
+<option value='others'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class=''> <select name='browsers[6]' id='browsers6' class='form-control'>
+<option value=''></option>
+<option value='all'>全部</option>
+<option value='ie'>IE系列</option>
+<option value='ie11'>IE11</option>
+<option value='ie10'>IE10</option>
+<option value='ie9'>IE9</option>
+<option value='ie8'>IE8</option>
+<option value='ie7'>IE7</option>
+<option value='ie6'>IE6</option>
+<option value='chrome'>chrome</option>
+<option value='firefox'>firefox系列</option>
+<option value='firefox4'>firefox4</option>
+<option value='firefox3'>firefox3</option>
+<option value='firefox2'>firefox2</option>
+<option value='opera'>opera系列</option>
+<option value='oprea11'>opera11</option>
+<option value='oprea10'>opera10</option>
+<option value='opera9'>opera9</option>
+<option value='safari'>safari</option>
+<option value='maxthon'>傲游</option>
+<option value='uc'>UC</option>
+<option value='other'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='hidden'><input type='text' name='keywords[6]' id='keywords[6]' value='' class=form-control />
+</td>
+      </tr>
+                  <tr class='text-center'>
+        <td>8</td>
+        <td class='text-left'  style='overflow:visible'><select name='modules[7]' id='modules7' class='form-control chosen'>
+<option value='0'>/</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='text-left' style='overflow:visible'><select name='projects[7]' id='projects7' class='form-control chosen' onchange='loadProjectBuilds(21, this.value, 7)'>
+<option value=''></option>
+<option value='22'>33332555</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='text-left' style='overflow:visible' id='buildBox7'><select name='openedBuilds[7][]' id='openedBuilds7' class='form-control chosen' multiple>
+<option value='trunk'>Trunk</option>
+</select>
+</td>
+        <td style='overflow:visible'>
+          <div class='input-group'>
+          <input type='hidden' name='color[7]' id='color[7]' value='' data-provide='colorpicker' data-wrapper='input-group-btn fix-border-right' data-pull-menu-right='false' data-btn-tip='颜色标签' data-update-text='#title\[7\]' />
+          <input type='text' name='title[7]' id='title[7]' value='' class=form-control />
+          </div>
+        </td>
+        <td class=''>   <textarea name='stepses[7]' id='stepses[7]' rows='1' class='form-control autosize'></textarea>
+</td>
+        <td class=''>    <select name='types[7]' id='types7' class='form-control'>
+<option value=''></option>
+<option value='codeerror'>代码错误</option>
+<option value='interface'>界面优化</option>
+<option value='designdefect'>设计缺陷</option>
+<option value='config'>配置相关</option>
+<option value='install'>安装部署</option>
+<option value='security'>安全相关</option>
+<option value='performance'>性能问题</option>
+<option value='standard'>标准规范</option>
+<option value='automation'>测试脚本</option>
+<option value='others'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='hidden'>     <select name='pris[7]' id='pris7' class='form-control'>
+<option value='0'></option>
+<option value='7'>7</option>
+<option value='3'>中</option>
+<option value='1'>紧急</option>
+<option value='2'>高</option>
+<option value='4'>低</option>
+<option value='5'>5</option>
+<option value='6'>6</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class=''><select name='severities[7]' id='severities7' class='form-control'>
+<option value='3'>一般</option>
+<option value='1'>致命</option>
+<option value='2'>严重</option>
+<option value='4'>普通</option>
+<option value='5'>5</option>
+<option value='7'>7</option>
+<option value='6'>不严重</option>
+</select>
+</td>
+        <td class=''>      <select name='oses[7]' id='oses7' class='form-control'>
+<option value=''></option>
+<option value='all'>全部</option>
+<option value='windows'>Windows</option>
+<option value='win8'>Windows 8</option>
+<option value='win7'>Windows 7</option>
+<option value='vista'>Windows Vista</option>
+<option value='winxp'>Windows XP</option>
+<option value='win2012'>Windows 2012</option>
+<option value='win2008'>Windows 2008</option>
+<option value='win2003'>Windows 2003</option>
+<option value='win2000'>Windows 2000</option>
+<option value='android'>Android</option>
+<option value='ios'>IOS</option>
+<option value='wp8'>WP8</option>
+<option value='wp7'>WP7</option>
+<option value='symbian'>Symbian</option>
+<option value='linux'>Linux</option>
+<option value='freebsd'>FreeBSD</option>
+<option value='osx'>OS X</option>
+<option value='unix'>Unix</option>
+<option value='others'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class=''> <select name='browsers[7]' id='browsers7' class='form-control'>
+<option value=''></option>
+<option value='all'>全部</option>
+<option value='ie'>IE系列</option>
+<option value='ie11'>IE11</option>
+<option value='ie10'>IE10</option>
+<option value='ie9'>IE9</option>
+<option value='ie8'>IE8</option>
+<option value='ie7'>IE7</option>
+<option value='ie6'>IE6</option>
+<option value='chrome'>chrome</option>
+<option value='firefox'>firefox系列</option>
+<option value='firefox4'>firefox4</option>
+<option value='firefox3'>firefox3</option>
+<option value='firefox2'>firefox2</option>
+<option value='opera'>opera系列</option>
+<option value='oprea11'>opera11</option>
+<option value='oprea10'>opera10</option>
+<option value='opera9'>opera9</option>
+<option value='safari'>safari</option>
+<option value='maxthon'>傲游</option>
+<option value='uc'>UC</option>
+<option value='other'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='hidden'><input type='text' name='keywords[7]' id='keywords[7]' value='' class=form-control />
+</td>
+      </tr>
+                  <tr class='text-center'>
+        <td>9</td>
+        <td class='text-left'  style='overflow:visible'><select name='modules[8]' id='modules8' class='form-control chosen'>
+<option value='0'>/</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='text-left' style='overflow:visible'><select name='projects[8]' id='projects8' class='form-control chosen' onchange='loadProjectBuilds(21, this.value, 8)'>
+<option value=''></option>
+<option value='22'>33332555</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='text-left' style='overflow:visible' id='buildBox8'><select name='openedBuilds[8][]' id='openedBuilds8' class='form-control chosen' multiple>
+<option value='trunk'>Trunk</option>
+</select>
+</td>
+        <td style='overflow:visible'>
+          <div class='input-group'>
+          <input type='hidden' name='color[8]' id='color[8]' value='' data-provide='colorpicker' data-wrapper='input-group-btn fix-border-right' data-pull-menu-right='false' data-btn-tip='颜色标签' data-update-text='#title\[8\]' />
+          <input type='text' name='title[8]' id='title[8]' value='' class=form-control />
+          </div>
+        </td>
+        <td class=''>   <textarea name='stepses[8]' id='stepses[8]' rows='1' class='form-control autosize'></textarea>
+</td>
+        <td class=''>    <select name='types[8]' id='types8' class='form-control'>
+<option value=''></option>
+<option value='codeerror'>代码错误</option>
+<option value='interface'>界面优化</option>
+<option value='designdefect'>设计缺陷</option>
+<option value='config'>配置相关</option>
+<option value='install'>安装部署</option>
+<option value='security'>安全相关</option>
+<option value='performance'>性能问题</option>
+<option value='standard'>标准规范</option>
+<option value='automation'>测试脚本</option>
+<option value='others'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='hidden'>     <select name='pris[8]' id='pris8' class='form-control'>
+<option value='0'></option>
+<option value='7'>7</option>
+<option value='3'>中</option>
+<option value='1'>紧急</option>
+<option value='2'>高</option>
+<option value='4'>低</option>
+<option value='5'>5</option>
+<option value='6'>6</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class=''><select name='severities[8]' id='severities8' class='form-control'>
+<option value='3'>一般</option>
+<option value='1'>致命</option>
+<option value='2'>严重</option>
+<option value='4'>普通</option>
+<option value='5'>5</option>
+<option value='7'>7</option>
+<option value='6'>不严重</option>
+</select>
+</td>
+        <td class=''>      <select name='oses[8]' id='oses8' class='form-control'>
+<option value=''></option>
+<option value='all'>全部</option>
+<option value='windows'>Windows</option>
+<option value='win8'>Windows 8</option>
+<option value='win7'>Windows 7</option>
+<option value='vista'>Windows Vista</option>
+<option value='winxp'>Windows XP</option>
+<option value='win2012'>Windows 2012</option>
+<option value='win2008'>Windows 2008</option>
+<option value='win2003'>Windows 2003</option>
+<option value='win2000'>Windows 2000</option>
+<option value='android'>Android</option>
+<option value='ios'>IOS</option>
+<option value='wp8'>WP8</option>
+<option value='wp7'>WP7</option>
+<option value='symbian'>Symbian</option>
+<option value='linux'>Linux</option>
+<option value='freebsd'>FreeBSD</option>
+<option value='osx'>OS X</option>
+<option value='unix'>Unix</option>
+<option value='others'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class=''> <select name='browsers[8]' id='browsers8' class='form-control'>
+<option value=''></option>
+<option value='all'>全部</option>
+<option value='ie'>IE系列</option>
+<option value='ie11'>IE11</option>
+<option value='ie10'>IE10</option>
+<option value='ie9'>IE9</option>
+<option value='ie8'>IE8</option>
+<option value='ie7'>IE7</option>
+<option value='ie6'>IE6</option>
+<option value='chrome'>chrome</option>
+<option value='firefox'>firefox系列</option>
+<option value='firefox4'>firefox4</option>
+<option value='firefox3'>firefox3</option>
+<option value='firefox2'>firefox2</option>
+<option value='opera'>opera系列</option>
+<option value='oprea11'>opera11</option>
+<option value='oprea10'>opera10</option>
+<option value='opera9'>opera9</option>
+<option value='safari'>safari</option>
+<option value='maxthon'>傲游</option>
+<option value='uc'>UC</option>
+<option value='other'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='hidden'><input type='text' name='keywords[8]' id='keywords[8]' value='' class=form-control />
+</td>
+      </tr>
+                  <tr class='text-center'>
+        <td>10</td>
+        <td class='text-left'  style='overflow:visible'><select name='modules[9]' id='modules9' class='form-control chosen'>
+<option value='0'>/</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='text-left' style='overflow:visible'><select name='projects[9]' id='projects9' class='form-control chosen' onchange='loadProjectBuilds(21, this.value, 9)'>
+<option value=''></option>
+<option value='22'>33332555</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='text-left' style='overflow:visible' id='buildBox9'><select name='openedBuilds[9][]' id='openedBuilds9' class='form-control chosen' multiple>
+<option value='trunk'>Trunk</option>
+</select>
+</td>
+        <td style='overflow:visible'>
+          <div class='input-group'>
+          <input type='hidden' name='color[9]' id='color[9]' value='' data-provide='colorpicker' data-wrapper='input-group-btn fix-border-right' data-pull-menu-right='false' data-btn-tip='颜色标签' data-update-text='#title\[9\]' />
+          <input type='text' name='title[9]' id='title[9]' value='' class=form-control />
+          </div>
+        </td>
+        <td class=''>   <textarea name='stepses[9]' id='stepses[9]' rows='1' class='form-control autosize'></textarea>
+</td>
+        <td class=''>    <select name='types[9]' id='types9' class='form-control'>
+<option value=''></option>
+<option value='codeerror'>代码错误</option>
+<option value='interface'>界面优化</option>
+<option value='designdefect'>设计缺陷</option>
+<option value='config'>配置相关</option>
+<option value='install'>安装部署</option>
+<option value='security'>安全相关</option>
+<option value='performance'>性能问题</option>
+<option value='standard'>标准规范</option>
+<option value='automation'>测试脚本</option>
+<option value='others'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='hidden'>     <select name='pris[9]' id='pris9' class='form-control'>
+<option value='0'></option>
+<option value='7'>7</option>
+<option value='3'>中</option>
+<option value='1'>紧急</option>
+<option value='2'>高</option>
+<option value='4'>低</option>
+<option value='5'>5</option>
+<option value='6'>6</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class=''><select name='severities[9]' id='severities9' class='form-control'>
+<option value='3'>一般</option>
+<option value='1'>致命</option>
+<option value='2'>严重</option>
+<option value='4'>普通</option>
+<option value='5'>5</option>
+<option value='7'>7</option>
+<option value='6'>不严重</option>
+</select>
+</td>
+        <td class=''>      <select name='oses[9]' id='oses9' class='form-control'>
+<option value=''></option>
+<option value='all'>全部</option>
+<option value='windows'>Windows</option>
+<option value='win8'>Windows 8</option>
+<option value='win7'>Windows 7</option>
+<option value='vista'>Windows Vista</option>
+<option value='winxp'>Windows XP</option>
+<option value='win2012'>Windows 2012</option>
+<option value='win2008'>Windows 2008</option>
+<option value='win2003'>Windows 2003</option>
+<option value='win2000'>Windows 2000</option>
+<option value='android'>Android</option>
+<option value='ios'>IOS</option>
+<option value='wp8'>WP8</option>
+<option value='wp7'>WP7</option>
+<option value='symbian'>Symbian</option>
+<option value='linux'>Linux</option>
+<option value='freebsd'>FreeBSD</option>
+<option value='osx'>OS X</option>
+<option value='unix'>Unix</option>
+<option value='others'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class=''> <select name='browsers[9]' id='browsers9' class='form-control'>
+<option value=''></option>
+<option value='all'>全部</option>
+<option value='ie'>IE系列</option>
+<option value='ie11'>IE11</option>
+<option value='ie10'>IE10</option>
+<option value='ie9'>IE9</option>
+<option value='ie8'>IE8</option>
+<option value='ie7'>IE7</option>
+<option value='ie6'>IE6</option>
+<option value='chrome'>chrome</option>
+<option value='firefox'>firefox系列</option>
+<option value='firefox4'>firefox4</option>
+<option value='firefox3'>firefox3</option>
+<option value='firefox2'>firefox2</option>
+<option value='opera'>opera系列</option>
+<option value='oprea11'>opera11</option>
+<option value='oprea10'>opera10</option>
+<option value='opera9'>opera9</option>
+<option value='safari'>safari</option>
+<option value='maxthon'>傲游</option>
+<option value='uc'>UC</option>
+<option value='other'>其他</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+        <td class='hidden'><input type='text' name='keywords[9]' id='keywords[9]' value='' class=form-control />
+</td>
+      </tr>
+          </tbody>
+    <tfoot>
+      <tr><td colspan='10' class='text-center'> <button type='submit' id='submit' class='btn btn-primary'  data-loading='稍候...'>保存</button><a href='javascript:history.go(-1);' class='btn btn-back ' >返回</a></td></tr>
+    </tfoot>
+  </table>
+</form>
+<table class='hide' id='trTemp'>
+  <tbody>
+    <tr class='text-center'>
+      <td>%s</td>
+      <td class='text-left'  style='overflow:visible'><select name='modules[%s]' id='modules%s' class='form-control'>
+<option value='0'>/</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+      <td class='text-left' style='overflow:visible'><select name='projects[%s]' id='projects%s' class='form-control' onchange='loadProjectBuilds(21, this.value, "%s")'>
+<option value=''></option>
+<option value='22'>33332555</option>
+<option value='ditto' selected='selected'>同上</option>
+</select>
+</td>
+      <td class='text-left' style='overflow:visible' id='buildBox%s'><select name='openedBuilds[%s][]' id='openedBuilds%s' class='form-control' multiple>
+<option value='trunk'>Trunk</option>
+</select>
+</td>
+      <td style='overflow:visible'>
+        <div class='input-group'>
+        <input type='hidden' name='color[%s]' id='color[%s]' value='' data-wrapper='input-group-btn fix-border-right' data-pull-menu-right='false' data-btn-tip='颜色标签' data-update-text='#title\[%s\]' />
+        <input type='text' name='title[%s]' id='title[%s]' value='' class=form-control />
+        </div>
+      </td>
+      <td class=''>   <textarea name='stepses[%s]' id='stepses[%s]' rows='1' class='form-control autosize'></textarea>
+</td>
+      <td class=''>    <select name='types[%s]' id='types%s' class='form-control'>
+<option value='' selected='selected'></option>
+<option value='codeerror'>代码错误</option>
+<option value='interface'>界面优化</option>
+<option value='designdefect'>设计缺陷</option>
+<option value='config'>配置相关</option>
+<option value='install'>安装部署</option>
+<option value='security'>安全相关</option>
+<option value='performance'>性能问题</option>
+<option value='standard'>标准规范</option>
+<option value='automation'>测试脚本</option>
+<option value='others'>其他</option>
+<option value='ditto'>同上</option>
+</select>
+</td>
+      <td class='hidden'>     <select name='pris[%s]' id='pris%s' class='form-control'>
+<option value='0'></option>
+<option value='7'>7</option>
+<option value='3'>中</option>
+<option value='1'>紧急</option>
+<option value='2'>高</option>
+<option value='4'>低</option>
+<option value='5'>5</option>
+<option value='6'>6</option>
+<option value='ditto'>同上</option>
+</select>
+</td>
+      <td class=''><select name='severities[%s]' id='severities%s' class='form-control'>
+<option value='3'>一般</option>
+<option value='1'>致命</option>
+<option value='2'>严重</option>
+<option value='4'>普通</option>
+<option value='5'>5</option>
+<option value='7'>7</option>
+<option value='6'>不严重</option>
+</select>
+</td>
+      <td class=''>      <select name='oses[%s]' id='oses%s' class='form-control'>
+<option value='' selected='selected'></option>
+<option value='all'>全部</option>
+<option value='windows'>Windows</option>
+<option value='win8'>Windows 8</option>
+<option value='win7'>Windows 7</option>
+<option value='vista'>Windows Vista</option>
+<option value='winxp'>Windows XP</option>
+<option value='win2012'>Windows 2012</option>
+<option value='win2008'>Windows 2008</option>
+<option value='win2003'>Windows 2003</option>
+<option value='win2000'>Windows 2000</option>
+<option value='android'>Android</option>
+<option value='ios'>IOS</option>
+<option value='wp8'>WP8</option>
+<option value='wp7'>WP7</option>
+<option value='symbian'>Symbian</option>
+<option value='linux'>Linux</option>
+<option value='freebsd'>FreeBSD</option>
+<option value='osx'>OS X</option>
+<option value='unix'>Unix</option>
+<option value='others'>其他</option>
+<option value='ditto'>同上</option>
+</select>
+</td>
+      <td class=''> <select name='browsers[%s]' id='browsers%s' class='form-control'>
+<option value='' selected='selected'></option>
+<option value='all'>全部</option>
+<option value='ie'>IE系列</option>
+<option value='ie11'>IE11</option>
+<option value='ie10'>IE10</option>
+<option value='ie9'>IE9</option>
+<option value='ie8'>IE8</option>
+<option value='ie7'>IE7</option>
+<option value='ie6'>IE6</option>
+<option value='chrome'>chrome</option>
+<option value='firefox'>firefox系列</option>
+<option value='firefox4'>firefox4</option>
+<option value='firefox3'>firefox3</option>
+<option value='firefox2'>firefox2</option>
+<option value='opera'>opera系列</option>
+<option value='oprea11'>opera11</option>
+<option value='oprea10'>opera10</option>
+<option value='opera9'>opera9</option>
+<option value='safari'>safari</option>
+<option value='maxthon'>傲游</option>
+<option value='uc'>UC</option>
+<option value='other'>其他</option>
+<option value='ditto'>同上</option>
+</select>
+</td>
+      <td class='hidden'><input type='text' name='keywords[%s]' id='keywords[%s]' value='' class=form-control />
+</td>
+    </tr>
+  </tbody>
+</table>
+<script language='Javascript'>branch = 0;</script>
+<style>
+#customModal .checkbox-inline{width:90px}
+#customModal .checkbox-inline+.checkbox-inline{margin-left:0px;}
+</style>
+<div class="modal fade" id="customModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog w-800px">
+    <div class="modal-content">
+      <form class='form-condensed' method='post' target='hiddenwin' action='/custom-ajaxSaveCustomFields-bug-custom-batchCreateFields.html'>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title">
+            <i class="icon-cog"></i> 自定义            <div class='pull-right' style='margin-right:15px;'> <button type='submit' id='submit' class='btn btn-primary'  data-loading='稍候...'>保存</button></div>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <p><label class='checkbox-inline'><input type='checkbox' name='fields[]' value='module'  checked ='checked' id='fieldsmodule' /> 所属模块</label><label class='checkbox-inline'><input type='checkbox' name='fields[]' value='project'  checked ='checked' id='fieldsproject' /> 所属项目</label><label class='checkbox-inline'><input type='checkbox' name='fields[]' value='steps'  checked ='checked' id='fieldssteps' /> 重现步骤</label><label class='checkbox-inline'><input type='checkbox' name='fields[]' value='type'  checked ='checked' id='fieldstype' /> Bug类型</label><label class='checkbox-inline'><input type='checkbox' name='fields[]' value='pri'  id='fieldspri' /> 优先级</label><label class='checkbox-inline'><input type='checkbox' name='fields[]' value='severity'  checked ='checked' id='fieldsseverity' /> 严重程度</label><label class='checkbox-inline'><input type='checkbox' name='fields[]' value='os'  checked ='checked' id='fieldsos' /> 操作系统</label><label class='checkbox-inline'><input type='checkbox' name='fields[]' value='browser'  checked ='checked' id='fieldsbrowser' /> 浏览器</label><label class='checkbox-inline'><input type='checkbox' name='fields[]' value='keywords'  id='fieldskeywords' /> 关键词</label></p>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+$("button[data-toggle='customModal']").click(function(){$('#customModal').modal('show')});
+$(function()
+{
+    $table = $('.outer form table:first');
+    $form = $table.closest('form');
+    if($table.width() > $form.width())$form.css('overflow-x', 'auto')
+})
+</script>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog w-800px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title"><i class="icon-file-text"></i> 粘贴文本 </h4>
+      </div>
+      <div class="modal-body">
+        <textarea name='pasteText' id='pasteText' class='form-control mgb-10' rows='10' placeholder='粘贴文本到文本域中，每行文字作为一条数据的标题。'></textarea>
+         <button type='submit' id='submit' class='btn btn-primary'  data-loading='稍候...'>保存</button>      </div>
+    </div>
+  </div>
+</div>
+<script>
+$("button[data-toggle='myModal']").click(function(){$('#myModal').modal('show')})
+$("#myModal button[type='submit']").click(function()
+{
+    var pasteText = $('#myModal #pasteText').val();
+
+    $('#myModal').modal('hide')
+    $('#myModal #pasteText').val('');
+
+    var dataList = pasteText.split("\n");
+
+    if(typeof(mainField) == 'undefined') mainField = 'title';
+    var index = 0;
+    for(i in dataList)
+    {
+        var data = dataList[i].replace(/(^\s*)|(\s*$)/g, "");;
+
+        if(data.length == 0) continue;
+        while(true)
+        {
+            var title = $('form tbody tr').eq(index).find("input[id*='" + mainField + "']");
+            if($(title).size() == 0)
+            {
+                if(index == 0) break;
+                cloneTr = $('#trTemp tbody').html();
+                cloneTr = cloneTr.replace(/%s/g, index);
+                $('form tbody tr').eq(index - 1).after(cloneTr);
+                $('form tbody tr').eq(index).find('td:first').html(index + 1);
+                $('form tbody tr').eq(index - 1).find('td').each(function()
+                {
+                    if($(this).find('div.chosen-container').size() != 0)
+                    {
+                        $('form tbody tr').eq(index).find("td").eq($(this).index()).find('select').chosen(defaultChosenOptions);
+                    }
+                });
+                title = $('form tbody tr').eq(index).find("input[id*='" + mainField + "']");
+                $('#color\\[' + index + '\\]').colorPicker();//Update color picker.
+            }
+
+            index++;
+
+            if($(title).val() != '') continue;
+            if($(title).val() == '')$(title).val(data);
+            break;
+        }
+    }
+});
+</script>
+  </div>  <script>setTreeBox()</script>
+    
+  <div id='divider'></div>
+  <iframe frameborder='0' name='hiddenwin' id='hiddenwin' scrolling='no' class='debugwin hidden'></iframe>
+</div>
+
+
+<script>config.onlybody = 'no';</script>
+<script language='Javascript'>$(function() 
+{
+    setModal4List('iframe', 'bugList');
+
+    if(typeof page == 'undefined') page = '';
+    if(page == 'create')
+    {
+        productID  = $('#product').val();
+        moduleID   = $('#module').val();
+        assignedto = $('#assignedTo').val();
+        changeProductConfirmed = true;
+        oldStoryID             = 0;
+        oldProjectID           = 0;
+        oldOpenedBuild         = '';
+        oldTaskID              = 0;
+        if(!assignedto) setAssignedTo(moduleID, productID);
+        notice();
+    }
+
+    if(page == 'create' || page == 'edit' || page == 'assignedto' || page == 'confirmbug')
+    {
+        oldProductID = $('#product').val();
+        $("#story, #task, #mailto").chosen(defaultChosenOptions);
+    }
+});
+
+/**
+ * Load all fields.
+ * 
+ * @param  int $productID 
+ * @access public
+ * @return void
+ */
+function loadAll(productID)
+{
+    if(page == 'create') 
+    {
+        loadProjectTeamMembers(productID);
+        setAssignedTo();
+    }
+
+    if(!changeProductConfirmed)
+    {
+        firstChoice = confirm(confirmChangeProduct);
+        changeProductConfirmed = true;    // Only notice the user one time.
+
+        if(!firstChoice)
+        {
+            $('#product').val(oldProductID);//Revert old product id if confirm is no.
+            $('#product').trigger("chosen:updated");
+            $('#product').chosen(defaultChosenOptions);
+            return true;
+        }
+
+        loadAll(productID);
+    }
+    else
+    {
+        $('#taskIdBox').innerHTML = '<select id="task"></select>';  // Reset the task.
+        $('#task').chosen(defaultChosenOptions);
+        loadProductBranches(productID)
+        loadProductModules(productID); 
+        loadProductProjects(productID); 
+        loadProductBuilds(productID);
+        loadProductplans(productID);
+        loadProductStories(productID);
+    }
+}
+
+/**
+ * Load by branch.
+ * 
+ * @access public
+ * @return void
+ */
+function loadBranch()
+{
+    $('#taskIdBox').innerHTML = '<select id="task"></select>';  // Reset the task.
+    $('#task').chosen(defaultChosenOptions);
+    productID = $('#product').val();
+    loadProductModules(productID); 
+    loadProductProjects(productID); 
+    loadProductBuilds(productID);
+    loadProductplans(productID);
+    loadProductStories(productID);
+}
+
+/**
+  *Load all builds of one project or product.
+  *
+  * @access public
+  * @return void
+  */
+function loadAllBuilds(that)
+{
+    if(page == 'resolve')
+    {
+        oldResolvedBuild = $('#resolvedBuild').val() ? $('#resolvedBuild').val() : 0;
+        link = createLink('build', 'ajaxGetProductBuilds', 'productID=' + productID + '&varName=resolvedBuild&build=' + oldResolvedBuild + '&branch=0&index=0&type=all');
+        $('#resolvedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+    }
+    else
+    {
+        productID = $('#product').val();
+        projectID = $('#project').val();
+        if(page == 'edit') buildBox = $(that).parent().prev().filter('span').attr('id');
+
+        if(projectID)
+        {
+            loadAllProjectBuilds(projectID, productID);
+        }
+        else
+        {
+            loadAllProductBuilds(productID);
+        }
+    }
+}
+
+/** 
+  * Load all builds of the project.
+  *
+  * @param  int    $projectID
+  * @param  int    $productID
+  * @access public
+  * @return void
+  */
+function loadAllProjectBuilds(projectID, productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    if(page == 'create')
+    {
+        oldOpenedBuild = $('#openedBuild').val() ? $('#openedBuild').val() : 0;
+        link = createLink('build', 'ajaxGetProjectBuilds', 'projectID=' + projectID + '&productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + '&branch=' + branch + '&index=0&needCreate=true&type=all');
+        $('#buildBox').load(link, function(){ notice(); $('#openedBuild').chosen(defaultChosenOptions);});
+    }
+    if(page == 'edit')
+    {
+        if(buildBox == 'openedBuildBox')
+        {
+            link = createLink('build', 'ajaxGetProjectBuilds', 'projectID=' + projectID + '&productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + '&branch=' + branch + '&index=0&needCreate=true&type=all');
+            $('#openedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+        }
+        if(buildBox == 'resolvedBuildBox')
+        {
+            link = createLink('build', 'ajaxGetProjectBuilds', 'projectID=' + projectID + '&productID=' + productID + '&varName=resolvedBuild&build=' + oldResolvedBuild + '&branch=0&index=0&needCreate=true&type=all');
+            $('#resolvedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+        }
+    }
+}
+
+/** 
+  * Load all builds of the product.
+  *
+  * @param  int    $productID
+  * @access public
+  * @return void
+  */
+function loadAllProductBuilds(productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    if(page == 'create') 
+    {
+        link = createLink('build', 'ajaxGetProductBuilds', 'productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + '&branch=' + branch + '&index=0&type=all');
+        $('#buildBox').load(link, function(){ notice(); $('#openedBuild').chosen(defaultChosenOptions);});
+    }
+    if(page == 'edit')
+    {
+        if(buildBox == 'openedBuildBox')
+        {
+            link = createLink('build', 'ajaxGetProductBuilds', 'productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + '&branch=' + branch + '&index=0&type=all');
+            $('#openedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+        }
+        if(buildBox == 'resolvedBuildBox')
+        {
+            link = createLink('build', 'ajaxGetProductBuilds', 'productID=' + productID + '&varName=resolvedBuild&build=' + oldResolvedBuild + '&branch=0&index=0&type=all');
+            $('#resolvedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+        }
+    }
+}
+
+/**
+ * Load product's modules.
+ * 
+ * @param  int    $productID 
+ * @access public
+ * @return void
+ */
+function loadProductModules(productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('tree', 'ajaxGetOptionMenu', 'productID=' + productID + '&viewtype=bug&branch=' + branch + '&rootModuleID=0&returnType=html&needManage=true');
+    $('#moduleIdBox').load(link, function()
+    {
+        $(this).find('select').chosen(defaultChosenOptions)
+        if(typeof(bugModule) == 'string') $('#moduleIdBox').prepend("<span class='input-group-addon'>" + bugModule + "</span>")
+    });
+}
+
+/**
+ * Load product stories 
+ * 
+ * @param  int    $productID 
+ * @access public
+ * @return void
+ */
+function loadProductStories(productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('story', 'ajaxGetProductStories', 'productID=' + productID + '&branch=' + branch + '&moduleId=0&storyID=' + oldStoryID);
+    $('#storyIdBox').load(link, function(){$('#story').chosen(defaultChosenOptions);});
+}
+
+/**
+ * Load projects of product. 
+ * 
+ * @param  int    $productID 
+ * @access public
+ * @return void
+ */
+function loadProductProjects(productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('product', 'ajaxGetProjects', 'productID=' + productID + '&projectID=' + oldProjectID + '&branch=' + branch);
+    $('#projectIdBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+}
+
+/**
+ * Load product plans.
+ * 
+ * @param  productID $productID 
+ * @access public
+ * @return void
+ */
+function loadProductplans(productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('productplan', 'ajaxGetProductplans', 'productID=' + productID + '&branch=' + branch);
+    $('#planIdBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+}
+
+/**
+ * Load product builds. 
+ * 
+ * @param  productID $productID 
+ * @access public
+ * @return void
+ */
+function loadProductBuilds(productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('build', 'ajaxGetProductBuilds', 'productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + '&branch=' + branch);
+
+    if(page == 'create')
+    {
+        $('#buildBox').load(link, function(){ notice(); $('#openedBuild').chosen(defaultChosenOptions);});
+    }
+    else
+    {
+        $('#openedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+        link = createLink('build', 'ajaxGetProductBuilds', 'productID=' + productID + '&varName=resolvedBuild&build=' + oldResolvedBuild + '&branch=' + branch);
+        $('#resolvedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+    }
+}
+
+/**
+ * Load project related bugs and tasks.
+ * 
+ * @param  int    $projectID 
+ * @access public
+ * @return void
+ */
+function loadProjectRelated(projectID)
+{
+    if(projectID)
+    {
+        loadProjectTasks(projectID);
+        loadProjectStories(projectID);
+        loadProjectBuilds(projectID);
+        loadAssignedTo(projectID);
+    }
+    else
+    {
+        $('#taskIdBox').innerHTML = '<select id="task"></select>';  // Reset the task.
+        loadProductStories($('#product').val());
+        loadProductBuilds($('#product').val());
+    }
+}
+
+/**
+ * Load project tasks.
+ * 
+ * @param  projectID $projectID 
+ * @access public
+ * @return void
+ */
+function loadProjectTasks(projectID)
+{
+    link = createLink('task', 'ajaxGetProjectTasks', 'projectID=' + projectID + '&taskID=' + oldTaskID);
+    $('#taskIdBox').load(link, function(){$('#task').chosen(defaultChosenOptions);});
+}
+
+/**
+ * Load project stories.
+ * 
+ * @param  projectID $projectID 
+ * @access public
+ * @return void
+ */
+function loadProjectStories(projectID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('story', 'ajaxGetProjectStories', 'projectID=' + projectID + '&productID=' + $('#product').val() + '&branch=' + branch + '&moduleID=0&storyID=' + oldStoryID);
+    $('#storyIdBox').load(link, function(){$('#story').chosen(defaultChosenOptions);});
+}
+
+/**
+ * Load builds of a project.
+ * 
+ * @param  int      $projectID 
+ * @access public
+ * @return void
+ */
+function loadProjectBuilds(projectID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    productID = $('#product').val();
+    if(page == 'create') oldOpenedBuild = $('#openedBuild').val() ? $('#openedBuild').val() : 0;
+
+    if(page == 'create')
+    {
+        link = createLink('build', 'ajaxGetProjectBuilds', 'projectID=' + projectID + '&productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + "&branch=" + branch + "&index=0&needCreate=true");
+        $('#buildBox').load(link, function(){ notice(); $('#openedBuild').chosen(defaultChosenOptions);});
+    }
+    else
+    {
+        link = createLink('build', 'ajaxGetProjectBuilds', 'projectID=' + projectID + '&productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + '&branch=' + branch);
+        $('#openedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+
+        link = createLink('build', 'ajaxGetProjectBuilds', 'projectID=' + projectID + '&productID=' + productID + '&varName=resolvedBuild&build=' + oldResolvedBuild + '&branch=' + branch);
+        $('#resolvedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+    }
+}
+
+/**
+ * Set story field.
+ * 
+ * @param  moduleID $moduleID 
+ * @param  productID $productID 
+ * @access public
+ * @return void
+ */
+function setStories(moduleID, productID)
+{
+    var branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('story', 'ajaxGetProductStories', 'productID=' + productID + '&branch=' + branch + '&moduleID=' + moduleID);
+    $.get(link, function(stories)
+    {
+        if(!stories) stories = '<select id="story" name="story" class="form-control"></select>';
+        $('#story').replaceWith(stories);
+        $('#story_chosen').remove();
+        $("#story").chosen(defaultChosenOptions);
+    });
+}
+
+/**
+ * Load product branches.
+ * 
+ * @param  int $productID 
+ * @access public
+ * @return void
+ */
+function loadProductBranches(productID)
+{
+    $('#branch').remove();
+    $.get(createLink('branch', 'ajaxGetBranches', "productID=" + productID), function(data)
+    {
+        if(data)
+        {
+            $('#product').closest('.input-group').append(data);
+            $('#branch').css('width', page == 'create' ? '120px' : '65px');
+        }
+    })
+}
+
+/**
+ * Load team members of the project as assignedTo list.
+ * 
+ * @param  int     $projectID 
+ * @access public
+ * @return void
+ */
+function loadAssignedTo(projectID)
+{
+    link = createLink('bug', 'ajaxLoadAssignedTo', 'projectID=' + projectID + '&selectedUser=' + $('#assignedTo').val());
+    $('#assignedToBox').load(link, function(){$('#assignedTo').chosen(defaultChosenOptions);});
+}
+
+/**
+ * notice for create build.
+ * 
+ * @access public
+ * @return void
+ */
+function notice()
+{
+    $('#buildBoxActions').empty().hide();
+    if($('#openedBuild').find('option').length <= 1) 
+    {
+        var html = '';
+        if($('#project').val() == '')
+        {
+            branch = $('#branch').val();
+            if(typeof(branch) == 'undefined') branch = 0;
+            html += '<a href="' + createLink('release', 'create', 'productID=' + $('#product').val() + '&branch=' + branch) + '" target="_blank" style="padding-right:5px">' + createRelease + '</a> ';
+            html += '<a href="javascript:loadProductBuilds(' + $('#product').val() + ')">' + refresh + '</a>';
+        }
+        else
+        {
+            html += '<a href="' + createLink('build', 'create','projectID=' + $('#project').val()) + '" target="_blank" style="padding-right:5px">' + createBuild + '</a> ';
+            html += '<a href="javascript:loadProjectBuilds(' + $('#project').val() + ')">' + refresh + '</a>';
+        }
+        var $bba = $('#buildBoxActions');
+        if($bba.length)
+        {
+            $bba.html(html);
+            $bba.show();
+        }
+        else
+        {
+            if($('#buildBox').closest('tr').find('td').size() > 1)
+            {
+                $('#buildBox').closest('td').next().attr('id', 'buildBoxActions');
+                $('#buildBox').closest('td').next().html(html);
+            }
+            else
+            {
+                html = "<td id='buildBoxActions'>" + html + '</td>';
+                $('#buildBox').closest('td').after(html);
+            }
+        }
+    }
+}
+$(function()
+{
+    $(".chosenBox select").chosen(defaultChosenOptions);
+    removeDitto();//Remove 'ditto' in first row.
+})
+
+/**
+ * Load project builds 
+ * 
+ * @param  int $productID 
+ * @param  int $projectID 
+ * @param  int $index 
+ * @access public
+ * @return void
+ */
+function loadProjectBuilds(productID, projectID, index)
+{
+    if(projectID)
+    {
+        link = createLink('build', 'ajaxGetProjectBuilds', 'projectID=' + projectID + '&productID=' + productID + "&varName=openedBuilds&build=&branch=" + branch + "&index=" + index);
+    }
+    else
+    {
+        link = createLink('build', 'ajaxGetProductBuilds', 'productID=' + productID + "&varName=openedBuilds&build=&branch=" + branch + "&index=" + index);
+    }
+
+    $.get(link, function(builds)
+    {
+        var row = $('#buildBox' + index).closest('tbody').find('tr').size()
+        do
+        {
+            var selected = $('#buildBox' + index).find('select').val();
+            $('#buildBox' + index).html(builds);
+            $('#buildBox' + index).find('select').val(selected);
+            $('#openedBuilds' + index + '_chosen').remove();
+            $('#buildBox' + index + ' select').removeClass('select-3');
+            $('#buildBox' + index + ' select').addClass('select-1');
+            $('#buildBox' + index + ' select').attr('name','openedBuilds[' + index + '][]');
+            $('#buildBox' + index + ' select').attr('id','openedBuilds' + index);
+            $('#buildBox' + index + ' select').chosen(defaultChosenOptions);
+
+            index++;
+            if($('#projects' + index).val() != 'ditto') break;
+        }while(index < row)
+    });
+}
+
+$(document).on('click', '.chosen-with-drop', function()
+{
+    var select = $(this).prev('select');
+    if($(select).val() == 'ditto')
+    {
+        var index = $(select).closest('td').index();
+        var row   = $(select).closest('tr').index();
+        var table = $(select).closest('tr').parent();
+        var value = '';
+        for(i = row - 1; i >= 0; i--)
+        {
+            value = $(table).find('tr').eq(i).find('td').eq(index).find('select').val();
+            if(value != 'ditto') break;
+        }
+        $(select).val(value);
+        $(select).trigger("chosen:updated");
+    }
+})
+$(document).on('mousedown', 'select', function()
+{
+    if($(this).val() == 'ditto')
+    {
+        var index = $(this).closest('td').index();
+        var row   = $(this).closest('tr').index();
+        var table = $(this).closest('tr').parent();
+        var value = '';
+        for(i = row - 1; i >= 0; i--)
+        {
+            value = $(table).find('tr').eq(i).find('td').eq(index).find('select').val();
+            if(value != 'ditto') break;
+        }
+        $(this).val(value);
+    }
+})
+
+if(navigator.userAgent.indexOf("Firefox") < 0)
+{
+    $(document).on('input keyup paste change', 'textarea.autosize', function()
+    {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight + 2) + "px"; 
+    });
+}
+
+</script>
+<div class='hidden'><script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_4553360'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s5.cnzz.com/stat.php%3Fid%3D4553360' type='text/javascript'%3E%3C/script%3E"));</script></div>
+</body>
+</html>

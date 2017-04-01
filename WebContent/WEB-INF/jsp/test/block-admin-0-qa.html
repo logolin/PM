@@ -1,0 +1,103 @@
+
+<style>.input-group-btn .dropdown-toggle {border-radius: 4px;}
+.dropdown-menu {min-width: 120px;}
+.dropdown-menu.colors {padding: 5px; width: 205px}
+.dropdown-menu.buttons {padding: 5px; padding-bottom: 0; padding-right: 0;}
+.dropdown-menu.buttons > li {margin-bottom: 5px; display: block; float: left; width: 33.333333%; padding-right: 5px}
+.table.table-form{margin-bottom:0px;}
+</style><script language='Javascript'>blockID = 0;</script>
+<script language='Javascript'>/**
+ * Get all blocks.
+ * 
+ * @param  string|int $moduleID 
+ * @access public
+ * @return void
+ */
+function getBlocks(moduleID)
+{
+    var moduleBlock = $('#modules').parent().parent().next();
+    $(moduleBlock).hide();
+
+    $('#blockParam').empty();
+    if(moduleID == '') return false;
+
+    if(moduleID.indexOf('hiddenBlock') != -1)
+    {
+        getNotSourceParams('html', moduleID.replace('hiddenBlock', ''));
+        return true;
+    }
+    if(moduleID == 'html' || moduleID == 'dynamic' || moduleID == 'flowchart')
+    {
+        getNotSourceParams(moduleID, blockID);
+        return true;
+    }
+
+    $.get(createLink('block', 'main', 'module=' + moduleID + '&id=' + blockID), {mode:'getblocklist'}, function(data)
+    {
+        $(moduleBlock).html(data);
+        $(moduleBlock).show();
+        $.ajustModalPosition();
+    })
+}
+
+/**
+ * Get rss and html params.
+ * 
+ * @param  string $type 
+ * @access public
+ * @return void
+ */
+function getNotSourceParams(type, blockID)
+{
+    blockID = typeof(blockID) == 'undefined' ? 0 : blockID;
+    $.get(createLink('block', 'set', 'id=' + blockID + '&type=' + type), function(data)
+    {
+        $('#blockParam').html(data);
+        $.ajustModalPosition();
+    });
+}
+
+/**
+ * Get block params.
+ * 
+ * @param  string $type 
+ * @param  int    $moduleID 
+ * @access public
+ * @return void
+ */
+function getBlockParams(type, moduleID)
+{
+    $('#blockParam').empty();
+    $.get(createLink('block', 'set', 'id=' + blockID + '&type=' + type + '&source=' + moduleID), function(data)
+    {
+        $('#blockParam').html(data);
+        $.ajustModalPosition();
+    });
+}
+
+$(function()
+{
+    $('#modules').change(function(){getBlocks($(this).val())});
+    if($('#modules').size() > 0) getBlocks($('#modules').val());
+
+    $(document).on('click', '.dropdown-menu.buttons .btn', function()
+    {
+        var $this = $(this);
+        var group = $this.closest('.input-group-btn');
+        group.find('.dropdown-toggle').removeClass().addClass('btn dropdown-toggle btn-' + $this.data('id'));
+        group.find('input[name^="params[color]"]').val($this.data('id'));
+    });
+})
+
+</script>
+<table class='table table-form'>
+  <tr><th class='w-100px'></th><td></td></tr>
+    <tr><th>区块</th><td><select name='moduleBlock' id='moduleBlock' class='form-control' onchange='getBlockParams(this.value, "qa")'>
+<option value='' selected='selected'></option>
+<option value='bug'>Bug列表</option>
+<option value='case'>用例列表</option>
+<option value='testtask'>版本列表</option>
+</select>
+</td></tr>
+</table>
+<div id='blockParam'></div>

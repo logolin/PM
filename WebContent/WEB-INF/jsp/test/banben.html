@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang='zh-cn'>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name="renderer" content="webkit"> 
+  <title>点觉CTM::测试视图版本 - 禅道</title>
+<script language='Javascript'>var config={"webRoot":"\/","appName":"","cookieLife":30,"requestType":"PATH_INFO","requestFix":"-","moduleVar":"m","methodVar":"f","viewVar":"t","defaultView":"html","themeRoot":"\/theme\/","currentModule":"testtask","currentMethod":"browse","clientLang":"zh-cn","requiredFields":"","router":"\/index.php","save":"\u4fdd\u5b58","runMode":"","timeout":30000,"pingInterval":""};
+var lang={"submitting":"\u7a0d\u5019...","save":"\u4fdd\u5b58","timeout":"\u8fde\u63a5\u8d85\u65f6\uff0c\u8bf7\u68c0\u67e5\u7f51\u7edc\u73af\u5883\uff0c\u6216\u91cd\u8bd5\uff01"};
+
+</script>
+<script src='http://cdn.zentao.net/8.2.4/js/all.js?v=8.2.4' type='text/javascript'></script>
+<link rel='stylesheet' href='http://cdn.zentao.net/8.2.4/theme/default/zh-cn.default.css?v=8.2.4' type='text/css' media='screen' />
+<link rel='icon' href='/favicon.ico' type='image/x-icon' />
+<link rel='shortcut icon' href='/favicon.ico' type='image/x-icon' />
+<!--[if lt IE 9]>
+<script src='http://cdn.zentao.net/8.2.4/js/html5shiv/min.js?v=8.2.4' type='text/javascript'></script>
+<script src='http://cdn.zentao.net/8.2.4/js/respond/min.js?v=8.2.4' type='text/javascript'></script>
+<![endif]-->
+<!--[if lt IE 10]>
+<script src='http://cdn.zentao.net/8.2.4/js/jquery/placeholder/min.js?v=8.2.4' type='text/javascript'></script>
+<![endif]-->
+<script src='banben.js' type='text/javascript'></script>
+</head>
+<body>
+<header id='header'>
+  
+  <nav id='mainmenu'>
+    <ul class='nav'>
+<li  data-id='my'><a href='/my/' ><i class="icon-home"></i><span> 我的地盘</span></a></li>
+<li  data-id='product'><a href='/product/' >产品</a></li>
+<li class='active' data-id='qa'><a href='/qa/' class='active'>测试</a></li>
+<li  data-id='project'><a href='/project/' >项目</a></li>
+<li  data-id='doc'><a href='/doc/' >文档</a></li>
+<li  data-id='report'><a href='/report/' >统计</a></li>
+<li  data-id='admin'><a href='/admin/' >后台</a></li>
+<li  data-id='company'><a href='/company/' >组织</a></li>
+<li class='custom-item'><a href='/custom-ajaxMenu-testtask-browse.html?onlybody=yes' data-toggle='modal' data-type='iframe' title='自定义导航' data-icon='cog' data-width='80%'><i class='icon icon-cog'></i></a></li></ul>
+<div class='input-group input-group-sm' id='searchbox'><div class='input-group-btn' id='typeSelector'><button type='button' class='btn dropdown-toggle' data-toggle='dropdown'><span id='searchTypeName'>测试版本</span> <span class='caret'></span></button><input type='hidden' name='searchType' id='searchType' value='testtask'  />
+<ul class='dropdown-menu'><li><a href='javascript:;' data-value='bug'>Bug</a></li><li><a href='javascript:;' data-value='story'>需求</a></li><li><a href='javascript:;' data-value='task'>任务</a></li><li><a href='javascript:;' data-value='testcase'>用例</a></li><li><a href='javascript:;' data-value='project'>项目</a></li><li><a href='javascript:;' data-value='product'>产品</a></li><li><a href='javascript:;' data-value='user'>用户</a></li><li><a href='javascript:;' data-value='build'>版本</a></li><li><a href='javascript:;' data-value='release'>发布</a></li><li><a href='javascript:;' data-value='productplan'>产品计划</a></li><li><a href='javascript:;' data-value='testtask'>测试版本</a></li><li><a href='javascript:;' data-value='doc'>文档</a></li></ul></div><input type='text' name='searchQuery' id='searchQuery' value='' onclick='this.value=""' onkeydown='if(event.keyCode==13) shortcut()' class='form-control' placeholder='编号(ctrl+g)' />
+<div id='objectSwitcher' class='input-group-btn'><a href='javascript:shortcut();' class='btn'>GO! </a></div></div>
+  </nav>
+  <nav id="modulemenu">
+    <ul class='nav'>
+<li data-id='product'><a id='currentItem' href="javascript:showDropMenu('product', '21', 'testtask', 'browse', '')">点觉CTM <span class='icon-caret-down'></span></a><div id='dropMenu'><i class='icon icon-spin icon-spinner'></i></div></li>
+<li class='right ' data-id='index'><a href='/qa-index-no-21.html' ><i class='icon-home'></i>测试主页</a>
+</li>
+<li class=' ' data-id='bug'><a href='/bug-browse-21.html' >Bug</a>
+</li>
+<li class=' ' data-id='testcase'><a href='/testcase-browse-21.html' >用例</a>
+</li>
+<li class=' active' data-id='testtask'><a href='/testtask-browse-21.html' >版本</a>
+</li>
+</ul>
+  </nav>
+</header>
+
+<div id='wrap'>
+  <div class='outer'>
+<script language='Javascript'>confirmDelete = "\u60a8\u786e\u8ba4\u8981\u5220\u9664\u8be5\u7248\u672c\u5417\uff1f";</script>
+<div id="featurebar">
+  <ul class="nav">
+    <li id='waitTab'><a href='/testtask-browse-21-0-wait.html' >待测版本</a>
+</li>
+    <li id='doneTab'><a href='/testtask-browse-21-0-done.html' >已测版本</a>
+</li>
+  </ul>
+  <div class="actions"><a href='/testtask-create-21.html' class='btn ' ><i class='icon-testtask-create icon-plus'></i> 提交测试</a>
+</div>
+</div>
+<table class='table tablesorter table-fixed' id='taskList'>
+  <thead>
+      <tr>
+      <th class='w-id'>   <div class='headerSortUp'><a href='/testtask-browse-21-0-wait-id_asc-0-20.html' >ID</a>
+</div></th>
+      <th class='w-200px'><div class='header'><a href='/testtask-browse-21-0-wait-name_asc-0-20.html' >名称</a>
+</div></th>
+      <th>                所属项目/版本      <th class='w-user'> <div class='header'><a href='/testtask-browse-21-0-wait-owner_asc-0-20.html' >负责人</a>
+</div></th>
+      <th class='w-100px'><div class='header'><a href='/testtask-browse-21-0-wait-begin_asc-0-20.html' >开始日期</a>
+</div></th>
+      <th class='w-100px'><div class='header'><a href='/testtask-browse-21-0-wait-end_asc-0-20.html' >结束日期</a>
+</div></th>
+      <th class='w-80px'> <div class='header'><a href='/testtask-browse-21-0-wait-status_asc-0-20.html' >状态</a>
+</div></th>
+      <th class='w-120px {sorter:false}'>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    </tbody>
+  <tfoot><tr><td colspan='8'><div style='float:right; clear:none;' class='page'>暂时没有记录</div></td></tr></tfoot>
+</table>
+<script>$(function(){$('#waitTab').addClass('active')})</script>
+  </div>  <script>setTreeBox()</script>
+    
+  <div id='divider'></div>
+  <iframe frameborder='0' name='hiddenwin' id='hiddenwin' scrolling='no' class='debugwin hidden'></iframe>
+</div>
+
+
+<script>config.onlybody = 'no';</script>
+<div class='hidden'><script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_4553360'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s5.cnzz.com/stat.php%3Fid%3D4553360' type='text/javascript'%3E%3C/script%3E"));</script></div>
+</body>
+</html>

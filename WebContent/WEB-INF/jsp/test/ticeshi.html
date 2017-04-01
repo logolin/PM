@@ -1,0 +1,471 @@
+
+<!DOCTYPE html>
+<html lang='zh-cn'>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name="renderer" content="webkit"> 
+  <title>点觉CTM::提交测试 - 禅道</title>
+<script language='Javascript'>var config={"webRoot":"\/","appName":"","cookieLife":30,"requestType":"PATH_INFO","requestFix":"-","moduleVar":"m","methodVar":"f","viewVar":"t","defaultView":"html","themeRoot":"\/theme\/","currentModule":"testtask","currentMethod":"create","clientLang":"zh-cn","requiredFields":"project,build,begin,end,name","router":"\/index.php","save":"\u4fdd\u5b58","runMode":"","timeout":30000,"pingInterval":""};
+var lang={"submitting":"\u7a0d\u5019...","save":"\u4fdd\u5b58","timeout":"\u8fde\u63a5\u8d85\u65f6\uff0c\u8bf7\u68c0\u67e5\u7f51\u7edc\u73af\u5883\uff0c\u6216\u91cd\u8bd5\uff01"};
+
+</script>
+<script src='http://cdn.zentao.net/8.2.4/js/all.js?v=8.2.4' type='text/javascript'></script>
+<link rel='stylesheet' href='http://cdn.zentao.net/8.2.4/theme/default/zh-cn.default.css?v=8.2.4' type='text/css' media='screen' />
+<style>#mailtoGroup .input-group-btn > .btn {margin-left: -1px!important;}
+</style><link rel='icon' href='/favicon.ico' type='image/x-icon' />
+<link rel='shortcut icon' href='/favicon.ico' type='image/x-icon' />
+<!--[if lt IE 9]>
+<script src='http://cdn.zentao.net/8.2.4/js/html5shiv/min.js?v=8.2.4' type='text/javascript'></script>
+<script src='http://cdn.zentao.net/8.2.4/js/respond/min.js?v=8.2.4' type='text/javascript'></script>
+<![endif]-->
+<!--[if lt IE 10]>
+<script src='http://cdn.zentao.net/8.2.4/js/jquery/placeholder/min.js?v=8.2.4' type='text/javascript'></script>
+<![endif]-->
+</head>
+<body>
+<script>
+var noResultsMatch       = '没有匹配结果';
+var chooseUsersToMail    = '选择要发信通知的用户...';
+var defaultChosenOptions = {no_results_text: noResultsMatch, width:'100%', allow_single_deselect: true, disable_search_threshold: 1, placeholder_text_single: ' ', placeholder_text_multiple: ' ', search_contains: true};
+$(document).ready(function()
+{
+    $("#mailto").attr('data-placeholder', chooseUsersToMail);
+    $("#mailto, .chosen, #productID").chosen(defaultChosenOptions).on('chosen:showing_dropdown', function()
+    {
+        var $this = $(this);
+        var $chosen = $this.next('.chosen-container').removeClass('chosen-up');
+        var $drop = $chosen.find('.chosen-drop');
+        $chosen.toggleClass('chosen-up', $drop.height() + $drop.offset().top - $(document).scrollTop() > $(window).height());
+    });
+});
+</script>
+<header id='header'>
+
+  <nav id='mainmenu'>
+    <ul class='nav'>
+<li  data-id='my'><a href='/my/' ><i class="icon-home"></i><span> 我的地盘</span></a></li>
+<li  data-id='product'><a href='/product/' >产品</a></li>
+<li class='active' data-id='qa'><a href='/qa/' class='active'>测试</a></li>
+<li  data-id='project'><a href='/project/' >项目</a></li>
+<li  data-id='doc'><a href='/doc/' >文档</a></li>
+<li  data-id='report'><a href='/report/' >统计</a></li>
+<li  data-id='admin'><a href='/admin/' >后台</a></li>
+<li  data-id='company'><a href='/company/' >组织</a></li>
+<li class='custom-item'><a href='/custom-ajaxMenu-testtask-create.html?onlybody=yes' data-toggle='modal' data-type='iframe' title='自定义导航' data-icon='cog' data-width='80%'><i class='icon icon-cog'></i></a></li></ul>
+<div class='input-group input-group-sm' id='searchbox'><div class='input-group-btn' id='typeSelector'><button type='button' class='btn dropdown-toggle' data-toggle='dropdown'><span id='searchTypeName'>测试版本</span> <span class='caret'></span></button><input type='hidden' name='searchType' id='searchType' value='testtask'  />
+<ul class='dropdown-menu'><li><a href='javascript:;' data-value='bug'>Bug</a></li><li><a href='javascript:;' data-value='story'>需求</a></li><li><a href='javascript:;' data-value='task'>任务</a></li><li><a href='javascript:;' data-value='testcase'>用例</a></li><li><a href='javascript:;' data-value='project'>项目</a></li><li><a href='javascript:;' data-value='product'>产品</a></li><li><a href='javascript:;' data-value='user'>用户</a></li><li><a href='javascript:;' data-value='build'>版本</a></li><li><a href='javascript:;' data-value='release'>发布</a></li><li><a href='javascript:;' data-value='productplan'>产品计划</a></li><li><a href='javascript:;' data-value='testtask'>测试版本</a></li><li><a href='javascript:;' data-value='doc'>文档</a></li></ul></div><input type='text' name='searchQuery' id='searchQuery' value='' onclick='this.value=""' onkeydown='if(event.keyCode==13) shortcut()' class='form-control' placeholder='编号(ctrl+g)' />
+<div id='objectSwitcher' class='input-group-btn'><a href='javascript:shortcut();' class='btn'>GO! </a></div></div>
+  </nav>
+  <nav id="modulemenu">
+    <ul class='nav'>
+<li data-id='product'><a id='currentItem' href="javascript:showDropMenu('product', '21', 'testtask', 'browse', '')">点觉CTM <span class='icon-caret-down'></span></a><div id='dropMenu'><i class='icon icon-spin icon-spinner'></i></div></li>
+<li class='right ' data-id='index'><a href='/qa-index-no-21.html' ><i class='icon-home'></i>测试主页</a>
+</li>
+<li class=' ' data-id='bug'><a href='/bug-browse-21.html' >Bug</a>
+</li>
+<li class=' ' data-id='testcase'><a href='/testcase-browse-21.html' >用例</a>
+</li>
+<li class=' active' data-id='testtask'><a href='/testtask-browse-21.html' >版本</a>
+</li>
+</ul>
+  </nav>
+</header>
+
+<div id='wrap'>
+  <div class='outer'>
+<script language='javascript'>
+$(function()
+{
+    $.fn.fixedDate = function()
+    {
+        return $(this).each(function()
+        {
+            var $this = $(this);
+            if($this.offset().top + 200 > $(document.body).height())
+            {
+                $this.attr('data-picker-position', 'top-right');
+            }
+
+            if($this.val() == '0000-00-00')
+            {
+                $this.focus(function(){if($this.val() == '0000-00-00') $this.val('').datetimepicker('update');}).blur(function(){if($this.val() == '') $this.val('0000-00-00')});
+            }
+        });
+    };
+
+    var options = 
+    {
+        language: 'zh-cn',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        showMeridian: 1,
+        format: 'yyyy-mm-dd hh:ii',
+        startDate: '1970-1-1'
+    }
+
+    $('.form-datetime').fixedDate().datetimepicker(options);
+    $('.form-date').fixedDate().datetimepicker($.extend(options, {minView: 2, format: 'yyyy-mm-dd'}));
+    $('.form-time').fixedDate().datetimepicker($.extend(options, {startView: 1, minView: 0, maxView: 1, format: 'hh:ii'}));
+
+    $('.datepicker-wrapper').click(function()
+    {
+        $(this).find('.form-date, .form-datetime, .form-time').datetimepicker('show').focus();
+    });
+
+    window.datepickerOptions = options;
+});
+</script>
+<script language='Javascript'>themeRoot = "http:\/\/cdn.zentao.net\/8.2.4\/theme\/";</script>
+<link rel="stylesheet" href="http://cdn.zentao.net/8.2.4/js/kindeditor/themes/default/default.css" />
+<script src='http://cdn.zentao.net/8.2.4/js/kindeditor/kindeditor-min.js' type='text/javascript'></script>
+<script src='http://cdn.zentao.net/8.2.4/js/kindeditor/lang/zh_CN.js' type='text/javascript'></script>
+<script language='javascript'>
+var editor = {"id":["desc"],"tools":"simpleTools"};
+
+var bugTools =
+[ 'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic','underline', '|', 
+'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist', 'insertunorderedlist', '|',
+'emoticons', 'image', 'code', 'link', '|', 'removeformat','undo', 'redo', 'fullscreen', 'source', 'about'];
+
+var simpleTools = 
+[ 'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic','underline', '|', 
+'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist', 'insertunorderedlist', '|',
+'emoticons', 'image', 'code', 'link', '|', 'removeformat','undo', 'redo', 'fullscreen', 'source', 'about'];
+
+var fullTools = 
+[ 'formatblock', 'fontname', 'fontsize', 'lineheight', '|', 'forecolor', 'hilitecolor', '|', 'bold', 'italic','underline', 'strikethrough', '|',
+'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', '|',
+'insertorderedlist', 'insertunorderedlist', '|',
+'emoticons', 'image', 'insertfile', 'hr', '|', 'link', 'unlink', '/',
+'undo', 'redo', '|', 'selectall', 'cut', 'copy', 'paste', '|', 'plainpaste', 'wordpaste', '|', 'removeformat', 'clearhtml','quickformat', '|',
+'indent', 'outdent', 'subscript', 'superscript', '|',
+'table', 'code', '|', 'pagebreak', 'anchor', '|', 
+'fullscreen', 'source', 'preview', 'about'];
+
+$(document).ready(initKindeditor);
+function initKindeditor(afterInit)
+{
+    var nextFormControl = 'input:not([type="hidden"]), textarea:not(.ke-edit-textarea), button[type="submit"], select';
+    $.each(editor.id, function(key, editorID)
+    {
+        editorTool = simpleTools;
+        if(editor.tools == 'bugTools')  editorTool = bugTools;
+        if(editor.tools == 'fullTools') editorTool = fullTools;
+
+        var K = KindEditor, $editor = $('#' + editorID);
+        var options = 
+        {
+            cssPath:[themeRoot + 'zui/css/min.css'],
+            width:'100%',
+            items:editorTool,
+            filterMode: true, 
+            bodyClass:'article-content',
+            urlType:'relative', 
+            uploadJson: createLink('file', 'ajaxUpload'),
+            allowFileManager:true,
+            langType:'zh_CN',
+            afterBlur: function(){this.sync();$editor.prev('.ke-container').removeClass('focus');},
+            afterFocus: function(){$editor.prev('.ke-container').addClass('focus');},
+            afterChange: function(){$editor.change().hide();},
+            afterCreate : function()
+            {
+                var doc = this.edit.doc; 
+                var cmd = this.edit.cmd; 
+                if(!K.WEBKIT && !K.GECKO)
+                {
+                    var pasted = false;
+                    $(doc.body).bind('paste', function(ev)
+                    {
+                        pasted = true;
+                        return true;
+                    });
+                    setTimeout(function()
+                    {
+                        $(doc.body).bind('keyup', function(ev)
+                        {
+                            if(pasted)
+                            {
+                                pasted = false;
+                                return true;
+                            }
+                            if(ev.keyCode == 86 && ev.ctrlKey) alert('您的浏览器不支持粘贴图片！');
+                        })
+                    }, 10);
+                }
+                /* Paste in chrome.*/
+                /* Code reference from http://www.foliotek.com/devblog/copy-images-from-clipboard-in-javascript/. */
+                if(K.WEBKIT)
+                {
+                    $(doc.body).bind('paste', function(ev)
+                    {
+                        var $this    = $(this);
+                        var original = ev.originalEvent;
+                        var file     = original.clipboardData.items[0].getAsFile();
+                        if(file)
+                        {
+                            var reader = new FileReader();
+                            reader.onload = function(evt) 
+                            {
+                                var result = evt.target.result; 
+                                var result = evt.target.result;
+                                var arr    = result.split(",");
+                                var data   = arr[1]; // raw base64
+                                var contentType = arr[0].split(";")[0].split(":")[1];
+
+                                html = '<img src="' + result + '" alt="" />';
+                                $.post(createLink('file', 'ajaxPasteImage'), {editor: html}, function(data){cmd.inserthtml(data);});
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                }
+                /* Paste in firfox and other firfox.*/
+                else
+                {
+                    K(doc.body).bind('paste', function(ev)
+                    {
+                        setTimeout(function()
+                        {
+                            var html = K(doc.body).html();
+                            if(html.search(/<img src="data:.+;base64,/) > -1)
+                            {
+                                K(doc.body).html(html.replace(/<img src="data:.+;base64,.*".*\/>/, ''));
+                                $.post(createLink('file', 'ajaxPasteImage'), {editor: html}, function(data){K(doc.body).html(data);});
+                            }
+                        }, 80);
+                    });
+                }
+                /* End */
+            },
+            afterTab: function(id)
+            {
+                var $next = $editor.next(nextFormControl);
+                if(!$next.length) $next = $editor.parent().next().find(nextFormControl);
+                if(!$next.length) $next = $editor.parent().parent().next().find(nextFormControl);
+                $next = $next.first().focus();
+                var keditor = $next.data('keditor');
+                if(keditor) keditor.focus();
+                else if($next.hasClass('chosen')) $next.trigger('chosen:activate');
+            }
+        };
+        try
+        {
+            if(!window.editor) window.editor = {};
+            var keditor = K.create('#' + editorID, options);
+            window.editor['#'] = window.editor[editorID] = keditor;
+            $editor.data('keditor', keditor);
+        }
+        catch(e){}
+    });
+
+    if($.isFunction(afterInit)) afterInit();
+}
+</script>
+<script src='http://cdn.zentao.net/8.2.4/js/misc/date.js?v=8.2.4' type='text/javascript'></script>
+<div class='container mw-1400px'>
+  <div id='titlebar'>
+    <div class='heading'>
+      <span class='prefix'><i class='icon-check'></i></span>
+      <strong><small class='text-muted'><i class='icon-plus'></i></small> 提交测试</strong>
+    </div>
+  </div>
+  <form class='form-condensed' method='post' target='hiddenwin' id='dataform'>
+    <table class='table table-form'> 
+            <tr class='hide'>
+        <th class='w-90px'>所属产品</th>
+        <td class='w-p25-f'><input type='text' name='product' id='product' value='21' class='form-control' />
+</td><td></td>
+      </tr>  
+            <tr>
+        <th class='w-90px'>所属项目</th>
+        <td class='w-p25-f'><select name='project' id='project' class='form-control chosen' onchange='loadProjectRelated(this.value)'>
+<option value='' selected='selected'></option>
+<option value='22'>33332555</option>
+</select>
+</td><td></td>
+      </tr>  
+      <tr>
+        <th>版本</th>
+        <td><span id='buildBox'><select name='build' id='build' class='form-control chosen'>
+<option value='' selected='selected'></option>
+<option value='trunk'>Trunk</option>
+</select>
+</span></td>
+      </tr>  
+      <tr>
+        <th>负责人</th>
+        <td><select name='owner' id='owner' class='form-control chosen'>
+<option value='' selected='selected'></option>
+<option value='testManager'>T:测试经理</option>
+<option value='tester1'>T:测试甲</option>
+<option value='tester2'>T:测试乙</option>
+<option value='tester3'>T:测试丙</option>
+<option value='admin'>A:admin</option>
+<option value='demo'>D:Demo</option>
+<option value='feedback'>F:Feedback</option>
+<option value='dev1'>D:开发甲</option>
+<option value='dev2'>D:开发乙</option>
+<option value='dev3'>D:开发丙</option>
+<option value='productManager'>P:产品经理</option>
+<option value='projectManager'>P:项目经理</option>
+</select>
+</td>
+      </tr>  
+      <tr>
+        <th>优先级</th>
+        <td><select name='pri' id='pri' class='form-control'>
+<option value='0' selected='selected'></option>
+<option value='3'>3</option>
+<option value='1'>1</option>
+<option value='2'>2</option>
+<option value='4'>4</option>
+</select>
+</td>
+      </tr>  
+      <tr>
+        <th>开始日期</th>
+        <td><input type='text' name='begin' id='begin' value='' class='form-control form-date' onchange='suitEndDate()' />
+</td>
+      </tr>  
+      <tr>
+        <th>结束日期</th>
+        <td><input type='text' name='end' id='end' value='' class='form-control form-date' />
+</td>
+      </tr>  
+      <tr>
+        <th>当前状态</th>
+        <td><select name='status' id='status' class='form-control'>
+<option value='wait'>未开始</option>
+<option value='doing'>进行中</option>
+<option value='done'>已完成</option>
+<option value='blocked'>被阻塞</option>
+</select>
+</td>
+      </tr>  
+      <tr>
+        <th>名称</th>
+        <td colspan='2'><input type='text' name='name' id='name' value='' class='form-control' />
+</td>
+      </tr>  
+      <tr>
+        <th>描述</th>
+        <td colspan='2'><textarea name='desc' id='desc' rows=10 class='form-control'></textarea>
+</td>
+      </tr>
+      <tr>
+        <th>抄送给</th>
+        <td colspan='2'>
+          <div id='mailtoGroup' class='input-group'>
+          <select name='mailto[]' id='mailto' multiple class='form-control'>
+<option value='' selected='selected'></option>
+<option value='testManager'>T:测试经理</option>
+<option value='tester1'>T:测试甲</option>
+<option value='tester2'>T:测试乙</option>
+<option value='tester3'>T:测试丙</option>
+<option value='admin'>A:admin</option>
+<option value='demo'>D:Demo</option>
+<option value='feedback'>F:Feedback</option>
+<option value='dev1'>D:开发甲</option>
+<option value='dev2'>D:开发乙</option>
+<option value='dev3'>D:开发丙</option>
+<option value='productManager'>P:产品经理</option>
+<option value='projectManager'>P:项目经理</option>
+</select>
+<select name='' id='' class='form-control chosen' onchange="setMailto('mailto', this.value)">
+<option value='' selected='selected'>联系人</option>
+<option value='4'>zhl</option>
+<option value='2'>aa</option>
+<option value='5'></option>
+</select>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td></td><td colspan='2'> <button type='submit' id='submit' class='btn btn-primary'  data-loading='稍候...'>保存</button><a href='javascript:history.go(-1);' class='btn btn-back ' >返回</a> </td>
+      </tr>
+    </table>
+  </form>
+</div>
+  </div>  <script>setTreeBox()</script>
+    
+  <div id='divider'></div>
+  <iframe frameborder='0' name='hiddenwin' id='hiddenwin' scrolling='no' class='debugwin hidden'></iframe>
+</div>
+
+
+<script>config.onlybody = 'no';</script>
+<script language='Javascript'>/**
+ * Load project related builds
+ * 
+ * @param  int    $projectID 
+ * @access public
+ * @return void
+ */
+function loadProjectRelated(projectID)
+{
+    loadProjectBuilds(projectID);
+}
+
+/**
+ * Load project builds.
+ * 
+ * @param  int $projectID 
+ * @access public
+ * @return void
+ */
+function loadProjectBuilds(projectID)
+{
+    selectedBuild = $('#openedBuild').val();
+    if(!selectedBuild) selectedBuild = 0;
+    link = createLink('build', 'ajaxGetProjectBuilds', 'projectID=' + projectID + '&productID=' + $('#product').val() + '&varName=testTaskBuild&build=' + selectedBuild);
+    $('#buildBox').load(link, function(){$('#build').chosen(defaultChosenOptions);});
+}
+
+/**
+ * Convert a date string like 2011-11-11 to date object in js.
+ * 
+ * @param  string $date 
+ * @access public
+ * @return date
+ */
+function convertStringToDate(dateString)
+{
+    dateString = dateString.split('-');
+    dateString = dateString[1] + '/' + dateString[2] + '/' + dateString[0];
+    
+    return Date.parse(dateString);
+}
+
+/**
+ * when begin date input change and end date input is null
+ * change end date input to begin's after day
+ * 
+ * @access public
+ * @return void
+ */
+function suitEndDate()
+{
+    beginDate = $('#begin').val();
+    if(!beginDate) return;
+    endDate = $('#end').val();
+    if(endDate) return;
+    
+    endDate = convertStringToDate(beginDate).addDays(1).toString('yyyy-MM-dd');
+    $('#end').val(endDate);
+}
+
+/* If the mouse hover over the manage contacts button, give tip. */
+$(function()
+{
+    $('[data-toggle=tooltip]').tooltip();
+});
+
+</script>
+<div class='hidden'><script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_4553360'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s5.cnzz.com/stat.php%3Fid%3D4553360' type='text/javascript'%3E%3C/script%3E"));</script></div>
+</body>
+</html>

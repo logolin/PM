@@ -1,0 +1,737 @@
+
+<!DOCTYPE html>
+<html lang='zh-cn'>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name="renderer" content="webkit"> 
+  <title>点觉CTM::Bug::报表统计 - 禅道</title>
+<script language='Javascript'>var config={"webRoot":"\/","appName":"","cookieLife":30,"requestType":"PATH_INFO","requestFix":"-","moduleVar":"m","methodVar":"f","viewVar":"t","defaultView":"html","themeRoot":"\/theme\/","currentModule":"bug","currentMethod":"report","clientLang":"zh-cn","requiredFields":"","router":"\/index.php","save":"\u4fdd\u5b58","runMode":"","timeout":30000,"pingInterval":""};
+var lang={"submitting":"\u7a0d\u5019...","save":"\u4fdd\u5b58","timeout":"\u8fde\u63a5\u8d85\u65f6\uff0c\u8bf7\u68c0\u67e5\u7f51\u7edc\u73af\u5883\uff0c\u6216\u91cd\u8bd5\uff01"};
+
+</script>
+<script src='http://cdn.zentao.net/8.2.4/js/all.js?v=8.2.4' type='text/javascript'></script>
+<link rel='stylesheet' href='http://cdn.zentao.net/8.2.4/theme/default/zh-cn.default.css?v=8.2.4' type='text/css' media='screen' />
+<style>.ke-toolbar .ke-outline[data-name='savetemplate'] {display: none}
+#modulemenu .nav #dropMenu #searchResult .closed{text-decoration:none;}
+.table-bordered caption {border: 1px solid #ddd;}
+.table-bordered tr > th:first-child, .table-bordered tr > td:first-child {border-left: 1px solid #ddd!important}
+.table-bordered tr > th:last-child, .table-bordered tr > td:last-child {border-right: 1px solid #ddd!important}
+
+.col-side {width: 250px}
+</style><link rel='icon' href='/favicon.ico' type='image/x-icon' />
+<link rel='shortcut icon' href='/favicon.ico' type='image/x-icon' />
+<!--[if lt IE 9]>
+<script src='http://cdn.zentao.net/8.2.4/js/html5shiv/min.js?v=8.2.4' type='text/javascript'></script>
+<script src='http://cdn.zentao.net/8.2.4/js/respond/min.js?v=8.2.4' type='text/javascript'></script>
+<![endif]-->
+<!--[if lt IE 10]>
+<script src='http://cdn.zentao.net/8.2.4/js/jquery/placeholder/min.js?v=8.2.4' type='text/javascript'></script>
+<![endif]-->
+</head>
+<body>
+<script>
+var noResultsMatch       = '没有匹配结果';
+var chooseUsersToMail    = '选择要发信通知的用户...';
+var defaultChosenOptions = {no_results_text: noResultsMatch, width:'100%', allow_single_deselect: true, disable_search_threshold: 1, placeholder_text_single: ' ', placeholder_text_multiple: ' ', search_contains: true};
+$(document).ready(function()
+{
+    $("#mailto").attr('data-placeholder', chooseUsersToMail);
+    $("#mailto, .chosen, #productID").chosen(defaultChosenOptions).on('chosen:showing_dropdown', function()
+    {
+        var $this = $(this);
+        var $chosen = $this.next('.chosen-container').removeClass('chosen-up');
+        var $drop = $chosen.find('.chosen-drop');
+        $chosen.toggleClass('chosen-up', $drop.height() + $drop.offset().top - $(document).scrollTop() > $(window).height());
+    });
+});
+</script>
+<header id='header'>
+ 
+  <nav id='mainmenu'>
+    <ul class='nav'>
+<li  data-id='my'><a href='/my/' ><i class="icon-home"></i><span> 我的地盘</span></a></li>
+<li  data-id='product'><a href='/product/' >产品</a></li>
+<li class='active' data-id='qa'><a href='/qa/' class='active'>测试</a></li>
+<li  data-id='project'><a href='/project/' >项目</a></li>
+<li  data-id='doc'><a href='/doc/' >文档</a></li>
+<li  data-id='report'><a href='/report/' >统计</a></li>
+<li  data-id='admin'><a href='/admin/' >后台</a></li>
+<li  data-id='company'><a href='/company/' >组织</a></li>
+<li class='custom-item'><a href='/custom-ajaxMenu-bug-report.html?onlybody=yes' data-toggle='modal' data-type='iframe' title='自定义导航' data-icon='cog' data-width='80%'><i class='icon icon-cog'></i></a></li></ul>
+<div class='input-group input-group-sm' id='searchbox'><div class='input-group-btn' id='typeSelector'><button type='button' class='btn dropdown-toggle' data-toggle='dropdown'><span id='searchTypeName'>Bug</span> <span class='caret'></span></button><input type='hidden' name='searchType' id='searchType' value='bug'  />
+<ul class='dropdown-menu'><li><a href='javascript:;' data-value='bug'>Bug</a></li><li><a href='javascript:;' data-value='story'>需求</a></li><li><a href='javascript:;' data-value='task'>任务</a></li><li><a href='javascript:;' data-value='testcase'>用例</a></li><li><a href='javascript:;' data-value='project'>项目</a></li><li><a href='javascript:;' data-value='product'>产品</a></li><li><a href='javascript:;' data-value='user'>用户</a></li><li><a href='javascript:;' data-value='build'>版本</a></li><li><a href='javascript:;' data-value='release'>发布</a></li><li><a href='javascript:;' data-value='productplan'>产品计划</a></li><li><a href='javascript:;' data-value='testtask'>测试版本</a></li><li><a href='javascript:;' data-value='doc'>文档</a></li></ul></div><input type='text' name='searchQuery' id='searchQuery' value='' onclick='this.value=""' onkeydown='if(event.keyCode==13) shortcut()' class='form-control' placeholder='编号(ctrl+g)' />
+<div id='objectSwitcher' class='input-group-btn'><a href='javascript:shortcut();' class='btn'>GO! </a></div></div>
+  </nav>
+  <nav id="modulemenu">
+    <ul class='nav'>
+<li data-id='product'><a id='currentItem' href="javascript:showDropMenu('product', '21', 'bug', 'browse', '')">点觉CTM <span class='icon-caret-down'></span></a><div id='dropMenu'><i class='icon icon-spin icon-spinner'></i></div></li>
+<li class='right ' data-id='index'><a href='/qa-index-no-21.html' ><i class='icon-home'></i>测试主页</a>
+</li>
+<li class=' active' data-id='bug'><a href='/bug-browse-21.html' >Bug</a>
+</li>
+<li class=' ' data-id='testcase'><a href='/testcase-browse-21.html' >用例</a>
+</li>
+<li class=' ' data-id='testtask'><a href='/testtask-browse-21.html' >版本</a>
+</li>
+</ul>
+  </nav>
+</header>
+
+<div id='wrap'>
+  <div class='outer'>
+<style>
+.table-chart tr > td.chart-color {padding-left: 0!important; text-align: center; padding-right: 0!important; color: #f1f1f1}
+.chart-wrapper {padding: 10px; background-color: #f1f1f1; border: 1px solid #e5e5e5}
+.table-wrapper > .table-bordered > thead > tr:first-child th {border-top: 1px solid #ddd}
+</style>
+<!--[if lte IE 8]>
+<script src='http://cdn.zentao.net/8.2.4/js/chartjs/excanvas.min.js?v=8.2.4' type='text/javascript'></script>
+<![endif]-->
+<script>
+(function()
+{
+    var colorIndex = 0;
+    function nextAccentColor(idx)
+    {
+        if(typeof idx === 'undefined') idx = colorIndex++;
+        return new $.zui.Color({h: idx * 67 % 360, s: 0.5, l: 0.55});
+    }
+
+    jQuery.fn.tableChart = function()
+    {
+        $(this).each(function()
+        {
+            var $table    = $(this);
+            var options   = $table.data();
+            var chartType = options.chart || 'pie';
+            var $canvas   = $(options.target);
+            if(!$canvas.length) return;
+            var chart = null;
+
+            if(chartType === 'pie')
+            {
+                options = $.extend({scaleShowLabels: true, scaleLabel: '<%=label%>: <%=value%>'}, options);
+                var data = [];
+                var $rows = $table.find('tbody > tr').each(function(idx)
+                {
+                    var $row = $(this);
+                    var color = nextAccentColor().toCssStr();
+
+                    $row.attr('data-id', idx).find('.chart-color-dot').css('color', color);
+                    data.push({label: $row.find('.chart-label').text(), value: parseInt($row.find('.chart-value').text()), color: color, id: idx});
+                });
+
+                if(data.length > 1) options.scaleLabelPlacement = 'outside';
+                else if(data.length === 1)
+                {
+                    options.scaleLabelPlacement = 'inside';
+                    data.push({label: '', value: data[0].value/2000, color: '#fff', showLabel: false})
+                }
+
+                chart = $canvas.pieChart(data, options);
+                $canvas.on('mousemove', function(e)
+                {
+                    var activePoints = chart.getSegmentsAtEvent(e);
+                    $rows.removeClass('active');
+                    if(activePoints.length)
+                    {
+                        $rows.filter('[data-id="' + activePoints[0].id + '"]').addClass('active');
+                    }
+                });
+            }
+            else if(chartType === 'bar')
+            {
+                var labels = [], dataset = {label: $table.find('thead .chart-label').text(), color: nextAccentColor().toCssStr(), data: []};
+
+                var $rows = $table.find('tbody > tr').each(function(idx)
+                {
+                    var $row = $(this);
+                    labels.push($row.find('.chart-label').text());
+                    dataset.data.push(parseInt($row.find('.chart-value').text()));
+                });
+                var data = {labels: labels, datasets: [dataset]};
+                if(labels.length) options.barValueSpacing = 5;
+
+                chart = $canvas.barChart(data, options);
+            }
+
+            if(chart !== null) $table.data('zui.chart', chart);
+        });
+    };
+
+    $(function()
+    {
+        $('.table-chart').tableChart();
+    });
+}());
+</script>
+<div id='titlebar'>
+  <div class='heading'>
+    <span class='prefix'><i class='icon-bug'></i></span>
+    <strong><small class='text-muted'><i class='icon-bar-chart'></i></small> 报表</strong>
+  </div>
+  <div class='actions'>
+    <a href='/bug-browse-21-0-unclosed-0.html' class='btn'>返回</a>
+  </div>
+</div>
+<div class='row-table row-table-side-left'>
+  <div class='col-side'>
+    <div class='panel panel-sm'>
+      <div class='panel-heading'>
+        <strong>请选择报表类型</strong>
+      </div>
+      <div class='panel-body' style='padding-top:0'>
+        <form method='post'>
+          <div class='checkbox'><label><input type='checkbox' name='charts[]' value='bugsPerProject'  checked ='checked' id='chartsbugsPerProject' /> 项目Bug数量</label></div><div class='checkbox'><label><input type='checkbox' name='charts[]' value='bugsPerBuild'  id='chartsbugsPerBuild' /> 版本Bug数量</label></div><div class='checkbox'><label><input type='checkbox' name='charts[]' value='bugsPerModule'  id='chartsbugsPerModule' /> 模块Bug数量</label></div><div class='checkbox'><label><input type='checkbox' name='charts[]' value='openedBugsPerDay'  id='chartsopenedBugsPerDay' /> 每天新增Bug数</label></div><div class='checkbox'><label><input type='checkbox' name='charts[]' value='resolvedBugsPerDay'  id='chartsresolvedBugsPerDay' /> 每天解决Bug数</label></div><div class='checkbox'><label><input type='checkbox' name='charts[]' value='closedBugsPerDay'  id='chartsclosedBugsPerDay' /> 每天关闭的Bug数</label></div><div class='checkbox'><label><input type='checkbox' name='charts[]' value='openedBugsPerUser'  id='chartsopenedBugsPerUser' /> 每人提交的Bug数</label></div><div class='checkbox'><label><input type='checkbox' name='charts[]' value='resolvedBugsPerUser'  id='chartsresolvedBugsPerUser' /> 每人解决的Bug数</label></div><div class='checkbox'><label><input type='checkbox' name='charts[]' value='closedBugsPerUser'  id='chartsclosedBugsPerUser' /> 每人关闭的Bug数</label></div><div class='checkbox'><label><input type='checkbox' name='charts[]' value='bugsPerSeverity'  id='chartsbugsPerSeverity' /> Bug严重程度统计</label></div><div class='checkbox'><label><input type='checkbox' name='charts[]' value='bugsPerResolution'  id='chartsbugsPerResolution' /> Bug解决方案统计</label></div><div class='checkbox'><label><input type='checkbox' name='charts[]' value='bugsPerStatus'  id='chartsbugsPerStatus' /> Bug状态统计</label></div><div class='checkbox'><label><input type='checkbox' name='charts[]' value='bugsPerActivatedCount'  id='chartsbugsPerActivatedCount' /> Bug激活次数统计</label></div><div class='checkbox'><label><input type='checkbox' name='charts[]' value='bugsPerType'  id='chartsbugsPerType' /> Bug类型统计</label></div><div class='checkbox'><label><input type='checkbox' name='charts[]' value='bugsPerAssignedTo'  id='chartsbugsPerAssignedTo' /> 指派给统计</label></div>          <script type="text/javascript">
+function selectAll(checker, scope, type)
+{ 
+    if(scope)
+    {
+        if(type == 'button')
+        {
+            $('#' + scope + ' input').each(function() 
+            {
+                $(this).prop("checked", true)
+            });
+        }
+        else if(type == 'checkbox')
+        {
+            $('#' + scope + ' input').each(function() 
+            {
+                $(this).prop("checked", checker.checked)
+            });
+         }
+    }
+    else
+    {
+        if(type == 'button')
+        {
+            $('input:checkbox').each(function() 
+            {
+                $(this).prop("checked", true)
+            });
+        }
+        else if(type == 'checkbox')
+        { 
+            $('input:checkbox').each(function() 
+            {
+                $(this).prop("checked", checker.checked)
+            });
+        }
+    }
+}
+</script><input type='button' name='allchecker' id='allchecker' class='btn btn-select-all btn-sm' value='全选' onclick='selectAll(this, "", "button")' />           <button type='submit' id='submit' class='btn btn-primary btn-sm'  data-loading='稍候...'>生成报表</button>        </form>
+      </div>
+    </div>
+  </div>
+  <div class='col-main'>
+    <div class='panel panel-sm'>
+      <div class='panel-heading'>
+        <strong>报表</strong>
+      </div>
+      <table class='table active-disabled'>
+                <tr class='text-top'>
+          <td>
+            <div class='chart-wrapper text-center'>
+              <h5>项目Bug数量</h5>
+              <div class='chart-canvas'><canvas id='chart-bugsPerProject' width='500' height='140' data-responsive='true'></canvas></div>
+            </div>
+          </td>
+          <td style='width: 320px'>
+                        <div style="overflow:auto" class='table-wrapper'>
+              <table class='table table-condensed table-hover table-striped table-bordered table-chart' data-chart='pie' data-target='#chart-bugsPerProject' data-animation='false'>
+                <thead>
+                  <tr>
+                    <th class='chart-label' colspan='2'>条目</th>
+                    <th>值</th>
+                    <th>百分比</th>
+                  </tr>
+                </thead>
+                              </table>
+            </div>
+          </td>
+        </tr>
+              </table>
+    </div>
+  </div>
+</div>
+  </div>  <script>setTreeBox()</script>
+    
+  <div id='divider'></div>
+  <iframe frameborder='0' name='hiddenwin' id='hiddenwin' scrolling='no' class='debugwin hidden'></iframe>
+</div>
+
+
+<script>config.onlybody = 'no';</script>
+<script language='Javascript'>$(function() 
+{
+    setModal4List('iframe', 'bugList');
+
+    if(typeof page == 'undefined') page = '';
+    if(page == 'create')
+    {
+        productID  = $('#product').val();
+        moduleID   = $('#module').val();
+        assignedto = $('#assignedTo').val();
+        changeProductConfirmed = true;
+        oldStoryID             = 0;
+        oldProjectID           = 0;
+        oldOpenedBuild         = '';
+        oldTaskID              = 0;
+        if(!assignedto) setAssignedTo(moduleID, productID);
+        notice();
+    }
+
+    if(page == 'create' || page == 'edit' || page == 'assignedto' || page == 'confirmbug')
+    {
+        oldProductID = $('#product').val();
+        $("#story, #task, #mailto").chosen(defaultChosenOptions);
+    }
+});
+
+/**
+ * Load all fields.
+ * 
+ * @param  int $productID 
+ * @access public
+ * @return void
+ */
+function loadAll(productID)
+{
+    if(page == 'create') 
+    {
+        loadProjectTeamMembers(productID);
+        setAssignedTo();
+    }
+
+    if(!changeProductConfirmed)
+    {
+        firstChoice = confirm(confirmChangeProduct);
+        changeProductConfirmed = true;    // Only notice the user one time.
+
+        if(!firstChoice)
+        {
+            $('#product').val(oldProductID);//Revert old product id if confirm is no.
+            $('#product').trigger("chosen:updated");
+            $('#product').chosen(defaultChosenOptions);
+            return true;
+        }
+
+        loadAll(productID);
+    }
+    else
+    {
+        $('#taskIdBox').innerHTML = '<select id="task"></select>';  // Reset the task.
+        $('#task').chosen(defaultChosenOptions);
+        loadProductBranches(productID)
+        loadProductModules(productID); 
+        loadProductProjects(productID); 
+        loadProductBuilds(productID);
+        loadProductplans(productID);
+        loadProductStories(productID);
+    }
+}
+
+/**
+ * Load by branch.
+ * 
+ * @access public
+ * @return void
+ */
+function loadBranch()
+{
+    $('#taskIdBox').innerHTML = '<select id="task"></select>';  // Reset the task.
+    $('#task').chosen(defaultChosenOptions);
+    productID = $('#product').val();
+    loadProductModules(productID); 
+    loadProductProjects(productID); 
+    loadProductBuilds(productID);
+    loadProductplans(productID);
+    loadProductStories(productID);
+}
+
+/**
+  *Load all builds of one project or product.
+  *
+  * @access public
+  * @return void
+  */
+function loadAllBuilds(that)
+{
+    if(page == 'resolve')
+    {
+        oldResolvedBuild = $('#resolvedBuild').val() ? $('#resolvedBuild').val() : 0;
+        link = createLink('build', 'ajaxGetProductBuilds', 'productID=' + productID + '&varName=resolvedBuild&build=' + oldResolvedBuild + '&branch=0&index=0&type=all');
+        $('#resolvedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+    }
+    else
+    {
+        productID = $('#product').val();
+        projectID = $('#project').val();
+        if(page == 'edit') buildBox = $(that).parent().prev().filter('span').attr('id');
+
+        if(projectID)
+        {
+            loadAllProjectBuilds(projectID, productID);
+        }
+        else
+        {
+            loadAllProductBuilds(productID);
+        }
+    }
+}
+
+/** 
+  * Load all builds of the project.
+  *
+  * @param  int    $projectID
+  * @param  int    $productID
+  * @access public
+  * @return void
+  */
+function loadAllProjectBuilds(projectID, productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    if(page == 'create')
+    {
+        oldOpenedBuild = $('#openedBuild').val() ? $('#openedBuild').val() : 0;
+        link = createLink('build', 'ajaxGetProjectBuilds', 'projectID=' + projectID + '&productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + '&branch=' + branch + '&index=0&needCreate=true&type=all');
+        $('#buildBox').load(link, function(){ notice(); $('#openedBuild').chosen(defaultChosenOptions);});
+    }
+    if(page == 'edit')
+    {
+        if(buildBox == 'openedBuildBox')
+        {
+            link = createLink('build', 'ajaxGetProjectBuilds', 'projectID=' + projectID + '&productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + '&branch=' + branch + '&index=0&needCreate=true&type=all');
+            $('#openedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+        }
+        if(buildBox == 'resolvedBuildBox')
+        {
+            link = createLink('build', 'ajaxGetProjectBuilds', 'projectID=' + projectID + '&productID=' + productID + '&varName=resolvedBuild&build=' + oldResolvedBuild + '&branch=0&index=0&needCreate=true&type=all');
+            $('#resolvedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+        }
+    }
+}
+
+/** 
+  * Load all builds of the product.
+  *
+  * @param  int    $productID
+  * @access public
+  * @return void
+  */
+function loadAllProductBuilds(productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    if(page == 'create') 
+    {
+        link = createLink('build', 'ajaxGetProductBuilds', 'productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + '&branch=' + branch + '&index=0&type=all');
+        $('#buildBox').load(link, function(){ notice(); $('#openedBuild').chosen(defaultChosenOptions);});
+    }
+    if(page == 'edit')
+    {
+        if(buildBox == 'openedBuildBox')
+        {
+            link = createLink('build', 'ajaxGetProductBuilds', 'productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + '&branch=' + branch + '&index=0&type=all');
+            $('#openedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+        }
+        if(buildBox == 'resolvedBuildBox')
+        {
+            link = createLink('build', 'ajaxGetProductBuilds', 'productID=' + productID + '&varName=resolvedBuild&build=' + oldResolvedBuild + '&branch=0&index=0&type=all');
+            $('#resolvedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+        }
+    }
+}
+
+/**
+ * Load product's modules.
+ * 
+ * @param  int    $productID 
+ * @access public
+ * @return void
+ */
+function loadProductModules(productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('tree', 'ajaxGetOptionMenu', 'productID=' + productID + '&viewtype=bug&branch=' + branch + '&rootModuleID=0&returnType=html&needManage=true');
+    $('#moduleIdBox').load(link, function()
+    {
+        $(this).find('select').chosen(defaultChosenOptions)
+        if(typeof(bugModule) == 'string') $('#moduleIdBox').prepend("<span class='input-group-addon'>" + bugModule + "</span>")
+    });
+}
+
+/**
+ * Load product stories 
+ * 
+ * @param  int    $productID 
+ * @access public
+ * @return void
+ */
+function loadProductStories(productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('story', 'ajaxGetProductStories', 'productID=' + productID + '&branch=' + branch + '&moduleId=0&storyID=' + oldStoryID);
+    $('#storyIdBox').load(link, function(){$('#story').chosen(defaultChosenOptions);});
+}
+
+/**
+ * Load projects of product. 
+ * 
+ * @param  int    $productID 
+ * @access public
+ * @return void
+ */
+function loadProductProjects(productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('product', 'ajaxGetProjects', 'productID=' + productID + '&projectID=' + oldProjectID + '&branch=' + branch);
+    $('#projectIdBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+}
+
+/**
+ * Load product plans.
+ * 
+ * @param  productID $productID 
+ * @access public
+ * @return void
+ */
+function loadProductplans(productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('productplan', 'ajaxGetProductplans', 'productID=' + productID + '&branch=' + branch);
+    $('#planIdBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+}
+
+/**
+ * Load product builds. 
+ * 
+ * @param  productID $productID 
+ * @access public
+ * @return void
+ */
+function loadProductBuilds(productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('build', 'ajaxGetProductBuilds', 'productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + '&branch=' + branch);
+
+    if(page == 'create')
+    {
+        $('#buildBox').load(link, function(){ notice(); $('#openedBuild').chosen(defaultChosenOptions);});
+    }
+    else
+    {
+        $('#openedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+        link = createLink('build', 'ajaxGetProductBuilds', 'productID=' + productID + '&varName=resolvedBuild&build=' + oldResolvedBuild + '&branch=' + branch);
+        $('#resolvedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+    }
+}
+
+/**
+ * Load project related bugs and tasks.
+ * 
+ * @param  int    $projectID 
+ * @access public
+ * @return void
+ */
+function loadProjectRelated(projectID)
+{
+    if(projectID)
+    {
+        loadProjectTasks(projectID);
+        loadProjectStories(projectID);
+        loadProjectBuilds(projectID);
+        loadAssignedTo(projectID);
+    }
+    else
+    {
+        $('#taskIdBox').innerHTML = '<select id="task"></select>';  // Reset the task.
+        loadProductStories($('#product').val());
+        loadProductBuilds($('#product').val());
+    }
+}
+
+/**
+ * Load project tasks.
+ * 
+ * @param  projectID $projectID 
+ * @access public
+ * @return void
+ */
+function loadProjectTasks(projectID)
+{
+    link = createLink('task', 'ajaxGetProjectTasks', 'projectID=' + projectID + '&taskID=' + oldTaskID);
+    $('#taskIdBox').load(link, function(){$('#task').chosen(defaultChosenOptions);});
+}
+
+/**
+ * Load project stories.
+ * 
+ * @param  projectID $projectID 
+ * @access public
+ * @return void
+ */
+function loadProjectStories(projectID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('story', 'ajaxGetProjectStories', 'projectID=' + projectID + '&productID=' + $('#product').val() + '&branch=' + branch + '&moduleID=0&storyID=' + oldStoryID);
+    $('#storyIdBox').load(link, function(){$('#story').chosen(defaultChosenOptions);});
+}
+
+/**
+ * Load builds of a project.
+ * 
+ * @param  int      $projectID 
+ * @access public
+ * @return void
+ */
+function loadProjectBuilds(projectID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    productID = $('#product').val();
+    if(page == 'create') oldOpenedBuild = $('#openedBuild').val() ? $('#openedBuild').val() : 0;
+
+    if(page == 'create')
+    {
+        link = createLink('build', 'ajaxGetProjectBuilds', 'projectID=' + projectID + '&productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + "&branch=" + branch + "&index=0&needCreate=true");
+        $('#buildBox').load(link, function(){ notice(); $('#openedBuild').chosen(defaultChosenOptions);});
+    }
+    else
+    {
+        link = createLink('build', 'ajaxGetProjectBuilds', 'projectID=' + projectID + '&productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + '&branch=' + branch);
+        $('#openedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+
+        link = createLink('build', 'ajaxGetProjectBuilds', 'projectID=' + projectID + '&productID=' + productID + '&varName=resolvedBuild&build=' + oldResolvedBuild + '&branch=' + branch);
+        $('#resolvedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+    }
+}
+
+/**
+ * Set story field.
+ * 
+ * @param  moduleID $moduleID 
+ * @param  productID $productID 
+ * @access public
+ * @return void
+ */
+function setStories(moduleID, productID)
+{
+    var branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('story', 'ajaxGetProductStories', 'productID=' + productID + '&branch=' + branch + '&moduleID=' + moduleID);
+    $.get(link, function(stories)
+    {
+        if(!stories) stories = '<select id="story" name="story" class="form-control"></select>';
+        $('#story').replaceWith(stories);
+        $('#story_chosen').remove();
+        $("#story").chosen(defaultChosenOptions);
+    });
+}
+
+/**
+ * Load product branches.
+ * 
+ * @param  int $productID 
+ * @access public
+ * @return void
+ */
+function loadProductBranches(productID)
+{
+    $('#branch').remove();
+    $.get(createLink('branch', 'ajaxGetBranches', "productID=" + productID), function(data)
+    {
+        if(data)
+        {
+            $('#product').closest('.input-group').append(data);
+            $('#branch').css('width', page == 'create' ? '120px' : '65px');
+        }
+    })
+}
+
+/**
+ * Load team members of the project as assignedTo list.
+ * 
+ * @param  int     $projectID 
+ * @access public
+ * @return void
+ */
+function loadAssignedTo(projectID)
+{
+    link = createLink('bug', 'ajaxLoadAssignedTo', 'projectID=' + projectID + '&selectedUser=' + $('#assignedTo').val());
+    $('#assignedToBox').load(link, function(){$('#assignedTo').chosen(defaultChosenOptions);});
+}
+
+/**
+ * notice for create build.
+ * 
+ * @access public
+ * @return void
+ */
+function notice()
+{
+    $('#buildBoxActions').empty().hide();
+    if($('#openedBuild').find('option').length <= 1) 
+    {
+        var html = '';
+        if($('#project').val() == '')
+        {
+            branch = $('#branch').val();
+            if(typeof(branch) == 'undefined') branch = 0;
+            html += '<a href="' + createLink('release', 'create', 'productID=' + $('#product').val() + '&branch=' + branch) + '" target="_blank" style="padding-right:5px">' + createRelease + '</a> ';
+            html += '<a href="javascript:loadProductBuilds(' + $('#product').val() + ')">' + refresh + '</a>';
+        }
+        else
+        {
+            html += '<a href="' + createLink('build', 'create','projectID=' + $('#project').val()) + '" target="_blank" style="padding-right:5px">' + createBuild + '</a> ';
+            html += '<a href="javascript:loadProjectBuilds(' + $('#project').val() + ')">' + refresh + '</a>';
+        }
+        var $bba = $('#buildBoxActions');
+        if($bba.length)
+        {
+            $bba.html(html);
+            $bba.show();
+        }
+        else
+        {
+            if($('#buildBox').closest('tr').find('td').size() > 1)
+            {
+                $('#buildBox').closest('td').next().attr('id', 'buildBoxActions');
+                $('#buildBox').closest('td').next().html(html);
+            }
+            else
+            {
+                html = "<td id='buildBoxActions'>" + html + '</td>';
+                $('#buildBox').closest('td').after(html);
+            }
+        }
+    }
+}
+$(function()
+{
+    var resizeChartTable = function()
+    {
+        $('.table-wrapper').each(function()
+        {
+            var $this = $(this);
+            $this.css('max-height', $this.closest('.table').find('.chart-wrapper').outerHeight());
+        });
+    };
+    resizeChartTable();
+    fixedTableHead('.table-wrapper');
+    $(window).resize(resizeChartTable);
+});
+
+</script>
+<div class='hidden'><script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_4553360'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s5.cnzz.com/stat.php%3Fid%3D4553360' type='text/javascript'%3E%3C/script%3E"));</script></div>
+</body>
+</html>

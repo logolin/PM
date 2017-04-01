@@ -1,0 +1,90 @@
+@CHARSET "UTF-8";
+body {
+    background: #f5f5f5;
+    color: #31708f;
+    width: 100%;
+    box-sizing:border-box;
+}
+.wrap {
+	padding:8px;
+}
+.title{
+	color: #31708f;
+	text-align:center;
+	margin:4px 0px 0px 0px;
+	padding-bottom:4px;
+	border-bottom:1px dashed #ddd;
+}
+.mytable {
+	width:100%;
+	border:1px solid #e5e5e5;
+	font-size:14px;
+	margin-bottom:8px;
+	box-shadow:1px 1px 1px #ddd;
+}
+.mytable tr {
+	line-height:25px;
+}
+.mytable tr th {
+	padding:0px 0px 0px 10px;
+}
+.icon-calendar {
+	font-size:18px;
+	color:#ee7700;
+}
+.icon-remove {
+	font-size:18px;
+	color:#cc0000;
+}
+.mytable tbody tr td input {
+	 width:50%;
+} 
+.mytable tbody tr td textarea {
+	 width:100%;
+} 
+.form-control {
+	border-radius:4px;
+	padding:0;
+	font-size:14px;
+}
+	.input-group .input-group-addon,.input-group input{ 
+		background:#f5f5f5; 
+		border:none; 
+		box-shadow:none;
+		color:#ee7700;
+	} 
+.btn1 {
+	text-align:center;
+	margin-bottom:10px;
+}
+.btn1 .btn-save {
+   	padding:6px 15px; 
+   	color:#ffffff;
+   	background:#3280fc; 
+   	border:#1970fc; 
+   	text-shadow:0 -1px rgba(0,0,0,0.2);
+   	font-size:18px; 
+   	font-weight:bold; 
+   	line-height:1.5;
+   	border: 1px solid transparent; 
+   	border-radius: 4px;
+} 
+.oldTable {
+	width:100%;
+	border:1px solid #e5e5e5;
+	font-size:13px;
+	margin-bottom:8px;
+	text-align:center;
+	box-shadow:1px 1px 1px #ddd;
+}
+.oldTable thead tr {
+	background:#e5e5e5;
+}
+.oldTable thead tr th {
+	text-align:center;
+	font-size:14px;
+	line-height:25px;
+}
+.oldTable tbody tr {
+	border-bottom:1px solid #e5e5e5;
+}

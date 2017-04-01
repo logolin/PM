@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"  
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:task="http://www.springframework.org/schema/task" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd        
+        http://www.springframework.org/schema/data/jpa
+        http://www.springframework.org/schema/data/jpa/spring-jpa.xsd    
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+	<context:annotation-config />
+	<!-- spring扫描注解的配置 -->
+	<context:component-scan base-package="com.projectmanager.service, com.projectmanager.controller"></context:component-scan>
+	<mvc:annotation-driven></mvc:annotation-driven>
+	<tx:annotation-driven/>
+	<aop:aspectj-autoproxy proxy-target-class="true" expose-proxy="true"/>
+	<jpa:repositories base-package="com.projectmanager.repository"></jpa:repositories>
+	<!-- 开启这个配置，spring才能识别@Scheduled注解 -->
+	<task:annotation-driven />
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url" value="jdbc:mysql://192.168.3.2:3306/swproject?useSSL=false"></property>
+		<property name="password" value="123456"></property>
+<!-- 		<property name="url" value="jdbc:mysql://localhost:3306/swproject?useSSL=false"></property> -->
+<!-- 		<property name="password" value=""></property> -->
+		<property name="username" value="root"></property>
+	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<constructor-arg ref="entityManagerFactory"></constructor-arg>
+	</bean>
+	
+	<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+		<property name="database" value="MYSQL"></property>
+		<property name="generateDdl" value="true"></property>
+		<property name="showSql" value="true"></property>
+	</bean>
+	
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="jpaVendorAdapter" ref="jpaVendorAdapter"></property>
+		<property name="packagesToScan" value="com.projectmanager.entity"></property>
+	</bean>
+	
+	<mvc:resources location="/resources/" mapping="/resources/**"></mvc:resources>
+	
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+		<property name="prefix" value="/WEB-INF/jsp/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+		
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    	<property name="maxUploadSize" value="100000"/>
+	</bean>	
+	
+	<bean id="loggingAspect" class="com.projectmanager.aspect.LoggingAspect"/>
+	
+		<!-- Shiro Filter -->  
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">  
+	    <property name="securityManager" ref="securityManager" />  
+	    <property name="loginUrl" value="/user_login" />  
+	    <property name="successUrl" value="/project/project_task_4" />  
+	    <property name="unauthorizedUrl" value="/error" />  
+		<property name="filterChainDefinitions">
+	        <value>
+	           <!--  /user_login = anon
+	            /wechat/** = anon
+	            
+ 	            /product/story_browse* = perms[product:browse]
+ 	            /product/story_batchCreate* = perms[story:batchCreate]
+ 	            /product/dynamic* = perms[product:dynamic]
+ 	            /product/plan* = perms[productplan:browse]
+ 	            /product/release_browse* = perms[release:browse]
+ 	            /product/release_create* = perms[story:create]
+ 	            
+ 	            
+ 	            /project/project_story* = perms[project:story]
+ 	            build
+ 	            /project/project_build* = perms[project:build]
+ 	            /project/build_create* = perms[build:create]
+ 	            /project/build_edit* = perms[build:edit]
+ 	            /project/build_delete* = perms[build:delete]
+ 	            /project/build_view* = perms[build:view]
+ 	            
+ 	            /project/project_bug* = perms[project:bug]
+ 	            /project/bug_batchAssignTo* = perms[bug:batchAssignTo]
+ 	            /project/project_testtask* = perms[project:testtask]
+ 	            /project/project_team* = perms[project:team]
+ 	            /project/team_deleted* = perms[project:unlinkMember]
+ 	            /project/project_managemember* = perms[project:manageMembers]
+ 	            /project/project_dynamic* = perms[project:dynamic]
+ 	            /project/project_doc* = perms[project:doc]
+ 	            /project/project_manageproducts* = perms[project:manageProducts]
+ 	            /project/project_index* = perms[project:index]
+ 	            /project/project_view* = perms[project:view]
+ 	            /project/project_all* = perms[project:all]
+ 	            /project/project_kanban* = perms[project:kanban]
+ 	            /project/project_burn* = perms[project:burn]
+ 	            /project/project_tree* = perms[project:tree]
+ 	            /project/project_group* = perms[project:grouptask]
+ 	            /project/project_importBug* = perms[project:importBug]
+ 	            /project/project_importTask* = perms[project:importtask]
+ 	            /project/projectstory_deleted* = perms[project:unlinkStory]
+ 	            项目操作
+ 	            /project/project_create* = perms[project:create]
+ 	            /project/project_edit* = perms[project:edit]
+ 	            /project/task_batchEdit* = perms[project:batchEdit]
+ 	            /project/projects_begin* = perms[project:start]
+ 	            /project/projects_delay* = perms[project:putoff]
+ 	            /project/projects_suspend* = perms[project:suspend]
+ 	            /project/projects_activate* = perms[project:activate]
+ 	            /project/projects_close* = perms[project:close]
+ 	            任务操作
+ 	            /project/task_edit* = perms[task:edit]
+ 	            /project/task_view* = perms[task:view]
+ 	            /project/task_assigned* = perms[task:assignTo]
+ 	            /project/task_begin_[0-9]+_[0-9]+_view = perms[task:start]
+ 	            /project/task_begin_[0-9]+_[0-9]+_restart = perms[task:restart]
+ 	            /project/task_recordEstimate* = perms[task:recordEstimate]
+ 	            /project/task_close_[0-9]+_[0-9]+_pause = perms[task:pause]
+ 	            /project/task_finish* = perms[task:finish]
+ 	            /project/task_cancel* = perms[task:cancel]
+ 	            /project/task_close_[0-9]+_[0-9]+_view = perms[task:close]
+ 	            /project/task_assigned* = perms[task:activate]
+ 	            /project/task_deleted* = perms[task:delete]
+ 	            /project/task_batchCreate* = perms[project:batchCreate]
+ 	            /project/task_batchEdit* = perms[project:batchEdit]
+ 	            
+ 	             视图权限
+	            /project/** = roles["project"]
+	            /product/** = roles["product"]
+	            /company/** = roles["company"]
+	            
+ 	            /** = authc
+	       		 -->
+	        </value>
+		</property>
+	</bean>
+	<!-- 添加securityManager定义  -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">  
+		<!-- 认证管理器 -->
+    	<property name="realm" ref="myRealm" />
+    	<!-- 缓存管理器 -->
+        <property name="cacheManager" ref="shiroCacheManager" />
+	</bean>
+	<!-- 认证管理器实现类 -->
+	<bean id="myRealm" class="com.projectmanager.shiro.UserRealm" />
+	<!-- <bean id="myRealm" class="com.projectmanager.shiro.UserRealm">
+  		验证方式 
+        <property name="credentialsMatcher">
+            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                <property name="hashAlgorithmName" value="MD5"/>
+            </bean>
+        </property>
+	</bean> -->
+	<!-- 缓存管理器实现类，这里用的是系统自带的 -->
+    <bean id="shiroCacheManager"  class="org.apache.shiro.cache.MemoryConstrainedCacheManager"/>
+    
+    <!-- 会话Cookie模板   -->
+	<bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">  
+	    <constructor-arg value="sid"/>  
+	    <property name="httpOnly" value="true"/>  
+	    <property name="maxAge" value="-1"/>  
+	</bean>  
+	<bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">  
+	    <constructor-arg value="rememberMe"/>  
+	    <property name="httpOnly" value="true"/>  
+	    <property name="maxAge" value="2592000"/><!-- 30天   -->
+	</bean>
+	<!-- rememberMe管理器   -->
+	<bean id="rememberMeManager"   
+	class="org.apache.shiro.web.mgt.CookieRememberMeManager">  
+	    <property name="cipherKey" value="  
+	#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}"/>  
+	     <property name="cookie" ref="rememberMeCookie"/>  
+	</bean>
+    <mvc:interceptors>  
+    	<!-- 定义拦截器   -->
+    	<mvc:interceptor>      
+        	<!-- 匹配的是url路径， 如果不配置或/**,将拦截所有的Controller  -->   
+        	<mvc:mapping path="/**" />    
+        	<!-- 不需要拦截的地址   -->
+        	<mvc:exclude-mapping path="/user_login" />  
+       		<bean class="com.projectmanager.shiro.SystemSessionInterceptor"></bean>      
+		</mvc:interceptor>  
+    </mvc:interceptors>
+</beans>

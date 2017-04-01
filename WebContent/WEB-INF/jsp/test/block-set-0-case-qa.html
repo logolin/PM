@@ -1,0 +1,80 @@
+
+<form method='post' id='blockForm' target='hiddenwin' class='form form-horizontal' action='/block-set-0-case-qa.html'>
+  <table class='table table-form'>
+    <tbody>
+      <tr>
+  <th class='w-100px'>鍖哄潡鍚嶇О</th>
+  <td><input type='text' name='title' id='title' value='' class='form-control' />
+</td>
+</tr>
+<tr>
+  <th>澶栬</th>
+  <td>
+    <div class='w-240px'>
+      <div class='input-group'>
+        <span class='input-group-addon'>瀹藉害</span>
+        <select name='grid' id='grid' class='form-control'>
+<option value='6'>1/2</option>
+<option value='4' selected='selected'>1/3</option>
+<option value='8'>2/3</option>
+<option value='3'>1/4</option>
+<option value='9'>3/4</option>
+<option value='12'>100%</option>
+</select>
+        <div class='input-group-btn block'>
+                    <button type='button' class="btn btn-default dropdown-toggle" data-toggle='dropdown'>
+            棰滆壊 <span class='caret'></span>
+          </button>
+          <input type='hidden' name='params[color]' id='params[color]' value='default'  />
+          <div class='dropdown-menu buttons pull-right'>
+            <li><button type='button' data-id='default' class='btn btn-block btn-default'>&nbsp;</li>
+            <li><button type='button' data-id='primary' class='btn btn-block btn-primary'>&nbsp;</li>
+            <li><button type='button' data-id='warning' class='btn btn-block btn-warning'>&nbsp;</li>
+            <li><button type='button' data-id='danger' class='btn btn-block btn-danger'>&nbsp;</li>
+            <li><button type='button' data-id='success' class='btn btn-block btn-success'>&nbsp;</li>
+            <li><button type='button' data-id='info' class='btn btn-block btn-info'>&nbsp;</li>
+          </div>
+        </div>
+      </div>
+    </div>
+  </td>
+</tr>
+            <tr>
+        <th>绫诲瀷</th>
+        <td>
+        <select name='params[type]' id='paramstype' class='form-control chosen' >
+<option value='assigntome'>鎸囨淳缁欐垜</option>
+<option value='openedbyme'>鐢辨垜鍒涘缓</option>
+</select>
+        </td>
+      </tr>
+            <tr>
+        <th>鏁伴噺</th>
+        <td>
+        <input type='text' name='params[num]' id='params[num]' value='20' class='form-control'  />
+        </td>
+      </tr>
+            <tr>
+        <th>鎺掑簭</th>
+        <td>
+        <select name='params[orderBy]' id='paramsorderBy' class='form-control chosen' >
+<option value='id_asc'>ID 閫掑</option>
+<option value='id_desc' selected='selected'>ID 閫掑噺</option>
+<option value='pri_asc'>浼樺厛绾ч€掑</option>
+<option value='pri_desc'>浼樺厛绾ч€掑噺</option>
+</select>
+        </td>
+      </tr>
+          </tbody>
+    <tfoot>
+      <tr><th></th><td> <button type='submit' id='submit' class='btn btn-primary'  data-loading='绋嶅€�...'>淇濆瓨</button></td></tr>
+    </tfoot>
+  </table>
+</form>
+<script>
+$(function()
+{
+    options = $('#moduleBlock').find("option").text();
+    if($('#title').val() == '') $('#title').val($('#moduleBlock').find("option:selected").text());
+})
+</script>

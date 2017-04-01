@@ -1,0 +1,1827 @@
+
+<!DOCTYPE html>
+<html lang='zh-cn'>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name="renderer" content="webkit"> 
+  <title>点觉CTM::Bug - 禅道</title>
+<script language='Javascript'>var config={"webRoot":"\/","appName":"","cookieLife":30,"requestType":"PATH_INFO","requestFix":"-","moduleVar":"m","methodVar":"f","viewVar":"t","defaultView":"html","themeRoot":"\/theme\/","currentModule":"bug","currentMethod":"browse","clientLang":"zh-cn","requiredFields":"","router":"\/index.php","save":"\u4fdd\u5b58","runMode":"","timeout":30000,"pingInterval":""};
+var lang={"submitting":"\u7a0d\u5019...","save":"\u4fdd\u5b58","timeout":"\u8fde\u63a5\u8d85\u65f6\uff0c\u8bf7\u68c0\u67e5\u7f51\u7edc\u73af\u5883\uff0c\u6216\u91cd\u8bd5\uff01"};
+
+</script>
+<script src='http://cdn.zentao.net/8.2.4/js/all.js?v=8.2.4' type='text/javascript'></script>
+<link rel='stylesheet' href='http://cdn.zentao.net/8.2.4/theme/default/zh-cn.default.css?v=8.2.4' type='text/css' media='screen' />
+<style>.ke-toolbar .ke-outline[data-name='savetemplate'] {display: none}
+#modulemenu .nav #dropMenu #searchResult .closed{text-decoration:none;}
+.closed, .closed a{color:gray; text-decoration:line-through;}
+.resolved, .resolved a{color:#8EC21F; text-decoration:none;}
+.tree .closed, .tree .closed a{color:#003366; text-decoration:none;}
+.confirm0 {color:gray;  font-size:9px}
+.confirm1 {color:green; font-size:9px}
+.red{color:red;}
+
+.dropdown-menu.with-search {padding-bottom: 34px; min-width: 150px; overflow: hidden; max-height: 305px}
+.dropdown-menu > .menu-search {padding: 0; position: absolute; z-index: 0; bottom: 0; left: 0; right: 0}
+.dropdown-menu > .menu-search .input-group {width:100%;}
+.dropdown-menu > .menu-search .input-group-addon {position: absolute; right: 10px; top: 0; z-index: 10; background: none; border: none; color: #666}
+</style><link rel='icon' href='/favicon.ico' type='image/x-icon' />
+<link rel='shortcut icon' href='/favicon.ico' type='image/x-icon' />
+<!--[if lt IE 9]>
+<script src='http://cdn.zentao.net/8.2.4/js/html5shiv/min.js?v=8.2.4' type='text/javascript'></script>
+<script src='http://cdn.zentao.net/8.2.4/js/respond/min.js?v=8.2.4' type='text/javascript'></script>
+<![endif]-->
+<!--[if lt IE 10]>
+<script src='http://cdn.zentao.net/8.2.4/js/jquery/placeholder/min.js?v=8.2.4' type='text/javascript'></script>
+<![endif]-->
+</head>
+<body>
+<script>
+var noResultsMatch       = '没有匹配结果';
+var chooseUsersToMail    = '选择要发信通知的用户...';
+var defaultChosenOptions = {no_results_text: noResultsMatch, width:'100%', allow_single_deselect: true, disable_search_threshold: 1, placeholder_text_single: ' ', placeholder_text_multiple: ' ', search_contains: true};
+$(document).ready(function()
+{
+    $("#mailto").attr('data-placeholder', chooseUsersToMail);
+    $("#mailto, .chosen, #productID").chosen(defaultChosenOptions).on('chosen:showing_dropdown', function()
+    {
+        var $this = $(this);
+        var $chosen = $this.next('.chosen-container').removeClass('chosen-up');
+        var $drop = $chosen.find('.chosen-drop');
+        $chosen.toggleClass('chosen-up', $drop.height() + $drop.offset().top - $(document).scrollTop() > $(window).height());
+    });
+});
+</script>
+<header id='header'>
+  
+  <nav id='mainmenu'>
+    <ul class='nav'>
+<li  data-id='my'><a href='/my/' ><i class="icon-home"></i><span> 我的地盘</span></a></li>
+<li  data-id='product'><a href='/product/' >产品</a></li>
+<li class='active' data-id='qa'><a href='/qa/' class='active'>测试</a></li>
+<li  data-id='project'><a href='/project/' >项目</a></li>
+<li  data-id='doc'><a href='/doc/' >文档</a></li>
+<li  data-id='report'><a href='/report/' >统计</a></li>
+<li  data-id='admin'><a href='/admin/' >后台</a></li>
+<li  data-id='company'><a href='/company/' >组织</a></li>
+<li class='custom-item'><a href='/custom-ajaxMenu-bug-browse.html?onlybody=yes' data-toggle='modal' data-type='iframe' title='自定义导航' data-icon='cog' data-width='80%'><i class='icon icon-cog'></i></a></li></ul>
+<div class='input-group input-group-sm' id='searchbox'><div class='input-group-btn' id='typeSelector'><button type='button' class='btn dropdown-toggle' data-toggle='dropdown'><span id='searchTypeName'>Bug</span> <span class='caret'></span></button><input type='hidden' name='searchType' id='searchType' value='bug'  />
+<ul class='dropdown-menu'><li><a href='javascript:;' data-value='bug'>Bug</a></li><li><a href='javascript:;' data-value='story'>需求</a></li><li><a href='javascript:;' data-value='task'>任务</a></li><li><a href='javascript:;' data-value='testcase'>用例</a></li><li><a href='javascript:;' data-value='project'>项目</a></li><li><a href='javascript:;' data-value='product'>产品</a></li><li><a href='javascript:;' data-value='user'>用户</a></li><li><a href='javascript:;' data-value='build'>版本</a></li><li><a href='javascript:;' data-value='release'>发布</a></li><li><a href='javascript:;' data-value='productplan'>产品计划</a></li><li><a href='javascript:;' data-value='testtask'>测试版本</a></li><li><a href='javascript:;' data-value='doc'>文档</a></li></ul></div><input type='text' name='searchQuery' id='searchQuery' value='' onclick='this.value=""' onkeydown='if(event.keyCode==13) shortcut()' class='form-control' placeholder='编号(ctrl+g)' />
+<div id='objectSwitcher' class='input-group-btn'><a href='javascript:shortcut();' class='btn'>GO! </a></div></div>
+  </nav>
+  <nav id="modulemenu">
+    <ul class='nav'>
+<li data-id='product'><a id='currentItem' href="javascript:showDropMenu('product', '21', 'bug', 'browse', '')">点觉CTM <span class='icon-caret-down'></span></a><div id='dropMenu'><i class='icon icon-spin icon-spinner'></i></div></li>
+<li class='right ' data-id='index'><a href='/qa-index-no-21.html' ><i class='icon-home'></i>测试主页</a>
+</li>
+<li class=' active' data-id='bug'><a href='/bug-browse-21.html' >Bug</a>
+</li>
+<li class=' ' data-id='testcase'><a href='/testcase-browse-21.html' >用例</a>
+</li>
+<li class=' ' data-id='testtask'><a href='/testtask-browse-21.html' >版本</a>
+</li>
+</ul>
+  </nav>
+</header>
+
+<div id='wrap'>
+  <div class='outer'>
+<style>
+.datatable-menu-wrapper {position: relative;}
+.datatable-menu {position: absolute; right: 0; top: 0; border: 1px solid #ddd; background: #fff; z-index: 999;}
+.datatable-menu > .btn {padding: 5px 6px; outline: none; color: #4d90fe!important}
+.datatable-menu > .btn:hover {color: #002563!important}
+.datatable + .datatable-menu-wrapper .datatable-menu > .btn {padding: 5px 6px 6px;}
+</style>
+<script>
+$(function()
+{
+    var table = $('#wrap > .outer > .main > form > table').first();
+    if($(table).length > 0)
+    {
+        var $dropdown = $("<div class='datatable-menu-wrapper'><div class='dropdown datatable-menu'><button type='button' class='btn btn-link' data-toggle='dropdown'><i class='icon-cogs'></i> <span class='caret'></span></button></div></div>");
+        var $dropmenu = $("<ul class='dropdown-menu pull-right'></ul>");
+        $dropmenu.append("<li><a href='javascript:;' id='switchToDatatable'>切换到高级表格</a></li>");
+        $dropdown.children('.dropdown').append($dropmenu);
+        $(table).before($dropdown);
+                $('.side .side-body .panel-body .tree').parent().append("<div class='text-right'><a href='javascript:;' data-toggle='showModuleModal'>列表页是否显示模块名</a></div>");
+                $("a[data-toggle='showModuleModal']").click(function(){$('#showModuleModal').modal('show')});
+    }
+
+    $('#switchToDatatable').click(function()
+    {
+        saveDatatableConfig('mode', 'datatable', true)
+    });
+
+    $('#setShowModule').click(function()
+    {
+        saveDatatableConfig('showModule', $('#showModuleModal input[name="showModule"]:checked').val(), true)
+    });
+
+    function saveDatatableConfig(name, value, reload)
+    {
+        if('demo' == 'guest') return;
+        datatableId = 'bugBrowse';
+        if(typeof value === 'object') value = JSON.stringify(value);
+        $.ajax(
+        {
+            type: "POST",
+            dataType: 'json',
+            data: {target: datatableId, name: name, value: value},
+            success:function(){if(reload) window.location.reload();},
+            url: '/datatable-ajaxSave.html'
+        });
+    };
+});
+</script>
+<div class="modal fade" id="showModuleModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog w-600px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title"><i class="icon-cog"></i> 列表页是否显示模块名</h4>
+      </div>
+      <div class="modal-body">
+        <form class='form-condensed' method='post' target='hiddenwin' action='/datatable-ajaxSave.html'>
+          <p>
+            <span><label class='radio-inline'><input type='radio' name='showModule' value='0'  checked ='checked' id='showModule0' /> 不显示</label><label class='radio-inline'><input type='radio' name='showModule' value='base'  id='showModulebase' /> 只显示一级模块</label><label class='radio-inline'><input type='radio' name='showModule' value='end'  checked ='checked' id='showModuleend' /> 只显示最后一级模块</label></span>
+            <button type='button' id='setShowModule' class='btn btn-primary'>保存</button>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script language='Javascript'>browseType = "unclosed";</script>
+<script language='Javascript'>moduleID = 0;</script>
+<script language='Javascript'>bugBrowseType = "unclosed";</script>
+<div id='featurebar'>
+  <ul class='nav'>
+    <li>
+      <div class='label-angle'>
+        所有模块      </div>
+    </li>
+                <li id='unclosedTab'><a href='/bug-browse-21-0-unclosed-0.html' >未关闭</a>
+</li>
+                    <li id='allTab'><a href='/bug-browse-21-0-all-0.html' >所有</a>
+</li>
+                    <li id='assigntomeTab'><a href='/bug-browse-21-0-assigntome-0.html' >指派给我</a>
+</li>
+                    <li id='openedbymeTab'><a href='/bug-browse-21-0-openedbyme-0.html' >由我创建</a>
+</li>
+                    <li id='resolvedbymeTab'><a href='/bug-browse-21-0-resolvedbyme-0.html' >由我解决</a>
+</li>
+                    <li id='unconfirmedTab'><a href='/bug-browse-21-0-unconfirmed-0.html' >未确认</a>
+</li>
+                    <li id='assigntonullTab'><a href='/bug-browse-21-0-assigntonull-0.html' >未指派</a>
+</li>
+                    <li id='unresolvedTab'><a href='/bug-browse-21-0-unresolved-0.html' >未解决</a>
+</li>
+                    <li id='toclosedTab'><a href='/bug-browse-21-0-toclosed-0.html' >待关闭</a>
+</li>
+                    <li id='longlifebugsTab'><a href='/bug-browse-21-0-longlifebugs-0.html' >久未处理</a>
+</li>
+                    <li id='postponedbugsTab'><a href='/bug-browse-21-0-postponedbugs-0.html' >被延期</a>
+</li>
+                    <li id='needconfirmTab'><a href='/bug-browse-21-0-needconfirm-0.html' >需求变动</a>
+</li>
+            <li id='bysearchTab'><a href='#'><i class='icon-search icon'></i>&nbsp;搜索</a></li>
+  </ul>
+  <div class='actions'>
+    <div class='btn-group'>
+      <div class='btn-group'>
+        <button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown'>
+          <i class='icon-download-alt'></i> 导出          <span class='caret'></span>
+        </button>
+        <ul class='dropdown-menu' id='exportActionMenu'>
+          <li><a href='/bug-export-21-status_asc.html' class='export'>导出数据</a>
+</li>        </ul>
+      </div>
+      <div class='btn-group'>
+        <a href='/bug-report-21-unclosed-0.html' class='btn ' ><i class='icon-common-report icon-bar-chart'></i> 报表</a>
+      </div>
+    </div>
+    <div class='btn-group'>
+      <a href='/bug-batchCreate-21-0-0-0.html' class='btn ' ><i class='icon-bug-batchCreate icon-plus-sign'></i> 批量添加</a>
+<a href='/bug-create-21-0-moduleID=0.html' class='btn btn-bug-create' ><i class='icon-bug-create icon-plus'></i> 提Bug</a>
+    </div>
+  </div>
+  <div id="querybox" class=""><script language="javascript">
+$(function()
+{
+    $.fn.fixedDate = function()
+    {
+        return $(this).each(function()
+        {
+            var $this = $(this);
+            if($this.offset().top + 200 > $(document.body).height())
+            {
+                $this.attr('data-picker-position', 'top-right');
+            }
+
+            if($this.val() == '0000-00-00')
+            {
+                $this.focus(function(){if($this.val() == '0000-00-00') $this.val('').datetimepicker('update');}).blur(function(){if($this.val() == '') $this.val('0000-00-00')});
+            }
+        });
+    };
+
+    var options = 
+    {
+        language: 'zh-cn',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        showMeridian: 1,
+        format: 'yyyy-mm-dd hh:ii',
+        startDate: '1970-1-1'
+    }
+
+    $('.form-datetime').fixedDate().datetimepicker(options);
+    $('.form-date').fixedDate().datetimepicker($.extend(options, {minView: 2, format: 'yyyy-mm-dd'}));
+    $('.form-time').fixedDate().datetimepicker($.extend(options, {startView: 1, minView: 0, maxView: 1, format: 'hh:ii'}));
+
+    $('.datepicker-wrapper').click(function()
+    {
+        $(this).find('.form-date, .form-datetime, .form-time').datetimepicker('show').focus();
+    });
+
+    window.datepickerOptions = options;
+});
+</script>
+<script>
+var noResultsMatch       = '没有匹配结果';
+var chooseUsersToMail    = '选择要发信通知的用户...';
+var defaultChosenOptions = {no_results_text: noResultsMatch, width:'100%', allow_single_deselect: true, disable_search_threshold: 1, placeholder_text_single: ' ', placeholder_text_multiple: ' ', search_contains: true};
+$(document).ready(function()
+{
+    $("#mailto").attr('data-placeholder', chooseUsersToMail);
+    $("#mailto, .chosen, #productID").chosen(defaultChosenOptions).on('chosen:showing_dropdown', function()
+    {
+        var $this = $(this);
+        var $chosen = $this.next('.chosen-container').removeClass('chosen-up');
+        var $drop = $chosen.find('.chosen-drop');
+        $chosen.toggleClass('chosen-up', $drop.height() + $drop.offset().top - $(document).scrollTop() > $(window).height());
+    });
+});
+</script>
+<style>
+#bysearchTab {transition: all .3s cubic-bezier(.175, .885, .32, 1);}
+#bysearchTab.active {background: #fff; padding: 2px 10px 3px; padding-bottom: 2px\0; border: 1px solid #ddd; border-bottom: none}
+#bysearchTab.active:hover {background: #ddd}
+#bysearchTab.active > a:after {font-size: 14px; font-family: ZenIcon; content: ' \e6e2'; color: #808080}
+#featurebar .nav {position: relative;}
+#featurebar .nav .dropdown .dropdown-menu{z-index:1010;}
+#querybox form{padding-right: 40px;}
+#querybox .form-control {padding: 2px}
+@-moz-document url-prefix() {#querybox .form-control {padding: 6px 2px;}}
+#querybox .table {border: none}
+#querybox .table-form td {border: none}
+#querybox .btn {padding: 5px 8px;}
+#querybox .table-form td td {padding: 2px;}
+#querybox .table .table {margin: 0;}
+.outer #querybox .table tr > th:first-child, .outer #querybox .table tr > td:first-child,
+.outer #querybox .table tr > th:last-child, .outer #querybox .table tr > td:last-child,
+.outer #querybox .table tbody > tr:last-child td {padding: 2px}
+#querybox a:hover {text-decoration: none;}
+
+#selectPeriod {padding: 4px; height: 197px; min-width: 120px}
+#selectPeriod > .dropdown-header {background: #f1f1f1; display: block; text-align: center; padding: 4px 0; line-height: 20px; margin-bottom: 5px; font-size: 14px; border-radius: 2px; color: #333; font-size: 12px}
+#selectPeriod li > a {padding: 4px 15px; border-radius: 2px}
+
+#moreOrLite {position: absolute; right: 0; top: 0; bottom: 0}
+#searchlite, #searchmore {color: #4d90fe; width: 50px; padding: 0 5px; line-height: 60px; text-align: center;}
+#searchlite {line-height: 127px}
+#searchform.showmore #searchmore, #searchform #searchlite {display: none;}
+#searchform.showmore #searchlite, #searchform #searchmore {display: inline-block;}
+#searchform .chosen-container .chosen-drop{min-width: 300px;}
+#searchform .chosen-container .chosen-drop ul.chosen-results li{white-space:nowrap}
+#searchmore > i, #searchlite > i {font-size: 28px;}
+#searchmore > i {position: relative; top: 4px;}
+#searchmore:hover, #searchlite:hover {color: #145CCD; background: #e5e5e5}
+
+#groupAndOr {display: inline-block;}
+
+.outer > #querybox {margin: -20px -20px 20px; border-top: none; border-bottom: 1px solid #ddd}
+</style>
+<script language="Javascript">
+var dtOptions = 
+{
+    language: 'zh-cn',
+    weekStart: 1,
+    todayBtn:  1,
+    autoclose: 1,
+    todayHighlight: 1,
+    startView: 2,
+    minView: 2,
+    forceParse: 0,
+    format: 'yyyy-mm-dd'
+};
+
+$(function()
+{
+    $('.date').each(function()
+    {
+        time = $(this).val();
+        if(!isNaN(time) && time != ''){
+            var Y = time.substring(0, 4);
+            var m = time.substring(4, 6);
+            var d = time.substring(6, 8);
+            time = Y + '-' + m + '-' + d;
+            $('.date').val(time);
+        }
+    });
+    setDateField('.date');
+});
+
+var bugparams = {"title":{"operator":"include","control":"input","values":""},"keywords":{"operator":"include","control":"input","values":""},"steps":{"operator":"include","control":"input","values":""},"assignedTo":{"operator":"=","control":"select","values":{"":"","admin":"A:admin","demo":"D:Demo","dev1":"D:\u5f00\u53d1\u7532","dev2":"D:\u5f00\u53d1\u4e59","dev3":"D:\u5f00\u53d1\u4e19","feedback":"F:Feedback","productManager":"P:\u4ea7\u54c1\u7ecf\u7406","projectManager":"P:\u9879\u76ee\u7ecf\u7406","tester1":"T:\u6d4b\u8bd5\u7532","tester2":"T:\u6d4b\u8bd5\u4e59","tester3":"T:\u6d4b\u8bd5\u4e19","testManager":"T:\u6d4b\u8bd5\u7ecf\u7406","closed":"Closed","$@me":"\u81ea\u5df1","null":"\u7a7a"}},"resolvedBy":{"operator":"=","control":"select","values":{"":"","admin":"A:admin","demo":"D:Demo","dev1":"D:\u5f00\u53d1\u7532","dev2":"D:\u5f00\u53d1\u4e59","dev3":"D:\u5f00\u53d1\u4e19","feedback":"F:Feedback","productManager":"P:\u4ea7\u54c1\u7ecf\u7406","projectManager":"P:\u9879\u76ee\u7ecf\u7406","tester1":"T:\u6d4b\u8bd5\u7532","tester2":"T:\u6d4b\u8bd5\u4e59","tester3":"T:\u6d4b\u8bd5\u4e19","testManager":"T:\u6d4b\u8bd5\u7ecf\u7406","closed":"Closed","$@me":"\u81ea\u5df1","null":"\u7a7a"}},"status":{"operator":"=","control":"select","values":{"":"","active":"\u6fc0\u6d3b","resolved":"\u5df2\u89e3\u51b3","closed":"\u5df2\u5173\u95ed","null":"\u7a7a"}},"confirmed":{"operator":"=","control":"select","values":{"ZERO":"\u672a\u786e\u8ba4","1":"\u5df2\u786e\u8ba4"}},"product":{"operator":"=","control":"select","values":{"21":"\u70b9\u89c9CTM","all":"\u6240\u6709\u4ea7\u54c1","null":"\u7a7a"}},"plan":{"operator":"=","control":"select","values":{"":"","null":"\u7a7a"}},"module":{"operator":"belong","control":"select","values":{"ZERO":"\/"}},"project":{"operator":"=","control":"select","values":{"":"","22":"33332555","null":"\u7a7a"}},"severity":{"operator":"=","control":"select","values":{"3":"\u4e00\u822c","1":"\u81f4\u547d","2":"\u4e25\u91cd","4":"\u666e\u901a","5":"5","7":"7","6":"\u4e0d\u4e25\u91cd","null":"\u7a7a"}},"pri":{"operator":"=","control":"select","values":{"0":"","7":"7","3":"\u4e2d","1":"\u7d27\u6025","2":"\u9ad8","4":"\u4f4e","5":"5","6":"6","null":"\u7a7a"}},"type":{"operator":"=","control":"select","values":{"":"","codeerror":"\u4ee3\u7801\u9519\u8bef","interface":"\u754c\u9762\u4f18\u5316","designchange":"\u8bbe\u8ba1\u53d8\u66f4","newfeature":"\u65b0\u589e\u9700\u6c42","designdefect":"\u8bbe\u8ba1\u7f3a\u9677","config":"\u914d\u7f6e\u76f8\u5173","install":"\u5b89\u88c5\u90e8\u7f72","security":"\u5b89\u5168\u76f8\u5173","performance":"\u6027\u80fd\u95ee\u9898","standard":"\u6807\u51c6\u89c4\u8303","automation":"\u6d4b\u8bd5\u811a\u672c","trackthings":"\u4e8b\u52a1\u8ddf\u8e2a","others":"\u5176\u4ed6","null":"\u7a7a"}},"os":{"operator":"=","control":"select","values":{"":"","all":"\u5168\u90e8","windows":"Windows","win8":"Windows 8","win7":"Windows 7","vista":"Windows Vista","winxp":"Windows XP","win2012":"Windows 2012","win2008":"Windows 2008","win2003":"Windows 2003","win2000":"Windows 2000","android":"Android","ios":"IOS","wp8":"WP8","wp7":"WP7","symbian":"Symbian","linux":"Linux","freebsd":"FreeBSD","osx":"OS X","unix":"Unix","others":"\u5176\u4ed6","null":"\u7a7a"}},"browser":{"operator":"=","control":"select","values":{"":"","all":"\u5168\u90e8","ie":"IE\u7cfb\u5217","ie11":"IE11","ie10":"IE10","ie9":"IE9","ie8":"IE8","ie7":"IE7","ie6":"IE6","chrome":"chrome","firefox":"firefox\u7cfb\u5217","firefox4":"firefox4","firefox3":"firefox3","firefox2":"firefox2","opera":"opera\u7cfb\u5217","oprea11":"opera11","oprea10":"opera10","opera9":"opera9","safari":"safari","maxthon":"\u50b2\u6e38","uc":"UC","other":"\u5176\u4ed6","null":"\u7a7a"}},"resolution":{"operator":"=","control":"select","values":{"":"","bydesign":"\u8bbe\u8ba1\u5982\u6b64","duplicate":"\u91cd\u590dBug","external":"\u5916\u90e8\u539f\u56e0","fixed":"\u5df2\u89e3\u51b3","notrepro":"\u65e0\u6cd5\u91cd\u73b0","postponed":"\u5ef6\u671f\u5904\u7406","willnotfix":"\u4e0d\u4e88\u89e3\u51b3","tostory":"\u8f6c\u4e3a\u9700\u6c42","null":"\u7a7a"}},"activatedCount":{"operator":">=","control":"input","values":""},"toTask":{"operator":"=","control":"input","values":""},"toStory":{"operator":"=","control":"input","values":""},"openedBy":{"operator":"=","control":"select","values":{"":"","admin":"A:admin","demo":"D:Demo","dev1":"D:\u5f00\u53d1\u7532","dev2":"D:\u5f00\u53d1\u4e59","dev3":"D:\u5f00\u53d1\u4e19","feedback":"F:Feedback","productManager":"P:\u4ea7\u54c1\u7ecf\u7406","projectManager":"P:\u9879\u76ee\u7ecf\u7406","tester1":"T:\u6d4b\u8bd5\u7532","tester2":"T:\u6d4b\u8bd5\u4e59","tester3":"T:\u6d4b\u8bd5\u4e19","testManager":"T:\u6d4b\u8bd5\u7ecf\u7406","closed":"Closed","$@me":"\u81ea\u5df1","null":"\u7a7a"}},"closedBy":{"operator":"=","control":"select","values":{"":"","admin":"A:admin","demo":"D:Demo","dev1":"D:\u5f00\u53d1\u7532","dev2":"D:\u5f00\u53d1\u4e59","dev3":"D:\u5f00\u53d1\u4e19","feedback":"F:Feedback","productManager":"P:\u4ea7\u54c1\u7ecf\u7406","projectManager":"P:\u9879\u76ee\u7ecf\u7406","tester1":"T:\u6d4b\u8bd5\u7532","tester2":"T:\u6d4b\u8bd5\u4e59","tester3":"T:\u6d4b\u8bd5\u4e19","testManager":"T:\u6d4b\u8bd5\u7ecf\u7406","closed":"Closed","$@me":"\u81ea\u5df1","null":"\u7a7a"}},"lastEditedBy":{"operator":"=","control":"select","values":{"":"","admin":"A:admin","demo":"D:Demo","dev1":"D:\u5f00\u53d1\u7532","dev2":"D:\u5f00\u53d1\u4e59","dev3":"D:\u5f00\u53d1\u4e19","feedback":"F:Feedback","productManager":"P:\u4ea7\u54c1\u7ecf\u7406","projectManager":"P:\u9879\u76ee\u7ecf\u7406","tester1":"T:\u6d4b\u8bd5\u7532","tester2":"T:\u6d4b\u8bd5\u4e59","tester3":"T:\u6d4b\u8bd5\u4e19","testManager":"T:\u6d4b\u8bd5\u7ecf\u7406","closed":"Closed","$@me":"\u81ea\u5df1","null":"\u7a7a"}},"mailto":{"operator":"=","control":"select","values":{"":"","admin":"A:admin","demo":"D:Demo","dev1":"D:\u5f00\u53d1\u7532","dev2":"D:\u5f00\u53d1\u4e59","dev3":"D:\u5f00\u53d1\u4e19","feedback":"F:Feedback","productManager":"P:\u4ea7\u54c1\u7ecf\u7406","projectManager":"P:\u9879\u76ee\u7ecf\u7406","tester1":"T:\u6d4b\u8bd5\u7532","tester2":"T:\u6d4b\u8bd5\u4e59","tester3":"T:\u6d4b\u8bd5\u4e19","testManager":"T:\u6d4b\u8bd5\u7ecf\u7406","closed":"Closed","$@me":"\u81ea\u5df1","null":"\u7a7a"}},"openedBuild":{"operator":"include","control":"select","values":{"":"","trunk":"Trunk","null":"\u7a7a"}},"resolvedBuild":{"operator":"=","control":"select","values":{"":"","trunk":"Trunk","null":"\u7a7a"}},"openedDate":{"operator":">=","control":"input","values":"","class":"date"},"assignedDate":{"operator":">=","control":"input","values":"","class":"date"},"resolvedDate":{"operator":">=","control":"input","values":"","class":"date"},"closedDate":{"operator":">=","control":"input","values":"","class":"date"},"lastEditedDate":{"operator":">=","control":"input","values":"","class":"date"},"id":{"operator":"=","control":"input","values":""}};
+var groupItems    = 3;
+var setQueryTitle = '请输入查询标题（保存之前请先查询）：';
+var module        = 'bug';
+var actionURL     = '/bug-browse-21-0-bySearch-myQueryID.html';
+
+/**
+ * Set date field
+ * 
+ * @param  string $query 
+ * @return void
+ */
+function setDateField(query, fieldNO)
+{
+    var $period = $('#selectPeriod');
+    if(!$period.length)
+    {
+        $period = $("<ul id='selectPeriod' class='dropdown-menu'><li class='dropdown-header'>或  选择时间段</li><li><a href='#lastWeek'>上周</a></li><li><a href='#thisWeek'>本周</a></li><li><a href='#yesterday'>昨天</a></li><li><a href='#today'>今天</a></li><li><a href='#lastMonth'>上月</a></li><li><a href='#thisMonth'>本月</a></li></ul>").appendTo('body');
+        $period.find('li > a').click(function(event)
+        {
+            var target = $(query).closest('form').find('#' + $period.data('target'));
+            if(target.length)
+            {
+                target.val($(this).attr('href').replace('#', '$'));
+                $(query).closest('form').find('#operator' + $period.data('fieldNO')).val('between');
+                $period.hide();
+            }
+            event.stopPropagation();
+            return false;
+        });
+    }
+    $(query).datetimepicker('remove').datetimepicker(dtOptions).on('show', function(e)
+    {
+        var $e = $(e.target);
+        var ePos = $e.offset();
+        $period.css({'left': ePos.left + 175, 'top': ePos.top + 29, 'min-height': $('.datetimepicker').outerHeight()}).show().data('target', $e.attr('id')).data('fieldNO', fieldNO).find('li.active').removeClass('active');
+        $period.find("li > a[href='" + $e.val().replace('$', '#') + "']").closest('li').addClass('active');
+    }).on('changeDate', function()
+    {
+        var opt = $(query).closest('form').find('#operator' + $period.data('fieldNO'));
+        if(opt.val() == 'between') opt.val('<=');
+        $period.hide();
+    }).on('hide', function(){setTimeout(function(){$period.hide();}, 200);});
+}
+
+/**
+ * When the value of the fields select changed, set the operator and value of the new field.
+ * 
+ * @param  string $obj 
+ * @param  int    $fieldNO 
+ * @access public
+ * @return void
+ */
+function setField(obj, fieldNO, moduleparams)
+{
+    var params    = moduleparams;
+    var fieldName = $(obj).val();
+    $(obj).closest('form').find('#operator' + fieldNO).val(params[fieldName]['operator']);   // Set the operator according the param setting.
+    $(obj).closest('form').find('#valueBox' + fieldNO).html($(obj).closest('form').find('#box' + fieldName).children().clone());
+    $(obj).closest('form').find('#valueBox' + fieldNO).children().attr({name : 'value' + fieldNO, id : 'value' + fieldNO});
+
+    if(typeof(params[fieldName]['class']) != undefined && params[fieldName]['class'] == 'date')
+    {
+        setDateField($(obj).closest('form').find("#value" + fieldNO), fieldNO);
+        $(obj).closest('form').find("#value" + fieldNO).addClass('date');   // Shortcut the width of the datepicker to make sure align with others. 
+        var groupItems = 3;
+        var maxNO      = 2 * groupItems;
+        var nextNO     = fieldNO > groupItems ? fieldNO - groupItems + 1 : fieldNO + groupItems;
+        var nextValue  = $(obj).closest('form').find('#value' + nextNO).val();
+        if(nextNO <= maxNO && fieldNO < maxNO && (nextValue == '' || nextValue == 0))
+        {
+            $(obj).closest('form').find('#field' + nextNO).val($(obj).closest('form').find('#field' + fieldNO).val());
+            $(obj).closest('form').find('#operator' + nextNO).val('<=');
+            $(obj).closest('form').find('#valueBox' + nextNO).html($(obj).closest('form').find('#box' + fieldName).children().clone());
+            $(obj).closest('form').find('#valueBox' + nextNO).children().attr({name : 'value' + nextNO, id : 'value' + nextNO});
+            setDateField($(obj).closest('form').find("#value" + nextNO), nextNO);
+            $(obj).closest('form').find("#value" + nextNO).addClass('date');
+        }
+    }
+    else if(params[fieldName]['control'] == 'select')
+    {
+        $(obj).closest('form').find("#value" + fieldNO).chosen(defaultChosenOptions).on('chosen:showing_dropdown', function()
+        {
+            var $this = $(this);
+            var $chosen = $this.next('.chosen-container').removeClass('chosen-up');
+            var $drop = $chosen.find('.chosen-drop');
+            $chosen.toggleClass('chosen-up', $drop.height() + $drop.offset().top - $(document).scrollTop() > $(window).height());
+        });
+    }
+}
+
+/**
+ * Reset forms.
+ * 
+ * @access public
+ * @return void
+ */
+function resetForm(obj)
+{
+    for(i = 1; i <= groupItems * 2; i ++)
+    {
+        $(obj).closest('form').find('#value' + i).val('').trigger('chosen:updated');
+    }
+}
+
+/**
+ * Show more fields.
+ * 
+ * @access public
+ * @return void
+ */
+function showmore(obj)
+{
+    for(i = 1; i <= groupItems * 2; i ++)
+    {
+        if(i != 1 && i != groupItems + 1 )
+        {
+            $(obj).closest('form').find('#searchbox' + i).removeClass('hidden');
+        }
+    }
+
+    $(obj).closest('form').find('#formType').val('more');
+    $(obj).closest('form').addClass('showmore');
+}
+
+/**
+ * Show lite search form.
+ * 
+ * @access public
+ * @return void
+ */
+function showlite(obj)
+{
+    for(i = 1; i <= groupItems * 2; i ++)
+    {
+        if(i != 1 && i != groupItems + 1)
+        {
+            $(obj).closest('form').find('#value' + i).val('');
+            $(obj).closest('form').find('#searchbox' + i).addClass('hidden');
+        }
+    }
+    $(obj).closest('form').removeClass('showmore');
+    $(obj).closest('form').find('#formType').val('lite');
+}
+
+/**
+ * loadQueries.
+ * 
+ * @param  queryID $queryID 
+ * @access public
+ * @return void
+ */
+function loadQueries(queryID)
+{
+    $('#queryBox').load(createLink('search', 'ajaxGetQuery', 'module=' + module + '&queryID=' + queryID));
+}
+
+/**
+ * Execute a query.
+ * 
+ * @param  int    $queryID 
+ * @access public
+ * @return void
+ */
+function executeQuery(queryID)
+{
+    if(!queryID) return;
+    location.href = actionURL.replace('myQueryID', queryID);
+}
+
+/**
+ * Delete a query.
+ * 
+ * @access public
+ * @return void
+ */
+function deleteQuery()
+{
+    queryID = $('#queryID').val();
+    if(!queryID) return;
+    deleteQueryLink = createLink('search', 'deleteQuery', 'queryID=' + queryID);
+    $.get(deleteQueryLink, function(data)
+    {
+        if(data == 'success') $('#queryBox').load(createLink('search', 'ajaxGetQuery', 'module=' + module));
+    });
+}
+</script>
+
+<form method="post" action="/search-buildQuery.html" target="hiddenwin" id="searchform" class="form-condensed showmore">
+<div class="hidden">
+<span id="boxtitle"><input type="text" name="fieldtitle" id="fieldtitle" value="" class="form-control searchInput">
+</span><span id="boxkeywords"><input type="text" name="fieldkeywords" id="fieldkeywords" value="" class="form-control searchInput">
+</span><span id="boxsteps"><input type="text" name="fieldsteps" id="fieldsteps" value="" class="form-control searchInput">
+</span><span id="boxassignedTo"><select name="fieldassignedTo" id="fieldassignedTo" class="form-control searchSelect">
+<option value="" selected="selected"></option>
+<option value="admin">A:admin</option>
+<option value="demo">D:Demo</option>
+<option value="dev1">D:开发甲</option>
+<option value="dev2">D:开发乙</option>
+<option value="dev3">D:开发丙</option>
+<option value="feedback">F:Feedback</option>
+<option value="productManager">P:产品经理</option>
+<option value="projectManager">P:项目经理</option>
+<option value="tester1">T:测试甲</option>
+<option value="tester2">T:测试乙</option>
+<option value="tester3">T:测试丙</option>
+<option value="testManager">T:测试经理</option>
+<option value="closed">Closed</option>
+<option value="$@me">自己</option>
+<option value="null">空</option>
+</select>
+</span><span id="boxresolvedBy"><select name="fieldresolvedBy" id="fieldresolvedBy" class="form-control searchSelect">
+<option value="" selected="selected"></option>
+<option value="admin">A:admin</option>
+<option value="demo">D:Demo</option>
+<option value="dev1">D:开发甲</option>
+<option value="dev2">D:开发乙</option>
+<option value="dev3">D:开发丙</option>
+<option value="feedback">F:Feedback</option>
+<option value="productManager">P:产品经理</option>
+<option value="projectManager">P:项目经理</option>
+<option value="tester1">T:测试甲</option>
+<option value="tester2">T:测试乙</option>
+<option value="tester3">T:测试丙</option>
+<option value="testManager">T:测试经理</option>
+<option value="closed">Closed</option>
+<option value="$@me">自己</option>
+<option value="null">空</option>
+</select>
+</span><span id="boxstatus"><select name="fieldstatus" id="fieldstatus" class="form-control searchSelect">
+<option value="" selected="selected"></option>
+<option value="active">激活</option>
+<option value="resolved">已解决</option>
+<option value="closed">已关闭</option>
+<option value="null">空</option>
+</select>
+</span><span id="boxconfirmed"><select name="fieldconfirmed" id="fieldconfirmed" class="form-control searchSelect">
+<option value="ZERO">未确认</option>
+<option value="1">已确认</option>
+</select>
+</span><span id="boxproduct"><select name="fieldproduct" id="fieldproduct" class="form-control searchSelect">
+<option value="21">点觉CTM</option>
+<option value="all">所有产品</option>
+<option value="null">空</option>
+</select>
+</span><span id="boxplan"><select name="fieldplan" id="fieldplan" class="form-control searchSelect">
+<option value="" selected="selected"></option>
+<option value="null">空</option>
+</select>
+</span><span id="boxmodule"><select name="fieldmodule" id="fieldmodule" class="form-control searchSelect">
+<option value="ZERO">/</option>
+</select>
+</span><span id="boxproject"><select name="fieldproject" id="fieldproject" class="form-control searchSelect">
+<option value="" selected="selected"></option>
+<option value="22">33332555</option>
+<option value="null">空</option>
+</select>
+</span><span id="boxseverity"><select name="fieldseverity" id="fieldseverity" class="form-control searchSelect">
+<option value="3">一般</option>
+<option value="1">致命</option>
+<option value="2">严重</option>
+<option value="4">普通</option>
+<option value="5">5</option>
+<option value="7">7</option>
+<option value="6">不严重</option>
+<option value="null">空</option>
+</select>
+</span><span id="boxpri"><select name="fieldpri" id="fieldpri" class="form-control searchSelect">
+<option value="0"></option>
+<option value="7">7</option>
+<option value="3">中</option>
+<option value="1">紧急</option>
+<option value="2">高</option>
+<option value="4">低</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="null">空</option>
+</select>
+</span><span id="boxtype"><select name="fieldtype" id="fieldtype" class="form-control searchSelect">
+<option value="" selected="selected"></option>
+<option value="codeerror">代码错误</option>
+<option value="interface">界面优化</option>
+<option value="designchange">设计变更</option>
+<option value="newfeature">新增需求</option>
+<option value="designdefect">设计缺陷</option>
+<option value="config">配置相关</option>
+<option value="install">安装部署</option>
+<option value="security">安全相关</option>
+<option value="performance">性能问题</option>
+<option value="standard">标准规范</option>
+<option value="automation">测试脚本</option>
+<option value="trackthings">事务跟踪</option>
+<option value="others">其他</option>
+<option value="null">空</option>
+</select>
+</span><span id="boxos"><select name="fieldos" id="fieldos" class="form-control searchSelect">
+<option value="" selected="selected"></option>
+<option value="all">全部</option>
+<option value="windows">Windows</option>
+<option value="win8">Windows 8</option>
+<option value="win7">Windows 7</option>
+<option value="vista">Windows Vista</option>
+<option value="winxp">Windows XP</option>
+<option value="win2012">Windows 2012</option>
+<option value="win2008">Windows 2008</option>
+<option value="win2003">Windows 2003</option>
+<option value="win2000">Windows 2000</option>
+<option value="android">Android</option>
+<option value="ios">IOS</option>
+<option value="wp8">WP8</option>
+<option value="wp7">WP7</option>
+<option value="symbian">Symbian</option>
+<option value="linux">Linux</option>
+<option value="freebsd">FreeBSD</option>
+<option value="osx">OS X</option>
+<option value="unix">Unix</option>
+<option value="others">其他</option>
+<option value="null">空</option>
+</select>
+</span><span id="boxbrowser"><select name="fieldbrowser" id="fieldbrowser" class="form-control searchSelect">
+<option value="" selected="selected"></option>
+<option value="all">全部</option>
+<option value="ie">IE系列</option>
+<option value="ie11">IE11</option>
+<option value="ie10">IE10</option>
+<option value="ie9">IE9</option>
+<option value="ie8">IE8</option>
+<option value="ie7">IE7</option>
+<option value="ie6">IE6</option>
+<option value="chrome">chrome</option>
+<option value="firefox">firefox系列</option>
+<option value="firefox4">firefox4</option>
+<option value="firefox3">firefox3</option>
+<option value="firefox2">firefox2</option>
+<option value="opera">opera系列</option>
+<option value="oprea11">opera11</option>
+<option value="oprea10">opera10</option>
+<option value="opera9">opera9</option>
+<option value="safari">safari</option>
+<option value="maxthon">傲游</option>
+<option value="uc">UC</option>
+<option value="other">其他</option>
+<option value="null">空</option>
+</select>
+</span><span id="boxresolution"><select name="fieldresolution" id="fieldresolution" class="form-control searchSelect">
+<option value="" selected="selected"></option>
+<option value="bydesign">设计如此</option>
+<option value="duplicate">重复Bug</option>
+<option value="external">外部原因</option>
+<option value="fixed">已解决</option>
+<option value="notrepro">无法重现</option>
+<option value="postponed">延期处理</option>
+<option value="willnotfix">不予解决</option>
+<option value="tostory">转为需求</option>
+<option value="null">空</option>
+</select>
+</span><span id="boxactivatedCount"><input type="text" name="fieldactivatedCount" id="fieldactivatedCount" value="" class="form-control searchInput">
+</span><span id="boxtoTask"><input type="text" name="fieldtoTask" id="fieldtoTask" value="" class="form-control searchInput">
+</span><span id="boxtoStory"><input type="text" name="fieldtoStory" id="fieldtoStory" value="" class="form-control searchInput">
+</span><span id="boxopenedBy"><select name="fieldopenedBy" id="fieldopenedBy" class="form-control searchSelect">
+<option value="" selected="selected"></option>
+<option value="admin">A:admin</option>
+<option value="demo">D:Demo</option>
+<option value="dev1">D:开发甲</option>
+<option value="dev2">D:开发乙</option>
+<option value="dev3">D:开发丙</option>
+<option value="feedback">F:Feedback</option>
+<option value="productManager">P:产品经理</option>
+<option value="projectManager">P:项目经理</option>
+<option value="tester1">T:测试甲</option>
+<option value="tester2">T:测试乙</option>
+<option value="tester3">T:测试丙</option>
+<option value="testManager">T:测试经理</option>
+<option value="closed">Closed</option>
+<option value="$@me">自己</option>
+<option value="null">空</option>
+</select>
+</span><span id="boxclosedBy"><select name="fieldclosedBy" id="fieldclosedBy" class="form-control searchSelect">
+<option value="" selected="selected"></option>
+<option value="admin">A:admin</option>
+<option value="demo">D:Demo</option>
+<option value="dev1">D:开发甲</option>
+<option value="dev2">D:开发乙</option>
+<option value="dev3">D:开发丙</option>
+<option value="feedback">F:Feedback</option>
+<option value="productManager">P:产品经理</option>
+<option value="projectManager">P:项目经理</option>
+<option value="tester1">T:测试甲</option>
+<option value="tester2">T:测试乙</option>
+<option value="tester3">T:测试丙</option>
+<option value="testManager">T:测试经理</option>
+<option value="closed">Closed</option>
+<option value="$@me">自己</option>
+<option value="null">空</option>
+</select>
+</span><span id="boxlastEditedBy"><select name="fieldlastEditedBy" id="fieldlastEditedBy" class="form-control searchSelect">
+<option value="" selected="selected"></option>
+<option value="admin">A:admin</option>
+<option value="demo">D:Demo</option>
+<option value="dev1">D:开发甲</option>
+<option value="dev2">D:开发乙</option>
+<option value="dev3">D:开发丙</option>
+<option value="feedback">F:Feedback</option>
+<option value="productManager">P:产品经理</option>
+<option value="projectManager">P:项目经理</option>
+<option value="tester1">T:测试甲</option>
+<option value="tester2">T:测试乙</option>
+<option value="tester3">T:测试丙</option>
+<option value="testManager">T:测试经理</option>
+<option value="closed">Closed</option>
+<option value="$@me">自己</option>
+<option value="null">空</option>
+</select>
+</span><span id="boxmailto"><select name="fieldmailto" id="fieldmailto" class="form-control searchSelect">
+<option value="" selected="selected"></option>
+<option value="admin">A:admin</option>
+<option value="demo">D:Demo</option>
+<option value="dev1">D:开发甲</option>
+<option value="dev2">D:开发乙</option>
+<option value="dev3">D:开发丙</option>
+<option value="feedback">F:Feedback</option>
+<option value="productManager">P:产品经理</option>
+<option value="projectManager">P:项目经理</option>
+<option value="tester1">T:测试甲</option>
+<option value="tester2">T:测试乙</option>
+<option value="tester3">T:测试丙</option>
+<option value="testManager">T:测试经理</option>
+<option value="closed">Closed</option>
+<option value="$@me">自己</option>
+<option value="null">空</option>
+</select>
+</span><span id="boxopenedBuild"><select name="fieldopenedBuild" id="fieldopenedBuild" class="form-control searchSelect">
+<option value="" selected="selected"></option>
+<option value="trunk">Trunk</option>
+<option value="null">空</option>
+</select>
+</span><span id="boxresolvedBuild"><select name="fieldresolvedBuild" id="fieldresolvedBuild" class="form-control searchSelect">
+<option value="" selected="selected"></option>
+<option value="trunk">Trunk</option>
+<option value="null">空</option>
+</select>
+</span><span id="boxopenedDate"><input type="text" name="fieldopenedDate" id="fieldopenedDate" value="" class="form-control searchInput">
+</span><span id="boxassignedDate"><input type="text" name="fieldassignedDate" id="fieldassignedDate" value="" class="form-control searchInput">
+</span><span id="boxresolvedDate"><input type="text" name="fieldresolvedDate" id="fieldresolvedDate" value="" class="form-control searchInput">
+</span><span id="boxclosedDate"><input type="text" name="fieldclosedDate" id="fieldclosedDate" value="" class="form-control searchInput">
+</span><span id="boxlastEditedDate"><input type="text" name="fieldlastEditedDate" id="fieldlastEditedDate" value="" class="form-control searchInput">
+</span><span id="boxid"><input type="text" name="fieldid" id="fieldid" value="" class="form-control searchInput">
+</span></div>
+<table class="table table-condensed table-form" id="bug-search" style="max-width: 1200px; margin: 0 auto">
+  <tbody><tr>
+    <td class="w-400px">
+      <table class="table active-disabled table-fixed">
+      <tbody><tr id="searchbox1" class=""><td class="text-right w-60px"><span id="searchgroup1"><strong>第一组</strong></span><input type="hidden" name="andOr1" id="andOr1" value="AND">
+</td><td class="w-90px"><select name="field1" id="field1" onchange="setField(this, 1, bugparams)" class="form-control">
+<option value="title" selected="selected">Bug标题</option>
+<option value="id">Bug编号</option>
+<option value="keywords">关键词</option>
+<option value="steps">重现步骤</option>
+<option value="assignedTo">指派给</option>
+<option value="resolvedBy">解决者</option>
+<option value="status">Bug状态</option>
+<option value="confirmed">是否确认</option>
+<option value="product">所属产品</option>
+<option value="plan">所属计划</option>
+<option value="module">所属模块</option>
+<option value="project">所属项目</option>
+<option value="severity">严重程度</option>
+<option value="pri">优先级</option>
+<option value="type">Bug类型</option>
+<option value="os">操作系统</option>
+<option value="browser">浏览器</option>
+<option value="resolution">解决方案</option>
+<option value="activatedCount">激活次数</option>
+<option value="toTask">转任务</option>
+<option value="toStory">转需求</option>
+<option value="openedBy">由谁创建</option>
+<option value="closedBy">由谁关闭</option>
+<option value="lastEditedBy">修改者</option>
+<option value="mailto">抄送给</option>
+<option value="openedBuild">影响版本</option>
+<option value="resolvedBuild">解决版本</option>
+<option value="openedDate">创建日期</option>
+<option value="assignedDate">指派日期</option>
+<option value="resolvedDate">解决日期</option>
+<option value="closedDate">关闭日期</option>
+<option value="lastEditedDate">修改日期</option>
+</select>
+</td><td class="w-70px"><select name="operator1" id="operator1" class="form-control">
+<option value="=">=</option>
+<option value="!=">!=</option>
+<option value=">">&gt;</option>
+<option value=">=">&gt;=</option>
+<option value="<">&lt;</option>
+<option value="<=">&lt;=</option>
+<option value="include" selected="selected">包含</option>
+<option value="between">介于</option>
+<option value="notinclude">不包含</option>
+<option value="belong">从属于</option>
+</select>
+</td><td id="valueBox1" style="overflow:visible"><input type="text" name="value1" id="value1" value="" class="form-control  searchInput">
+</td></tr><tr id="searchbox2" class=""><td class="text-right w-60px"><select name="andOr2" id="andOr2" class="form-control">
+<option value="and" selected="selected">并且</option>
+<option value="or">或者</option>
+</select>
+</td><td class="w-90px"><select name="field2" id="field2" onchange="setField(this, 2, bugparams)" class="form-control">
+<option value="title">Bug标题</option>
+<option value="id" selected="selected">Bug编号</option>
+<option value="keywords">关键词</option>
+<option value="steps">重现步骤</option>
+<option value="assignedTo">指派给</option>
+<option value="resolvedBy">解决者</option>
+<option value="status">Bug状态</option>
+<option value="confirmed">是否确认</option>
+<option value="product">所属产品</option>
+<option value="plan">所属计划</option>
+<option value="module">所属模块</option>
+<option value="project">所属项目</option>
+<option value="severity">严重程度</option>
+<option value="pri">优先级</option>
+<option value="type">Bug类型</option>
+<option value="os">操作系统</option>
+<option value="browser">浏览器</option>
+<option value="resolution">解决方案</option>
+<option value="activatedCount">激活次数</option>
+<option value="toTask">转任务</option>
+<option value="toStory">转需求</option>
+<option value="openedBy">由谁创建</option>
+<option value="closedBy">由谁关闭</option>
+<option value="lastEditedBy">修改者</option>
+<option value="mailto">抄送给</option>
+<option value="openedBuild">影响版本</option>
+<option value="resolvedBuild">解决版本</option>
+<option value="openedDate">创建日期</option>
+<option value="assignedDate">指派日期</option>
+<option value="resolvedDate">解决日期</option>
+<option value="closedDate">关闭日期</option>
+<option value="lastEditedDate">修改日期</option>
+</select>
+</td><td class="w-70px"><select name="operator2" id="operator2" class="form-control">
+<option value="=" selected="selected">=</option>
+<option value="!=">!=</option>
+<option value=">">&gt;</option>
+<option value=">=">&gt;=</option>
+<option value="<">&lt;</option>
+<option value="<=">&lt;=</option>
+<option value="include">包含</option>
+<option value="between">介于</option>
+<option value="notinclude">不包含</option>
+<option value="belong">从属于</option>
+</select>
+</td><td id="valueBox2" style="overflow:visible"><input type="text" name="value2" id="value2" value="" class="form-control  searchInput">
+</td></tr><tr id="searchbox3" class=""><td class="text-right w-60px"><select name="andOr3" id="andOr3" class="form-control">
+<option value="and" selected="selected">并且</option>
+<option value="or">或者</option>
+</select>
+</td><td class="w-90px"><select name="field3" id="field3" onchange="setField(this, 3, bugparams)" class="form-control">
+<option value="title">Bug标题</option>
+<option value="id">Bug编号</option>
+<option value="keywords" selected="selected">关键词</option>
+<option value="steps">重现步骤</option>
+<option value="assignedTo">指派给</option>
+<option value="resolvedBy">解决者</option>
+<option value="status">Bug状态</option>
+<option value="confirmed">是否确认</option>
+<option value="product">所属产品</option>
+<option value="plan">所属计划</option>
+<option value="module">所属模块</option>
+<option value="project">所属项目</option>
+<option value="severity">严重程度</option>
+<option value="pri">优先级</option>
+<option value="type">Bug类型</option>
+<option value="os">操作系统</option>
+<option value="browser">浏览器</option>
+<option value="resolution">解决方案</option>
+<option value="activatedCount">激活次数</option>
+<option value="toTask">转任务</option>
+<option value="toStory">转需求</option>
+<option value="openedBy">由谁创建</option>
+<option value="closedBy">由谁关闭</option>
+<option value="lastEditedBy">修改者</option>
+<option value="mailto">抄送给</option>
+<option value="openedBuild">影响版本</option>
+<option value="resolvedBuild">解决版本</option>
+<option value="openedDate">创建日期</option>
+<option value="assignedDate">指派日期</option>
+<option value="resolvedDate">解决日期</option>
+<option value="closedDate">关闭日期</option>
+<option value="lastEditedDate">修改日期</option>
+</select>
+</td><td class="w-70px"><select name="operator3" id="operator3" class="form-control">
+<option value="=">=</option>
+<option value="!=">!=</option>
+<option value=">">&gt;</option>
+<option value=">=">&gt;=</option>
+<option value="<">&lt;</option>
+<option value="<=">&lt;=</option>
+<option value="include" selected="selected">包含</option>
+<option value="between">介于</option>
+<option value="notinclude">不包含</option>
+<option value="belong">从属于</option>
+</select>
+</td><td id="valueBox3" style="overflow:visible"><input type="text" name="value3" id="value3" value="" class="form-control  searchInput">
+</td></tr>      </tbody></table>
+    </td>
+    <td class="text-center nobr"><select name="groupAndOr" id="groupAndOr" class="form-control w-60px">
+<option value="and" selected="selected">并且</option>
+<option value="or">或者</option>
+</select>
+</td>
+    <td class="w-400px">
+      <table class="table active-disabled">
+      <tbody><tr id="searchbox4" class=""><td class="text-right w-60px"><span id="searchgroup2"><strong>第二组</strong></span><input type="hidden" name="andOr4" id="andOr4" value="AND">
+</td><td class="w-90px"><select name="field4" id="field4" onchange="setField(this, 4, bugparams)" class="form-control">
+<option value="title">Bug标题</option>
+<option value="id">Bug编号</option>
+<option value="keywords">关键词</option>
+<option value="steps" selected="selected">重现步骤</option>
+<option value="assignedTo">指派给</option>
+<option value="resolvedBy">解决者</option>
+<option value="status">Bug状态</option>
+<option value="confirmed">是否确认</option>
+<option value="product">所属产品</option>
+<option value="plan">所属计划</option>
+<option value="module">所属模块</option>
+<option value="project">所属项目</option>
+<option value="severity">严重程度</option>
+<option value="pri">优先级</option>
+<option value="type">Bug类型</option>
+<option value="os">操作系统</option>
+<option value="browser">浏览器</option>
+<option value="resolution">解决方案</option>
+<option value="activatedCount">激活次数</option>
+<option value="toTask">转任务</option>
+<option value="toStory">转需求</option>
+<option value="openedBy">由谁创建</option>
+<option value="closedBy">由谁关闭</option>
+<option value="lastEditedBy">修改者</option>
+<option value="mailto">抄送给</option>
+<option value="openedBuild">影响版本</option>
+<option value="resolvedBuild">解决版本</option>
+<option value="openedDate">创建日期</option>
+<option value="assignedDate">指派日期</option>
+<option value="resolvedDate">解决日期</option>
+<option value="closedDate">关闭日期</option>
+<option value="lastEditedDate">修改日期</option>
+</select>
+</td><td class="w-70px"><select name="operator4" id="operator4" class="form-control">
+<option value="=">=</option>
+<option value="!=">!=</option>
+<option value=">">&gt;</option>
+<option value=">=">&gt;=</option>
+<option value="<">&lt;</option>
+<option value="<=">&lt;=</option>
+<option value="include" selected="selected">包含</option>
+<option value="between">介于</option>
+<option value="notinclude">不包含</option>
+<option value="belong">从属于</option>
+</select>
+</td><td id="valueBox4"><input type="text" name="value4" id="value4" value="" class="form-control  searchInput">
+</td></tr><tr id="searchbox5" class=""><td class="text-right w-60px"><select name="andOr5" id="andOr5" class="form-control">
+<option value="and" selected="selected">并且</option>
+<option value="or">或者</option>
+</select>
+</td><td class="w-90px"><select name="field5" id="field5" onchange="setField(this, 5, bugparams)" class="form-control">
+<option value="title">Bug标题</option>
+<option value="id">Bug编号</option>
+<option value="keywords">关键词</option>
+<option value="steps">重现步骤</option>
+<option value="assignedTo" selected="selected">指派给</option>
+<option value="resolvedBy">解决者</option>
+<option value="status">Bug状态</option>
+<option value="confirmed">是否确认</option>
+<option value="product">所属产品</option>
+<option value="plan">所属计划</option>
+<option value="module">所属模块</option>
+<option value="project">所属项目</option>
+<option value="severity">严重程度</option>
+<option value="pri">优先级</option>
+<option value="type">Bug类型</option>
+<option value="os">操作系统</option>
+<option value="browser">浏览器</option>
+<option value="resolution">解决方案</option>
+<option value="activatedCount">激活次数</option>
+<option value="toTask">转任务</option>
+<option value="toStory">转需求</option>
+<option value="openedBy">由谁创建</option>
+<option value="closedBy">由谁关闭</option>
+<option value="lastEditedBy">修改者</option>
+<option value="mailto">抄送给</option>
+<option value="openedBuild">影响版本</option>
+<option value="resolvedBuild">解决版本</option>
+<option value="openedDate">创建日期</option>
+<option value="assignedDate">指派日期</option>
+<option value="resolvedDate">解决日期</option>
+<option value="closedDate">关闭日期</option>
+<option value="lastEditedDate">修改日期</option>
+</select>
+</td><td class="w-70px"><select name="operator5" id="operator5" class="form-control">
+<option value="=" selected="selected">=</option>
+<option value="!=">!=</option>
+<option value=">">&gt;</option>
+<option value=">=">&gt;=</option>
+<option value="<">&lt;</option>
+<option value="<=">&lt;=</option>
+<option value="include">包含</option>
+<option value="between">介于</option>
+<option value="notinclude">不包含</option>
+<option value="belong">从属于</option>
+</select>
+</td><td id="valueBox5"><select name="value5" id="value5" class="form-control searchSelect chosen" style="display: none;">
+<option value="" selected="selected"></option>
+<option value="admin">A:admin</option>
+<option value="demo">D:Demo</option>
+<option value="dev1">D:开发甲</option>
+<option value="dev2">D:开发乙</option>
+<option value="dev3">D:开发丙</option>
+<option value="feedback">F:Feedback</option>
+<option value="productManager">P:产品经理</option>
+<option value="projectManager">P:项目经理</option>
+<option value="tester1">T:测试甲</option>
+<option value="tester2">T:测试乙</option>
+<option value="tester3">T:测试丙</option>
+<option value="testManager">T:测试经理</option>
+<option value="closed">Closed</option>
+<option value="$@me">自己</option>
+<option value="null">空</option>
+</select><div class="chosen-container chosen-container-single" style="width: 100%;" title="" id="value5_chosen"><a class="chosen-single chosen-default" tabindex="-1"><span title=" "> </span><div><b></b></div></a><div class="chosen-drop"><div class="chosen-search"><input type="text" autocomplete="off"></div><ul class="chosen-results"></ul></div></div>
+</td></tr><tr id="searchbox6" class=""><td class="text-right w-60px"><select name="andOr6" id="andOr6" class="form-control">
+<option value="and" selected="selected">并且</option>
+<option value="or">或者</option>
+</select>
+</td><td class="w-90px"><select name="field6" id="field6" onchange="setField(this, 6, bugparams)" class="form-control">
+<option value="title">Bug标题</option>
+<option value="id">Bug编号</option>
+<option value="keywords">关键词</option>
+<option value="steps">重现步骤</option>
+<option value="assignedTo">指派给</option>
+<option value="resolvedBy" selected="selected">解决者</option>
+<option value="status">Bug状态</option>
+<option value="confirmed">是否确认</option>
+<option value="product">所属产品</option>
+<option value="plan">所属计划</option>
+<option value="module">所属模块</option>
+<option value="project">所属项目</option>
+<option value="severity">严重程度</option>
+<option value="pri">优先级</option>
+<option value="type">Bug类型</option>
+<option value="os">操作系统</option>
+<option value="browser">浏览器</option>
+<option value="resolution">解决方案</option>
+<option value="activatedCount">激活次数</option>
+<option value="toTask">转任务</option>
+<option value="toStory">转需求</option>
+<option value="openedBy">由谁创建</option>
+<option value="closedBy">由谁关闭</option>
+<option value="lastEditedBy">修改者</option>
+<option value="mailto">抄送给</option>
+<option value="openedBuild">影响版本</option>
+<option value="resolvedBuild">解决版本</option>
+<option value="openedDate">创建日期</option>
+<option value="assignedDate">指派日期</option>
+<option value="resolvedDate">解决日期</option>
+<option value="closedDate">关闭日期</option>
+<option value="lastEditedDate">修改日期</option>
+</select>
+</td><td class="w-70px"><select name="operator6" id="operator6" class="form-control">
+<option value="=" selected="selected">=</option>
+<option value="!=">!=</option>
+<option value=">">&gt;</option>
+<option value=">=">&gt;=</option>
+<option value="<">&lt;</option>
+<option value="<=">&lt;=</option>
+<option value="include">包含</option>
+<option value="between">介于</option>
+<option value="notinclude">不包含</option>
+<option value="belong">从属于</option>
+</select>
+</td><td id="valueBox6"><select name="value6" id="value6" class="form-control searchSelect chosen" style="display: none;">
+<option value="" selected="selected"></option>
+<option value="admin">A:admin</option>
+<option value="demo">D:Demo</option>
+<option value="dev1">D:开发甲</option>
+<option value="dev2">D:开发乙</option>
+<option value="dev3">D:开发丙</option>
+<option value="feedback">F:Feedback</option>
+<option value="productManager">P:产品经理</option>
+<option value="projectManager">P:项目经理</option>
+<option value="tester1">T:测试甲</option>
+<option value="tester2">T:测试乙</option>
+<option value="tester3">T:测试丙</option>
+<option value="testManager">T:测试经理</option>
+<option value="closed">Closed</option>
+<option value="$@me">自己</option>
+<option value="null">空</option>
+</select><div class="chosen-container chosen-container-single" style="width: 100%;" title="" id="value6_chosen"><a class="chosen-single chosen-default" tabindex="-1"><span title=" "> </span><div><b></b></div></a><div class="chosen-drop"><div class="chosen-search"><input type="text" autocomplete="off"></div><ul class="chosen-results"></ul></div></div>
+</td></tr>      </tbody></table>
+    </td>
+    <td class="w-160px"> 
+      <input type="hidden" name="module" id="module" value="bug">
+<input type="hidden" name="actionURL" id="actionURL" value="/bug-browse-21-0-bySearch-myQueryID.html">
+<input type="hidden" name="groupItems" id="groupItems" value="3">
+<div class="btn-group"> <button type="submit" id="submit" class="btn btn-primary" data-loading="稍候...">搜索</button> <button type="button" class="btn btn-default" onclick="resetForm(this)">重置</button><a href="/search-saveQuery-bug-yes.html" class="saveQuery btn">保存</a>
+</div>    </td>
+        <td class="w-120px">
+      <div class="input-group">
+      <span id="queryBox"><select name="queryID" id="queryID" onchange="executeQuery(this.value)" class="form-control">
+<option value="">我的查询</option>
+</select>
+</span>
+            </div>
+    </td>
+      </tr>
+</tbody></table>
+<div id="moreOrLite">
+  <a id="searchmore" href="javascript:;" onclick="showmore(this)"><i class="icon-double-angle-down icon-2x"></i></a>
+  <a id="searchlite" href="javascript:;" onclick="showlite(this)"><i class="icon-double-angle-up icon-2x"></i></a>
+  <input type="hidden" name="formType" id="formType" value="more">
+</div>
+</form>
+<script>
+$(function()
+{
+   $(".saveQuery").modalTrigger({width:650, type:'iframe', title:'请输入查询标题（保存之前请先查询）：'});
+   });
+</script>
+</div>
+</div>
+<div class='side' id='treebox'>
+  <a class='side-handle' data-id='bugTree'><i class='icon-caret-left'></i></a>
+  <div class='side-body'>
+    <div class='panel panel-sm'>
+      <div class='panel-heading nobr'>
+        <i class='icon-cube'></i> <strong>点觉CTM</strong>
+      </div>
+      <div class='panel-body'>
+        <ul class='tree tree-lines'></ul>
+        <div class='text-right'>
+          <a href='/tree-browse-21-bug.html' >维护模块</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class='main'>
+  <form method='post' id='bugForm'>
+    <style>
+.table-datatable tbody > tr td,
+.table-datatable thead > tr th {max-height: 34px; line-height: 21px;}
+.table-datatable tbody > tr td .btn-icon > i {line-height: 19px;}
+.hide-side .table-datatable thead > tr > th.check-btn i {visibility: hidden;}
+.hide-side .side-handle {line-height: 33px}
+.table-datatable .checkbox-row {display: none}
+.outer .datatable {border: 1px solid #ddd;}
+.outer .datatable .table, .outer .datatable .table tfoot td {border: none; box-shadow: none}
+.datatable .table>tbody>tr.active>td.col-hover, .datatable .table>tbody>tr.active.hover>td {background-color: #f3eed8 !important;}
+.datatable-span.flexarea .scroll-slide {bottom: -30px}
+
+.panel > .datatable, .panel-body > .datatable {margin-bottom: 0;}
+</style>
+<script> 
+$(document).ready(function()
+{
+    'use strict';
+
+    var $datatable  = $('table.datatable').first();
+    var datatableId = $datatable.attr('id');
+    var dtSetting   = $.cookie('datatable.bugBrowse' + '.cols') || {};
+    if(dtSetting === 'null') dtSetting = {};
+    if(typeof dtSetting === 'string') dtSetting = $.parseJSON(dtSetting);
+    var $modal = $('#customDatatable');
+    var $checkList = $modal.find('.modal-body > .table > tbody');
+
+    $datatable.find('thead>tr>th').each(function(idx)
+    {
+        var $th = $(this);
+        idx = $th.data('index') || idx;
+        var colSetting = dtSetting[idx];
+        $th.toggleClass('ignore', !!(colSetting && colSetting.ignore));
+    });
+
+    $checkList.on('click', 'tr', function()
+    {
+        var $tr = $(this);
+        if($tr.hasClass('disabled')) return;
+        $tr.toggleClass('checked');
+    });
+
+    $datatable.datatable(
+    {
+        customizable  : false, 
+        sortable      : false,
+        scrollPos     : 'out',
+        tableClass    : 'tablesorter',
+        storage       : false,
+        selectable    : {clickBehavior: 'multi'},
+        ready: function()
+        {
+            if(!this.$table) return;
+            var customMenu = this.$table.data('customMenu');
+
+            var $dropdown = $("<div class='datatable-menu-wrapper'><div class='dropdown datatable-menu'><button type='button' class='btn btn-link' data-toggle='dropdown'><i class='icon-cogs'></i> <span class='caret'></span></button></div></div>");
+            var $dropmenu = $("<ul class='dropdown-menu pull-right'></ul>");
+            if(customMenu) $dropmenu.append("<li><a id='customBtn' href='/datatable-ajaxCustom-bug-browse.html' data-toggle='modal' data-type='ajax'>自定义列</a></li>");
+            $dropmenu.append("<li><a href='javascript:;' id='switchToTable'>切换到简单表格</a></li>");
+            $dropdown.children('.dropdown').append($dropmenu);
+            this.$datatable.before($dropdown);
+            this.$datatable.find('[data-toggle=modal], a.iframe').modalTrigger();
+            $("a[data-toggle='showModuleModal']").click(function(){$('#showModuleModal').modal('show')});
+
+            $('#customBtn').modalTrigger();
+
+            $('#switchToTable').click(function()
+            {
+                saveDatatableConfig('mode', 'table', true)
+            });
+        }
+    });
+
+    window.saveDatatableConfig = function(name, value, reload)
+    {
+        var datatableId = 'bugBrowse';
+        if(typeof value === 'object') value = JSON.stringify(value);
+        if('demo' == 'guest') return;
+        $.ajax(
+        {
+            type: "POST",
+            dataType: 'json',
+            data: {target: datatableId, name: name, value: value},
+            success:function(e){if(reload) window.location.reload();},
+            url: '/datatable-ajaxSave.html'
+        });
+    };
+    setTimeout(function(){fixScroll()}, 500);
+});
+</script>
+
+<script>
+/**
+ * Fix scroll bar.
+ * 
+ * @access public
+ * @return void
+ */
+function fixScroll()
+{
+    var $scrollwrapper = $('div.datatable').first().find('.scroll-wrapper:first');
+    if($scrollwrapper.size() == 0)return;
+
+    var $tfoot       = $('div.datatable').first().find('table tfoot:last');
+    var scrollOffset = $scrollwrapper.offset().top + $scrollwrapper.find('.scroll-slide').height();
+    if($tfoot.size() > 0) scrollOffset += $tfoot.height();
+    if($('div.datatable.head-fixed').size() == 0) scrollOffset -= '34';
+    var windowH = $(window).height();
+    var bottom  = $tfoot.hasClass('fixedTfootAction') ? 53 + $tfoot.height() : 53;
+    if(scrollOffset > windowH + $(window).scrollTop()) $scrollwrapper.css({'position': 'fixed', 'bottom': bottom + 'px'});
+    $(window).scroll(function()
+    {
+        newBottom = $tfoot.hasClass('fixedTfootAction') ? 53 + $tfoot.height() : 53;
+       if(scrollOffset <= windowH + $(window).scrollTop()) 
+       {    
+           $scrollwrapper.css({'position':'relative', 'bottom': '0px'});
+       }    
+       else if($scrollwrapper.css('position') != 'fixed' || bottom != newBottom)
+       {    
+           $scrollwrapper.css({'position': 'fixed', 'bottom': newBottom + 'px'});
+           bottom = newBottom;
+       }
+    });
+}
+</script>
+    <table class='table table-condensed table-hover table-striped tablesorter table-fixed datatable' id='bugList' data-checkable='true' data-fixed-left-width='550' data-fixed-right-width='140' data-custom-menu='true' data-checkbox-name='bugIDList[]'>
+      <thead>
+        <tr><th data-flex='false' data-width='70px' class='w-id'><div class='header'><a href='/bug-browse-21-0-unclosed-0-id_asc-0-20.html' >ID</a>
+</div></th><th data-flex='false' data-width='50px' class='w-severity'><div class='header'><a href='/bug-browse-21-0-unclosed-0-severity_asc-0-20.html' >级别</a>
+</div></th><th data-flex='false' data-width='40px' class='w-pri'><div class='header'><a href='/bug-browse-21-0-unclosed-0-pri_asc-0-20.html' >P</a>
+</div></th><th data-flex='false' data-width='auto' class='w-title'><div class='header'><a href='/bug-browse-21-0-unclosed-0-title_asc-0-20.html' >Bug标题</a>
+</div></th><th data-flex='true' data-width='80px' class='w-status'><div class='headerSortDown'><a href='/bug-browse-21-0-unclosed-0-status_desc-0-20.html' >状态</a>
+</div></th><th data-flex='true' data-width='80px' class='w-assignedTo'><div class='header'><a href='/bug-browse-21-0-unclosed-0-assignedTo_asc-0-20.html' >指派给</a>
+</div></th><th data-flex='true' data-width='80px' class='w-resolvedBy'><div class='header'><a href='/bug-browse-21-0-unclosed-0-resolvedBy_asc-0-20.html' >解决</a>
+</div></th><th data-flex='true' data-width='80px' class='w-resolution'><div class='header'><a href='/bug-browse-21-0-unclosed-0-resolution_asc-0-20.html' >方案</a>
+</div></th><th data-flex='true' data-width='90px' class='w-resolvedDate'><div class='header'><a href='/bug-browse-21-0-unclosed-0-resolvedDate_asc-0-20.html' >解决日期</a>
+</div></th><th data-flex='true' data-width='90px' class='w-lastEditedDate'><div class='header'><a href='/bug-browse-21-0-unclosed-0-lastEditedDate_asc-0-20.html' >修改日期</a>
+</div></th><th data-flex='false' data-width='auto' class='w-actions'>操作</th></tr>
+      </thead>
+      <tbody>
+              </tbody>
+      <tfoot>
+        <tr>
+                    <td colspan='10'>
+                        <div class='text-right'><div style='float:right; clear:none;' class='page'>暂时没有记录</div></div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </form>
+</div>
+<script>
+$('#' + bugBrowseType + 'Tab').addClass('active');
+$('#module' + moduleID).addClass('active'); 
+$(function(){$('#modulemenu .nav li:last').after("<li class='right'><a style='font-size:12px' href='javascript:setHomepage(\"qa\", \"browse\")'><i class='icon icon-cog'></i>设为模块首页</a></li>")});
+</script>
+  </div>  <script>setTreeBox()</script>
+    
+  <div id='divider'></div>
+  <iframe frameborder='0' name='hiddenwin' id='hiddenwin' scrolling='no' class='debugwin hidden'></iframe>
+</div>
+
+
+<script>config.onlybody = 'no';</script>
+<script language='Javascript'>$(function() 
+{
+    setModal4List('iframe', 'bugList');
+
+    if(typeof page == 'undefined') page = '';
+    if(page == 'create')
+    {
+        productID  = $('#product').val();
+        moduleID   = $('#module').val();
+        assignedto = $('#assignedTo').val();
+        changeProductConfirmed = true;
+        oldStoryID             = 0;
+        oldProjectID           = 0;
+        oldOpenedBuild         = '';
+        oldTaskID              = 0;
+        if(!assignedto) setAssignedTo(moduleID, productID);
+        notice();
+    }
+
+    if(page == 'create' || page == 'edit' || page == 'assignedto' || page == 'confirmbug')
+    {
+        oldProductID = $('#product').val();
+        $("#story, #task, #mailto").chosen(defaultChosenOptions);
+    }
+});
+
+/**
+ * Load all fields.
+ * 
+ * @param  int $productID 
+ * @access public
+ * @return void
+ */
+function loadAll(productID)
+{
+    if(page == 'create') 
+    {
+        loadProjectTeamMembers(productID);
+        setAssignedTo();
+    }
+
+    if(!changeProductConfirmed)
+    {
+        firstChoice = confirm(confirmChangeProduct);
+        changeProductConfirmed = true;    // Only notice the user one time.
+
+        if(!firstChoice)
+        {
+            $('#product').val(oldProductID);//Revert old product id if confirm is no.
+            $('#product').trigger("chosen:updated");
+            $('#product').chosen(defaultChosenOptions);
+            return true;
+        }
+
+        loadAll(productID);
+    }
+    else
+    {
+        $('#taskIdBox').innerHTML = '<select id="task"></select>';  // Reset the task.
+        $('#task').chosen(defaultChosenOptions);
+        loadProductBranches(productID)
+        loadProductModules(productID); 
+        loadProductProjects(productID); 
+        loadProductBuilds(productID);
+        loadProductplans(productID);
+        loadProductStories(productID);
+    }
+}
+
+/**
+ * Load by branch.
+ * 
+ * @access public
+ * @return void
+ */
+function loadBranch()
+{
+    $('#taskIdBox').innerHTML = '<select id="task"></select>';  // Reset the task.
+    $('#task').chosen(defaultChosenOptions);
+    productID = $('#product').val();
+    loadProductModules(productID); 
+    loadProductProjects(productID); 
+    loadProductBuilds(productID);
+    loadProductplans(productID);
+    loadProductStories(productID);
+}
+
+/**
+  *Load all builds of one project or product.
+  *
+  * @access public
+  * @return void
+  */
+function loadAllBuilds(that)
+{
+    if(page == 'resolve')
+    {
+        oldResolvedBuild = $('#resolvedBuild').val() ? $('#resolvedBuild').val() : 0;
+        link = createLink('build', 'ajaxGetProductBuilds', 'productID=' + productID + '&varName=resolvedBuild&build=' + oldResolvedBuild + '&branch=0&index=0&type=all');
+        $('#resolvedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+    }
+    else
+    {
+        productID = $('#product').val();
+        projectID = $('#project').val();
+        if(page == 'edit') buildBox = $(that).parent().prev().filter('span').attr('id');
+
+        if(projectID)
+        {
+            loadAllProjectBuilds(projectID, productID);
+        }
+        else
+        {
+            loadAllProductBuilds(productID);
+        }
+    }
+}
+
+/** 
+  * Load all builds of the project.
+  *
+  * @param  int    $projectID
+  * @param  int    $productID
+  * @access public
+  * @return void
+  */
+function loadAllProjectBuilds(projectID, productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    if(page == 'create')
+    {
+        oldOpenedBuild = $('#openedBuild').val() ? $('#openedBuild').val() : 0;
+        link = createLink('build', 'ajaxGetProjectBuilds', 'projectID=' + projectID + '&productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + '&branch=' + branch + '&index=0&needCreate=true&type=all');
+        $('#buildBox').load(link, function(){ notice(); $('#openedBuild').chosen(defaultChosenOptions);});
+    }
+    if(page == 'edit')
+    {
+        if(buildBox == 'openedBuildBox')
+        {
+            link = createLink('build', 'ajaxGetProjectBuilds', 'projectID=' + projectID + '&productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + '&branch=' + branch + '&index=0&needCreate=true&type=all');
+            $('#openedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+        }
+        if(buildBox == 'resolvedBuildBox')
+        {
+            link = createLink('build', 'ajaxGetProjectBuilds', 'projectID=' + projectID + '&productID=' + productID + '&varName=resolvedBuild&build=' + oldResolvedBuild + '&branch=0&index=0&needCreate=true&type=all');
+            $('#resolvedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+        }
+    }
+}
+
+/** 
+  * Load all builds of the product.
+  *
+  * @param  int    $productID
+  * @access public
+  * @return void
+  */
+function loadAllProductBuilds(productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    if(page == 'create') 
+    {
+        link = createLink('build', 'ajaxGetProductBuilds', 'productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + '&branch=' + branch + '&index=0&type=all');
+        $('#buildBox').load(link, function(){ notice(); $('#openedBuild').chosen(defaultChosenOptions);});
+    }
+    if(page == 'edit')
+    {
+        if(buildBox == 'openedBuildBox')
+        {
+            link = createLink('build', 'ajaxGetProductBuilds', 'productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + '&branch=' + branch + '&index=0&type=all');
+            $('#openedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+        }
+        if(buildBox == 'resolvedBuildBox')
+        {
+            link = createLink('build', 'ajaxGetProductBuilds', 'productID=' + productID + '&varName=resolvedBuild&build=' + oldResolvedBuild + '&branch=0&index=0&type=all');
+            $('#resolvedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+        }
+    }
+}
+
+/**
+ * Load product's modules.
+ * 
+ * @param  int    $productID 
+ * @access public
+ * @return void
+ */
+function loadProductModules(productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('tree', 'ajaxGetOptionMenu', 'productID=' + productID + '&viewtype=bug&branch=' + branch + '&rootModuleID=0&returnType=html&needManage=true');
+    $('#moduleIdBox').load(link, function()
+    {
+        $(this).find('select').chosen(defaultChosenOptions)
+        if(typeof(bugModule) == 'string') $('#moduleIdBox').prepend("<span class='input-group-addon'>" + bugModule + "</span>")
+    });
+}
+
+/**
+ * Load product stories 
+ * 
+ * @param  int    $productID 
+ * @access public
+ * @return void
+ */
+function loadProductStories(productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('story', 'ajaxGetProductStories', 'productID=' + productID + '&branch=' + branch + '&moduleId=0&storyID=' + oldStoryID);
+    $('#storyIdBox').load(link, function(){$('#story').chosen(defaultChosenOptions);});
+}
+
+/**
+ * Load projects of product. 
+ * 
+ * @param  int    $productID 
+ * @access public
+ * @return void
+ */
+function loadProductProjects(productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('product', 'ajaxGetProjects', 'productID=' + productID + '&projectID=' + oldProjectID + '&branch=' + branch);
+    $('#projectIdBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+}
+
+/**
+ * Load product plans.
+ * 
+ * @param  productID $productID 
+ * @access public
+ * @return void
+ */
+function loadProductplans(productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('productplan', 'ajaxGetProductplans', 'productID=' + productID + '&branch=' + branch);
+    $('#planIdBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+}
+
+/**
+ * Load product builds. 
+ * 
+ * @param  productID $productID 
+ * @access public
+ * @return void
+ */
+function loadProductBuilds(productID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('build', 'ajaxGetProductBuilds', 'productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + '&branch=' + branch);
+
+    if(page == 'create')
+    {
+        $('#buildBox').load(link, function(){ notice(); $('#openedBuild').chosen(defaultChosenOptions);});
+    }
+    else
+    {
+        $('#openedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+        link = createLink('build', 'ajaxGetProductBuilds', 'productID=' + productID + '&varName=resolvedBuild&build=' + oldResolvedBuild + '&branch=' + branch);
+        $('#resolvedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+    }
+}
+
+/**
+ * Load project related bugs and tasks.
+ * 
+ * @param  int    $projectID 
+ * @access public
+ * @return void
+ */
+function loadProjectRelated(projectID)
+{
+    if(projectID)
+    {
+        loadProjectTasks(projectID);
+        loadProjectStories(projectID);
+        loadProjectBuilds(projectID);
+        loadAssignedTo(projectID);
+    }
+    else
+    {
+        $('#taskIdBox').innerHTML = '<select id="task"></select>';  // Reset the task.
+        loadProductStories($('#product').val());
+        loadProductBuilds($('#product').val());
+    }
+}
+
+/**
+ * Load project tasks.
+ * 
+ * @param  projectID $projectID 
+ * @access public
+ * @return void
+ */
+function loadProjectTasks(projectID)
+{
+    link = createLink('task', 'ajaxGetProjectTasks', 'projectID=' + projectID + '&taskID=' + oldTaskID);
+    $('#taskIdBox').load(link, function(){$('#task').chosen(defaultChosenOptions);});
+}
+
+/**
+ * Load project stories.
+ * 
+ * @param  projectID $projectID 
+ * @access public
+ * @return void
+ */
+function loadProjectStories(projectID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('story', 'ajaxGetProjectStories', 'projectID=' + projectID + '&productID=' + $('#product').val() + '&branch=' + branch + '&moduleID=0&storyID=' + oldStoryID);
+    $('#storyIdBox').load(link, function(){$('#story').chosen(defaultChosenOptions);});
+}
+
+/**
+ * Load builds of a project.
+ * 
+ * @param  int      $projectID 
+ * @access public
+ * @return void
+ */
+function loadProjectBuilds(projectID)
+{
+    branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    productID = $('#product').val();
+    if(page == 'create') oldOpenedBuild = $('#openedBuild').val() ? $('#openedBuild').val() : 0;
+
+    if(page == 'create')
+    {
+        link = createLink('build', 'ajaxGetProjectBuilds', 'projectID=' + projectID + '&productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + "&branch=" + branch + "&index=0&needCreate=true");
+        $('#buildBox').load(link, function(){ notice(); $('#openedBuild').chosen(defaultChosenOptions);});
+    }
+    else
+    {
+        link = createLink('build', 'ajaxGetProjectBuilds', 'projectID=' + projectID + '&productID=' + productID + '&varName=openedBuild&build=' + oldOpenedBuild + '&branch=' + branch);
+        $('#openedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+
+        link = createLink('build', 'ajaxGetProjectBuilds', 'projectID=' + projectID + '&productID=' + productID + '&varName=resolvedBuild&build=' + oldResolvedBuild + '&branch=' + branch);
+        $('#resolvedBuildBox').load(link, function(){$(this).find('select').chosen(defaultChosenOptions)});
+    }
+}
+
+/**
+ * Set story field.
+ * 
+ * @param  moduleID $moduleID 
+ * @param  productID $productID 
+ * @access public
+ * @return void
+ */
+function setStories(moduleID, productID)
+{
+    var branch = $('#branch').val();
+    if(typeof(branch) == 'undefined') branch = 0;
+    link = createLink('story', 'ajaxGetProductStories', 'productID=' + productID + '&branch=' + branch + '&moduleID=' + moduleID);
+    $.get(link, function(stories)
+    {
+        if(!stories) stories = '<select id="story" name="story" class="form-control"></select>';
+        $('#story').replaceWith(stories);
+        $('#story_chosen').remove();
+        $("#story").chosen(defaultChosenOptions);
+    });
+}
+
+/**
+ * Load product branches.
+ * 
+ * @param  int $productID 
+ * @access public
+ * @return void
+ */
+function loadProductBranches(productID)
+{
+    $('#branch').remove();
+    $.get(createLink('branch', 'ajaxGetBranches', "productID=" + productID), function(data)
+    {
+        if(data)
+        {
+            $('#product').closest('.input-group').append(data);
+            $('#branch').css('width', page == 'create' ? '120px' : '65px');
+        }
+    })
+}
+
+/**
+ * Load team members of the project as assignedTo list.
+ * 
+ * @param  int     $projectID 
+ * @access public
+ * @return void
+ */
+function loadAssignedTo(projectID)
+{
+    link = createLink('bug', 'ajaxLoadAssignedTo', 'projectID=' + projectID + '&selectedUser=' + $('#assignedTo').val());
+    $('#assignedToBox').load(link, function(){$('#assignedTo').chosen(defaultChosenOptions);});
+}
+
+/**
+ * notice for create build.
+ * 
+ * @access public
+ * @return void
+ */
+function notice()
+{
+    $('#buildBoxActions').empty().hide();
+    if($('#openedBuild').find('option').length <= 1) 
+    {
+        var html = '';
+        if($('#project').val() == '')
+        {
+            branch = $('#branch').val();
+            if(typeof(branch) == 'undefined') branch = 0;
+            html += '<a href="' + createLink('release', 'create', 'productID=' + $('#product').val() + '&branch=' + branch) + '" target="_blank" style="padding-right:5px">' + createRelease + '</a> ';
+            html += '<a href="javascript:loadProductBuilds(' + $('#product').val() + ')">' + refresh + '</a>';
+        }
+        else
+        {
+            html += '<a href="' + createLink('build', 'create','projectID=' + $('#project').val()) + '" target="_blank" style="padding-right:5px">' + createBuild + '</a> ';
+            html += '<a href="javascript:loadProjectBuilds(' + $('#project').val() + ')">' + refresh + '</a>';
+        }
+        var $bba = $('#buildBoxActions');
+        if($bba.length)
+        {
+            $bba.html(html);
+            $bba.show();
+        }
+        else
+        {
+            if($('#buildBox').closest('tr').find('td').size() > 1)
+            {
+                $('#buildBox').closest('td').next().attr('id', 'buildBoxActions');
+                $('#buildBox').closest('td').next().html(html);
+            }
+            else
+            {
+                html = "<td id='buildBoxActions'>" + html + '</td>';
+                $('#buildBox').closest('td').after(html);
+            }
+        }
+    }
+}
+$(document).ready(function()
+{
+    if(browseType == 'bysearch') ajaxGetSearchForm();
+
+    $('.dropdown-menu .with-search .menu-search').click(function(e)
+    {
+        e.stopPropagation();
+        return false;
+    }).on('keyup change paste', 'input', function()
+    {
+        var val = $(this).val().toLowerCase();
+        var $options = $(this).closest('ul.dropdown-menu.with-search').find('.option');
+        if(val == '') return $options.removeClass('hide');
+        $options.each(function()
+        {
+            var $option = $(this);
+            $option.toggleClass('hide', $option.text().toString().toLowerCase().indexOf(val) < 0 && $option.data('key').toString().toLowerCase().indexOf(val) < 0);
+        });
+    });
+    setTimeout(function(){fixedTfootAction('#bugForm')}, 100);
+    setTimeout(function(){fixedTheadOfList('#bugList')}, 100);
+});
+
+</script>
+<div class='hidden'><script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_4553360'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s5.cnzz.com/stat.php%3Fid%3D4553360' type='text/javascript'%3E%3C/script%3E"));</script></div>
+</body>
+</html>

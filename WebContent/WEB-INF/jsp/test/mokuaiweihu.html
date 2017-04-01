@@ -1,0 +1,425 @@
+
+<!DOCTYPE html>
+<html lang='zh-cn'>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name="renderer" content="webkit"> 
+  <title>点觉CTM::维护测试视图模块 - 禅道</title>
+<script language='Javascript'>var config={"webRoot":"\/","appName":"","cookieLife":30,"requestType":"PATH_INFO","requestFix":"-","moduleVar":"m","methodVar":"f","viewVar":"t","defaultView":"html","themeRoot":"\/theme\/","currentModule":"tree","currentMethod":"browse","clientLang":"zh-cn","requiredFields":"","router":"\/index.php","save":"\u4fdd\u5b58","runMode":"","timeout":30000,"pingInterval":""};
+var lang={"submitting":"\u7a0d\u5019...","save":"\u4fdd\u5b58","timeout":"\u8fde\u63a5\u8d85\u65f6\uff0c\u8bf7\u68c0\u67e5\u7f51\u7edc\u73af\u5883\uff0c\u6216\u91cd\u8bd5\uff01"};
+
+</script>
+<script src='http://cdn.zentao.net/8.2.4/js/all.js?v=8.2.4' type='text/javascript'></script>
+<link rel='stylesheet' href='http://cdn.zentao.net/8.2.4/theme/default/zh-cn.default.css?v=8.2.4' type='text/css' media='screen' />
+<style>.parentModule {width:10%; vertical-align:middle;}
+.copy {display:block; margin-bottom:5px;}
+
+.outer .row .col-md-8 .table-form {max-width: 600px}
+
+#sonModule {max-width: 400px}
+#moduleBox span > .form-control {margin-bottom: 5px;}
+
+.w-260px {width: 260px!important}
+table.copy td {padding: 0!important}
+table.copy td .form-control {border-right: 0}
+
+.tree-toggle {cursor: pointer;}
+.tree-actions, .tree li.hover > .tree-actions {opacity: 1}
+.tree-item-branch > .tree-actions [data-type='sort'] {display: none}
+.tree-item-branch > .tree-actions [data-type='add'] > .icon-plus:before {content: '\e6c7'}
+
+#childrenForm table .chosen-container .chosen-single {border-right-color: transparent}
+#childrenForm table .chosen-container .chosen-single {border-right-color: transparent}
+#childrenForm .col-table + .col-table .form-control {border-left: transparent;}
+</style><link rel='icon' href='/favicon.ico' type='image/x-icon' />
+<link rel='shortcut icon' href='/favicon.ico' type='image/x-icon' />
+<!--[if lt IE 9]>
+<script src='http://cdn.zentao.net/8.2.4/js/html5shiv/min.js?v=8.2.4' type='text/javascript'></script>
+<script src='http://cdn.zentao.net/8.2.4/js/respond/min.js?v=8.2.4' type='text/javascript'></script>
+<![endif]-->
+<!--[if lt IE 10]>
+<script src='http://cdn.zentao.net/8.2.4/js/jquery/placeholder/min.js?v=8.2.4' type='text/javascript'></script>
+<![endif]-->
+</head>
+<body>
+<script>
+var noResultsMatch       = '没有匹配结果';
+var chooseUsersToMail    = '选择要发信通知的用户...';
+var defaultChosenOptions = {no_results_text: noResultsMatch, width:'100%', allow_single_deselect: true, disable_search_threshold: 1, placeholder_text_single: ' ', placeholder_text_multiple: ' ', search_contains: true};
+$(document).ready(function()
+{
+    $("#mailto").attr('data-placeholder', chooseUsersToMail);
+    $("#mailto, .chosen, #productID").chosen(defaultChosenOptions).on('chosen:showing_dropdown', function()
+    {
+        var $this = $(this);
+        var $chosen = $this.next('.chosen-container').removeClass('chosen-up');
+        var $drop = $chosen.find('.chosen-drop');
+        $chosen.toggleClass('chosen-up', $drop.height() + $drop.offset().top - $(document).scrollTop() > $(window).height());
+    });
+});
+</script>
+<header id='header'>
+  
+  <nav id='mainmenu'>
+    <ul class='nav'>
+<li  data-id='my'><a href='/my/' ><i class="icon-home"></i><span> 我的地盘</span></a></li>
+<li  data-id='project'><a href='/project/' >项目</a></li>
+<li class='active' data-id='qa'><a href='/qa/' class='active'>测试</a></li>
+<li  data-id='report'><a href='/report/' >统计</a></li>
+<li  data-id='doc'><a href='/doc/' >文档</a></li>
+<li  data-id='company'><a href='/company/' >组织</a></li>
+<li  data-id='admin'><a href='/admin/' >后台</a></li>
+<li class='custom-item'><a href='/custom-ajaxMenu-tree-browse.html?onlybody=yes' data-toggle='modal' data-type='iframe' title='自定义导航' data-icon='cog' data-width='80%'><i class='icon icon-cog'></i></a></li></ul>
+<div class='input-group input-group-sm' id='searchbox'><div class='input-group-btn' id='typeSelector'><button type='button' class='btn dropdown-toggle' data-toggle='dropdown'><span id='searchTypeName'>Bug</span> <span class='caret'></span></button><input type='hidden' name='searchType' id='searchType' value='bug'  />
+<ul class='dropdown-menu'><li><a href='javascript:;' data-value='bug'>Bug</a></li><li><a href='javascript:;' data-value='story'>需求</a></li><li><a href='javascript:;' data-value='task'>任务</a></li><li><a href='javascript:;' data-value='testcase'>用例</a></li><li><a href='javascript:;' data-value='project'>项目</a></li><li><a href='javascript:;' data-value='product'>产品</a></li><li><a href='javascript:;' data-value='user'>用户</a></li><li><a href='javascript:;' data-value='build'>版本</a></li><li><a href='javascript:;' data-value='release'>发布</a></li><li><a href='javascript:;' data-value='productplan'>产品计划</a></li><li><a href='javascript:;' data-value='testtask'>测试版本</a></li><li><a href='javascript:;' data-value='doc'>文档</a></li></ul></div><input type='text' name='searchQuery' id='searchQuery' value='' onclick='this.value=""' onkeydown='if(event.keyCode==13) shortcut()' class='form-control' placeholder='编号(ctrl+g)' />
+<div id='objectSwitcher' class='input-group-btn'><a href='javascript:shortcut();' class='btn'>GO! </a></div></div>
+  </nav>
+  <nav id="modulemenu">
+    <ul class='nav'>
+<li data-id='product'><a id='currentItem' href="javascript:showDropMenu('product', '21', 'bug', 'browse', '')">点觉CTM <span class='icon-caret-down'></span></a><div id="dropMenu"><script language="Javascript">productID = 21;</script>
+<script language="Javascript">module = "bug";</script>
+<script language="Javascript">method = "browse";</script>
+<script language="Javascript">extra = "";</script>
+<input type="text" class="form-control" id="search" value="" placeholder="搜索">
+<div id="searchResult">
+  <div id="defaultMenu" class="search-list">
+    <ul>
+    <li class="heading active">我负责：</li><li class=""><a href="/bug-browse-65.html" class="mine text-important"><i class="icon-cube"></i> qq</a>
+</li><li class=""><a href="/bug-browse-64.html" class="mine text-important"><i class="icon-cube"></i> fefefef</a>
+</li><li class=""><a href="/bug-browse-63.html" class="mine text-important"><i class="icon-cube"></i> chip00</a>
+</li><li class=""><a href="/bug-browse-62.html" class="mine text-important"><i class="icon-cube"></i> bbn</a>
+</li><li class=""><a href="/bug-browse-61.html" class="mine text-important"><i class="icon-cube"></i> 嘿嘿</a>
+</li><li class=""><a href="/bug-browse-59.html" class="mine text-important"><i class="icon-cube"></i> DATACENTER</a>
+</li><li class=""><a href="/bug-browse-58.html" class="mine text-important"><i class="icon-cube"></i> 产品001</a>
+</li><li><a href="/bug-browse-57.html" class="mine text-important"><i class="icon-cube"></i> pon</a>
+</li><li><a href="/bug-browse-56.html" class="mine text-important"><i class="icon-cube"></i> 测试1</a>
+</li><li><a href="/bug-browse-54.html" class="mine text-important"><i class="icon-cube"></i> test1</a>
+</li><li><a href="/bug-browse-53.html" class="mine text-important"><i class="icon-cube"></i> 55555</a>
+</li><li><a href="/bug-browse-52.html" class="mine text-important"><i class="icon-cube"></i> 哈哈哈哈哈哈哈哈哈</a>
+</li><li><a href="/bug-browse-50.html" class="mine text-important"><i class="icon-cube"></i> 新IUU</a>
+</li><li><a href="/bug-browse-49.html" class="mine text-important"><i class="icon-cube"></i> 洱海</a>
+</li><li><a href="/bug-browse-48.html" class="mine text-important"><i class="icon-cube"></i> 地铁1</a>
+</li><li><a href="/bug-browse-47.html" class="mine text-important"><i class="icon-cube"></i> 1321313</a>
+</li><li><a href="/bug-browse-46.html" class="mine text-important"><i class="icon-cube"></i> 新旅游APP</a>
+</li><li><a href="/bug-browse-43.html" class="mine text-important"><i class="icon-cube"></i> 测试000</a>
+</li><li><a href="/bug-browse-41.html" class="mine text-important"><i class="icon-cube"></i> 去恶恶</a>
+</li><li><a href="/bug-browse-38.html" class="mine text-important"><i class="icon-cube"></i> bugClose</a>
+</li><li><a href="/bug-browse-37.html" class="mine text-important"><i class="icon-cube"></i> lingfo</a>
+</li><li><a href="/bug-browse-35.html" class="mine text-important"><i class="icon-cube"></i> ccc</a>
+</li><li><a href="/bug-browse-34.html" class="mine text-important"><i class="icon-cube"></i> ssss</a>
+</li><li><a href="/bug-browse-33.html" class="mine text-important"><i class="icon-cube"></i> 世界核平管理器</a>
+</li><li class="heading">其他：</li><li><a href="/bug-browse-60.html" class="other text-special"><i class="icon-cube"></i> 骑车通</a>
+</li><li><a href="/bug-browse-55.html" class="other text-special"><i class="icon-cube"></i> orv test</a>
+</li><li><a href="/bug-browse-51.html" class="other text-special"><i class="icon-cube"></i> pep</a>
+</li><li><a href="/bug-browse-42.html" class="other text-special"><i class="icon-cube"></i> test-多平台</a>
+</li><li><a href="/bug-browse-39.html" class="other text-special"><i class="icon-cube"></i> qiyu办公</a>
+</li><li><a href="/bug-browse-40.html" class="other text-special"><i class="icon-cube"></i> 测试项目</a>
+</li><li><a href="/bug-browse-44.html" class="other text-special"><i class="icon-cube"></i> aa</a>
+</li><li><a href="/bug-browse-36.html" class="other text-special"><i class="icon-cube"></i> 北京移动项目</a>
+</li>    </ul>
+ 
+    <div>
+      <a href="/product-all-21.html"><i class="icon-cubes mgr-5px"></i> 全部产品</a>
+            <div class="pull-right actions"><a id="more" href="javascript:switchMore()">已关闭 <i class="icon-angle-right"></i></a></div>
+          </div>
+  </div>
+ 
+  <div id="moreMenu">
+    <ul>
+    <li><a href="/bug-browse-45.html" class="closed"><i class="icon-cube"></i> IUU</a>
+</li><li><a href="/bug-browse-32.html" class="closed"><i class="icon-cube"></i> gsfsd</a>
+</li><li><a href="/bug-browse-31.html" class="closed"><i class="icon-cube"></i> 车辆管理</a>
+</li><li><a href="/bug-browse-30.html" class="closed"><i class="icon-cube"></i> 产品测试Demo</a>
+</li><li><a href="/bug-browse-29.html" class="closed"><i class="icon-cube"></i> test-yq</a>
+</li><li><a href="/bug-browse-28.html" class="closed"><i class="icon-cube"></i> 友途车友绘（IOS）</a>
+</li><li><a href="/bug-browse-27.html" class="closed"><i class="icon-cube"></i> 思道OA</a>
+</li><li><a href="/bug-browse-26.html" class="closed"><i class="icon-cube"></i> hehe</a>
+</li><li><a href="/bug-browse-25.html" class="closed"><i class="icon-cube"></i> rwebvr</a>
+</li><li><a href="/bug-browse-24.html" class="closed"><i class="icon-cube"></i> 客户管理</a>
+</li><li><a href="/bug-browse-23.html" class="closed"><i class="icon-cube"></i> 贸易管理</a>
+</li><li><a href="/bug-browse-22.html" class="closed"><i class="icon-cube"></i> 资产管理</a>
+</li><li><a href="/bug-browse-21.html" class="closed"><i class="icon-cube"></i> 点觉CTM</a>
+</li><li><a href="/bug-browse-20.html" class="closed"><i class="icon-cube"></i> dfsdf</a>
+</li><li><a href="/bug-browse-19.html" class="closed"><i class="icon-cube"></i> test22222</a>
+</li><li><a href="/bug-browse-18.html" class="closed"><i class="icon-cube"></i> APP</a>
+</li><li><a href="/bug-browse-15.html" class="closed"><i class="icon-cube"></i> 产品测试temp</a>
+</li><li><a href="/bug-browse-14.html" class="closed"><i class="icon-cube"></i> qq 红包</a>
+</li><li><a href="/bug-browse-13.html" class="closed"><i class="icon-cube"></i> EasyTouch</a>
+</li><li><a href="/bug-browse-16.html" class="closed"><i class="icon-cube"></i> 课外网1</a>
+</li><li><a href="/bug-browse-12.html" class="closed"><i class="icon-cube"></i> P2P</a>
+</li><li><a href="/bug-browse-10.html" class="closed"><i class="icon-cube"></i> 测试产品</a>
+</li><li><a href="/bug-browse-9.html" class="closed"><i class="icon-cube"></i> test</a>
+</li><li><a href="/bug-browse-8.html" class="closed"><i class="icon-cube"></i> 小刀网单接入</a>
+</li><li><a href="/bug-browse-7.html" class="closed"><i class="icon-cube"></i> 征信平台</a>
+</li><li><a href="/bug-browse-6.html" class="closed"><i class="icon-cube"></i> 产品Demo</a>
+</li><li><a href="/bug-browse-5.html" class="closed"><i class="icon-cube"></i> H5 7月版本</a>
+</li><li><a href="/bug-browse-4.html" class="closed"><i class="icon-cube"></i> KGK</a>
+</li><li><a href="/bug-browse-3.html" class="closed"><i class="icon-cube"></i> 测试</a>
+</li><li><a href="/bug-browse-2.html" class="closed"><i class="icon-cube"></i> 企业内部工时管理系统</a>
+</li><li><a href="/bug-browse-1.html" class="closed"><i class="icon-cube"></i> 公司企业网站建设</a>
+</li><li><a href="/bug-browse-17.html" class="closed"><i class="icon-cube"></i> 电气一次</a>
+</li>    </ul>
+  </div>
+</div>
+</div></li>
+<li class='right ' data-id='index'><a href='/qa-index-no-21.html' ><i class='icon-home'></i>测试主页</a>
+</li>
+<li class=' active' data-id='bug'><a href='/bug-browse-21.html' >Bug</a>
+</li>
+<li class=' ' data-id='testcase'><a href='/testcase-browse-21.html' >用例</a>
+</li>
+<li class=' ' data-id='testtask'><a href='/testtask-browse-21.html' >版本</a>
+</li>
+</ul>
+  </nav>
+</header>
+
+<div id='wrap'>
+  <div class='outer'>
+<div id='featurebar'>
+  <div class='heading'>模块维护</div>
+</div>
+<div class='row'>
+  <div class='col-sm-4'>
+    <div class='panel'>
+      <div class='panel-heading'><i class='icon-cog'></i> <strong>点觉CTM::维护测试视图模块</strong></div>
+      <div class='panel-body'>
+        <div class='container'>
+          <ul class='tree-lines' id='modulesTree'></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class='col-sm-8'>
+    <form id='childrenForm' class='form-condensed' method='post' target='hiddenwin' action='/tree-manageChild-21-bug.html'>
+      <div class='panel'>
+        <div class='panel-heading'>
+          <i class='icon-sitemap'></i> 
+                    维护Bug子模块                  </div>
+        <div class='panel-body'>
+          <table class='table table-form'>
+            <tr>
+              <td class='parentModule'>
+                <nobr>
+                <a href='/tree-browse-21-bug.html' >点觉CTM</a>
+&nbsp;<i class="icon-angle-right"></i>&nbsp;                </nobr>
+              </td>
+              <td id='moduleBox'> 
+                <div id="sonModule"><div class='row-table' style='margin-bottom:5px'><div class='col-table'><input type='text' name='modules[]' id='modules[]' value='' class='form-control' placeholder='模块名称' />
+</div><div class='col-table' style='width:120px'><div class='input-group'><input type='text' name='shorts[]' id='shorts[]' value='' class='form-control' placeholder='简称' />
+<span class='input-group-addon fix-border'><a href='javascript:;' onclick='addItem(this)'><i class='icon icon-plus'></i></a></span><span class='input-group-addon'><a href='javascript:;' onclick='deleteItem(this)'><i class='icon icon-remove'></i></a></span></div></div></div><div class='row-table' style='margin-bottom:5px'><div class='col-table'><input type='text' name='modules[]' id='modules[]' value='' class='form-control' placeholder='模块名称' />
+</div><div class='col-table' style='width:120px'><div class='input-group'><input type='text' name='shorts[]' id='shorts[]' value='' class='form-control' placeholder='简称' />
+<span class='input-group-addon fix-border'><a href='javascript:;' onclick='addItem(this)'><i class='icon icon-plus'></i></a></span><span class='input-group-addon'><a href='javascript:;' onclick='deleteItem(this)'><i class='icon icon-remove'></i></a></span></div></div></div><div class='row-table' style='margin-bottom:5px'><div class='col-table'><input type='text' name='modules[]' id='modules[]' value='' class='form-control' placeholder='模块名称' />
+</div><div class='col-table' style='width:120px'><div class='input-group'><input type='text' name='shorts[]' id='shorts[]' value='' class='form-control' placeholder='简称' />
+<span class='input-group-addon fix-border'><a href='javascript:;' onclick='addItem(this)'><i class='icon icon-plus'></i></a></span><span class='input-group-addon'><a href='javascript:;' onclick='deleteItem(this)'><i class='icon icon-remove'></i></a></span></div></div></div><div class='row-table' style='margin-bottom:5px'><div class='col-table'><input type='text' name='modules[]' id='modules[]' value='' class='form-control' placeholder='模块名称' />
+</div><div class='col-table' style='width:120px'><div class='input-group'><input type='text' name='shorts[]' id='shorts[]' value='' class='form-control' placeholder='简称' />
+<span class='input-group-addon fix-border'><a href='javascript:;' onclick='addItem(this)'><i class='icon icon-plus'></i></a></span><span class='input-group-addon'><a href='javascript:;' onclick='deleteItem(this)'><i class='icon icon-remove'></i></a></span></div></div></div><div class='row-table' style='margin-bottom:5px'><div class='col-table'><input type='text' name='modules[]' id='modules[]' value='' class='form-control' placeholder='模块名称' />
+</div><div class='col-table' style='width:120px'><div class='input-group'><input type='text' name='shorts[]' id='shorts[]' value='' class='form-control' placeholder='简称' />
+<span class='input-group-addon fix-border'><a href='javascript:;' onclick='addItem(this)'><i class='icon icon-plus'></i></a></span><span class='input-group-addon'><a href='javascript:;' onclick='deleteItem(this)'><i class='icon icon-remove'></i></a></span></div></div></div>                </div>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td colspan='2'>
+                 <button type='submit' id='submit' class='btn btn-primary'  data-loading='稍候...'>保存</button><a href='javascript:history.go(-1);' class='btn btn-back ' >返回</a><input type='hidden' name='parentModuleID' id='parentModuleID' value='0'  />
+<input type='hidden' name='maxOrder' id='maxOrder' value='0'  />
+      
+                <input type='hidden' value='0' name='parentModuleID' />
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<style>
+.tree-item-story > .tree-actions > .tree-action[data-type='sort'],
+.tree-item-story > .tree-actions > .tree-action[data-type='delete'] {display: none!important}
+</style>
+<script>
+$(function()
+{
+    var data = $.parseJSON('[]');
+    var options = {
+        name: 'tree-bug-edit',
+        initialState: 'preserve',
+        data: data,
+        itemCreator: function($li, item)
+        {
+            var link = item.id !== undefined ? ('<a href="' + createLink('tree', 'browse', 'root=21&viewType=bug&moduleID={0}&branch={1}'.format(item.id, item.branch)) + '">' + item.name + '</a>') : ('<span class="tree-toggle">' + item.name + '</span>');
+            var $toggle = $('<span class="module-name" data-id="' + item.id + '">' + link + '</span>');
+            if(item.type === 'bug') $toggle.append('&nbsp; <span class="text-muted">[B]</span>');
+            if(item.type === 'case') $toggle.append('&nbsp; <span class="text-muted">[C]</span>');
+            $li.append($toggle);
+            if(item.nodeType || item.type) $li.addClass('tree-item-' + (item.nodeType || item.type));
+            return true;
+        },
+        actions: 
+        {
+            sort:
+            {
+                title: '拖放排序',
+                template: '<a class="sort-handler" data-toggle="tooltip" href="javascript:;"><i class="icon icon-move"></i></a>'
+            },
+            edit:
+            {
+                linkTemplate: '/tree-edit-{0}-bug.html',
+                title: '编辑',
+                template: '<a data-toggle="tooltip" href="javascript:;">编辑</a>'
+            },
+            "delete":
+            {
+                linkTemplate: '/tree-delete-21-{0}.html',
+                title: '删除模块',
+                template: '<a data-toggle="tooltip" href="javascript:;">删除</a>'
+            }
+        },
+        action: function(event)
+        {
+            var action = event.action, $target = $(event.target), item = event.item;
+            if(action.type === 'edit')
+            {
+                $target.modalTrigger(
+                {
+                    type: 'ajax',
+                    url: action.linkTemplate.format(item.id)
+                }).trigger('click');
+            }
+            else if(action.type === 'delete')
+            {
+                window.open(action.linkTemplate.format(item.id), 'hiddenwin');
+            }
+            else if(action.type === 'sort')
+            {
+                var orders = {};
+                $('#modulesTree').find('li:not(.tree-action-item)').each(function()
+                {
+                    var $li = $(this);
+                    var item = $li.data();
+                    orders['orders[' + item.id + ']'] = $li.attr('data-order') || item.order;
+                });
+                $.post('/tree-updateOrder-21-bug.html', orders).error(function()
+                {
+                    bootbox.alert(lang.timeout);
+                });
+            }
+        }
+    };
+
+    if(false) options.actions["sort"] = false;
+    if(false) options.actions["edit"] = false;
+    if(false) options.actions["delete"] = false;
+
+    var $tree = $('#modulesTree').tree(options);
+
+    var tree = $tree.data('zui.tree');
+    if(!tree.store.time) tree.expand($tree.find('li:not(.tree-action-item)').first());
+    if(0)
+    {
+        var $currentLi = $tree.find('.module-name[data-id=' + 0 + ']').closest('li');
+        if($currentLi.length) tree.show($currentLi);
+    }
+
+    $tree.on('mouseenter', 'li:not(.tree-action-item)', function(e)
+    {
+        $('#modulesTree').find('li.hover').removeClass('hover');
+        $(this).addClass('hover');
+        e.stopPropagation();
+    });
+
+    $tree.find('[data-toggle="tooltip"]').tooltip();
+});
+</script>
+  </div>  <script>setTreeBox()</script>
+    
+  <div id='divider'></div>
+  <iframe frameborder='0' name='hiddenwin' id='hiddenwin' scrolling='no' class='debugwin hidden'></iframe>
+</div>
+
+
+<script>config.onlybody = 'no';</script>
+<script language='Javascript'>function syncModule(rootID, type)
+{
+    moduleID = type == 'task' ? $('#projectModule').val() : $('#productModule').val();
+    type     = type == 'task' ? 'task' : 'story';
+
+    link = createLink('tree', 'ajaxGetSonModules', 'moduleID=' + moduleID + '&rootID=' + rootID + '&type=' + type);
+    $.getJSON(link, function(modules)
+    {
+        if(modules.length == 0) return false;
+        $('.helplink').addClass('hidden');
+        var $inputgroup = $('<div></div>').append($('.input-group .icon-remove:first').closest('.row-table').clone()).html();
+        $.each(modules, function(key, module)
+        {
+            $('.row-table').each(function()
+            {
+               moduleName = $(this).find('input[id^=modules]').val();
+                if(moduleName == module.name) modules[key] = null;
+                if(!moduleName) $(this).closest('.row-table').remove();
+            })
+        });  
+
+        $.each(modules, function(key, module)
+        {
+            if(module)
+            {
+                $('#sonModule').append($inputgroup);
+                $('#sonModule .row-table:last input[id^=modules]').val(module.name);
+                $('#sonModule .row-table:last input[id^=shorts]').val(module.short);
+            }
+        })
+        $('#sonModule').append($inputgroup);
+    })
+}
+
+function syncProductOrProject(obj, type)
+{
+    if(type == 'product') viewType = 'story';
+    if(type == 'project') viewType = 'task';
+    link = createLink('tree', 'ajaxGetOptionMenu', 'rootID=' + obj.value + "&viewType=" + viewType + "&branch=0&rootModuleID=0&returnType=json");
+    $.getJSON(link, function(modules)
+    {
+        $('.helplink').addClass('hidden');
+        $('#' + type + 'Module').empty();
+        $.each(modules, function(key, value)
+        {  
+            $('#' + type + 'Module').append('<option value=' + key + '>' + value + '</option')
+        }); 
+        $('#' + type + 'Module').trigger("chosen:updated");
+    })
+    $('#copyModule').attr('onclick', null);
+    $('#copyModule').bind('click', function(){syncModule(obj.value, viewType)});
+}
+
+function toggleCopy()
+{
+   var $copy = $('table.copy');
+   if($copy.size() == 0) return false;
+   $copy.toggle();
+}
+
+function addItem(obj)
+{
+    var $inputgroup = $(obj).closest('.row-table');
+    $inputgroup.after($inputgroup.clone()).next('.row-table').find('input').val('');
+}
+
+function deleteItem(obj)
+{
+    if($(obj).closest('.row-table').parent().find('i.icon-remove').size() <= 1) return;
+    $(obj).closest('.row-table').remove();
+}
+
+$(document).ready(function()
+{
+    toggleCopy();
+    $('[data-id="create"] a').modalTrigger({type: 'iframe', width: 500});
+    $('[data-id="edit"] a').modalTrigger({type: 'iframe', width: 500});
+});
+
+</script>
+<div class='hidden'><script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_4553360'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s5.cnzz.com/stat.php%3Fid%3D4553360' type='text/javascript'%3E%3C/script%3E"));</script></div>
+</body>
+</html>
