@@ -129,7 +129,7 @@ input[type=checkbox].ml-10px{margin-left:10px;}
                     								<div class="table-actions clearfix">
                											<div class="btn-group dropup"> 
                												<button type="button" class="btn btn-default" onclick="ajaxChangePlan('','','batch')">移除需求</button>
-               												<button style="height: 26px" type="button" class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+               												<button style="height: 26px" type="button" class="btn dropdown-toggle" data-toggle="dropdown" title="将需求转移到计划"><span class="caret"></span></button>
                												<ul class="dropdown-menu">
                													<li class="dropdown-submenu">
                														<a href="javascript:;" id="changePlan">计划</a>

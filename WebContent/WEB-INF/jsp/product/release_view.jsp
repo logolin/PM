@@ -26,7 +26,7 @@ input[type=checkbox].ml-10px{margin-left:10px;}
 .tabs .tab-content{padding:0px; border:0px;}
 .tabs .tab-content .tab-pane #querybox{margin:0px; border-left:1px solid #ddd; border-right:1px solid #ddd;}
 .tabs .tab-content .tab-pane #querybox form{padding-left:0px;}
-.tabs .tab-content .tab-pane .action{position: absolute; right: 110px; top: 0px;}
+.tabs .tab-content .tab-pane .action{position: absolute; right: -1px; top: 0px;}
 </style>
 <title>RELEASE #${release.id} ${release.name}/${currentProduct.name}</title>
 </head>
@@ -79,9 +79,6 @@ input[type=checkbox].ml-10px{margin-left:10px;}
           					<li class="active"><a href="#stories" data-toggle="tab"><i class="icon-lightbulb green"></i> 完成的需求</a></li>
           					<li class=""><a href="#bugs" data-toggle="tab"><i class="icon-bug green"></i> 解决的Bug</a></li>
           					<li class=""><a href="#leftBugs" data-toggle="tab"><i class="icon-bug red"></i> 遗留的Bug</a></li>
-          					<shiro:hasPermission name="release:export">
-                    			<li class="pull-right"><a href="" class="btn export"><i class="icon-common-export icon-download-alt"></i> 导出HTML</a></li>
-                  			</shiro:hasPermission>
                   		</ul>
         				<div class="tab-content">
           					<div class="tab-pane active" id="stories">

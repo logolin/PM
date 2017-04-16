@@ -25,7 +25,7 @@ public class BranchService implements LogInterfaceService<Branch>{
 	@Autowired
 	private ProductRepository productRepository;
 	
-	/*public Map<String, String> getFieldNameMap() {
+	public Map<String, String> getFieldNameMap() {
 		
 		@SuppressWarnings("serial")
 		Map<String, String> fieldNameMap = new HashMap<String, String>(){{
@@ -92,5 +92,5 @@ public class BranchService implements LogInterfaceService<Branch>{
 		}
 		
 		return map;
-	}*/
+	}
 }
