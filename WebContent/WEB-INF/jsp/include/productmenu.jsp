@@ -33,7 +33,7 @@ function showDropMenu(obj,type) {
 function search(obj,type) {
 	var content = $(obj).val();
 	var $next = $(obj).next();
-	var no_result = "<li class='no-result-tip active'>找不到包含\"" + content +"\"的产品</li> ";
+	var no_result = "<li class='no-result-tip active'>找不到包含\"" + content +"\"的相关项</li> ";
 	var $ul = $next.find("div ul");
 	if (type == "branch") {
 		$.get("../ajaxGetBranches/${currentProduct.id}",{content:content},function(data){
@@ -115,9 +115,9 @@ function switchMore() {
 					</div>
 				</div>
 			</li>
-			<c:if test="${currentProduct.type != 'normal'}">
+			<c:if test="${currentProduct.type != 'normal' && branchId != null}">
 			<li class="">
-				<a id="currentBranch" href="javascript:" onclick="showDropMenu(this,'branch')">所有平台 <span class="icon-caret-down"></span></a>
+				<a id="currentBranch" href="javascript:" onclick="showDropMenu(this,'branch')"><c:if test="${branchId == 0}">所有</c:if>${branchMap[branchId]} <span class="icon-caret-down"></span></a>
 				<div id="dropMenu">
 					<input type="text" class="form-control" id="search" value="" placeholder="搜索" onkeyup="search(this,'branch')">
 					<div id="searchResult">

@@ -50,12 +50,12 @@
 										<c:choose>
 											<c:when test="${object.getClass().name == 'com.projectmanager.entity.Plan'}">
 												<div class='roadmap plan'>
-													<h5><a href=''  target='_blank'>${object.title}</a></h5>
+													<h5><a href='./plan_view_${object.product.id}_${object.id}'  target='_blank'>${object.title}</a></h5>
 													${object.begin} ~ ${object.end}
 												</div>
 											</c:when>
 											<c:otherwise>
-												<div class='roadmap release'><h5><a href=''  target='_blank'>${object.name}</a>
+												<div class='roadmap release'><h5><a href='./release_view_${object.product.id}_${object.id}'  target='_blank'>${object.name}</a>
 												</h5>${object.date}</div>
 											</c:otherwise>
 										</c:choose>	

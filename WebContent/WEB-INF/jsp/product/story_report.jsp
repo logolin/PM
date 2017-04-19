@@ -23,6 +23,7 @@
 .table-chart tr > td.chart-color {padding-left: 0!important; text-align: center; padding-right: 0!important; color: #f1f1f1}
 .chart-wrapper {padding: 10px; background-color: #f1f1f1; border: 1px solid #e5e5e5}
 .table-wrapper > .table-bordered > thead > tr:first-child th {border-top: 1px solid #ddd}
+.panel-heading > strong > span {float: right; color: #29a8cd;}
 </style>
 <title>报表</title>
 </head>
@@ -131,7 +132,7 @@
 			<div class="col-md-9 col-lg-10">
     			<div class="panel panel-sm">
       				<div class="panel-heading">
-        				<strong>报表</strong>
+        				<strong>报表<span>注：统计报表的数据，来源于列表页面的检索结果，生成统计报表前请先在列表页面进行检索。</span></strong>
       				</div>
       				<table class="table active-disabled">
                 		<tbody>

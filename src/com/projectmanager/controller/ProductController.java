@@ -299,6 +299,7 @@ public class ProductController {
 			//设置产品id的session
 			session.setAttribute("sessionProductId", product.getId());
 			model.addAttribute("currentProduct", product);
+			model.addAttribute("branchMap", this.branchService.getBranchesByProductIdMappingIdAndName(productId));
 		}
 	}
 	

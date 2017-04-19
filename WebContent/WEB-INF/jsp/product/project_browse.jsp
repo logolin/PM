@@ -12,11 +12,11 @@
 <link href="../resources/style.css" rel="stylesheet"/>
 <script src="../resources/zui/assets/jquery.js"></script>
 <script src="../resources/dist/js/zui.min.js"></script>
-<script src='http://cdn.zentao.net/8.2.4/js/chartjs/chart.line.min.js?v=8.2.4' type='text/javascript'></script>
+<script src="../resources/zui/dist/lib/chart/chart.line.min.js" type='text/javascript'></script>
 <style>
 .projectline {padding: 2px!important}
 </style>
-<title>::产品列表</title>
+<title>${currentProduct.name}::项目列表</title>
 </head>
 <body>
 	<header id="header">
