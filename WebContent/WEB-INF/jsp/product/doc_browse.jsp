@@ -52,7 +52,7 @@ $(document).ready(function(){
 			  			<c:forEach items="${docList}" var="doc">
 					    <tr class="text-center">
 					      	<td><a href=""><fmt:formatNumber value="${doc.id}" pattern="#000"/></a></td>
-					      	<td>${moduleMap.get(doc.module)}</td>
+					      	<td>${doc.type}</td>
 					      	<td class="text-left nobr"><nobr>
 					      		<shiro:hasPermission name="doc:view"><a href=""></shiro:hasPermission>${doc.title}<shiro:hasPermission name="doc:view"></a></shiro:hasPermission>
 					      	</nobr></td>

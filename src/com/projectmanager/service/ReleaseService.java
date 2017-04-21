@@ -84,4 +84,14 @@ public class ReleaseService implements LogInterfaceService<Release>{
 		
 		return this.releaseRepository.findFirstByProductAndBranch_idOrderByDate(productId, branchId);
 	}
+	
+	public List<Release> getReleasesIncludeBranch0(int productId, int branchId) {
+		
+		List<Release> releases = getReleases(productId, branchId);
+		if(branchId != 0) {
+			releases.addAll(this.releaseRepository.findByProductIdAndBranch_idOrderByDate(productId, 0));
+		}
+		
+		return releases;
+	}
 }

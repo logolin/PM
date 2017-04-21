@@ -55,7 +55,7 @@ public class BuildService {
 	 */
 	public List<Build> getUnreleasedBuild(int productId, int branchId) {
 		
-		List<Release> releases = this.releaseService.getReleases(productId, branchId);
+		List<Release> releases = this.releaseService.getReleasesIncludeBranch0(productId, branchId);
 		
 		List<Integer> releaseBuildIds = new ArrayList<Integer>();
 		
@@ -73,9 +73,9 @@ public class BuildService {
 			builds = this.buildRepository.findByIdNotInAndProductIdAndBranch_idOrderByBranch_id(releaseBuildIds, productId, branchId);
 		}
 		
-		for (Build build : builds) {
-			build.setBranchName(this.branchService.getBranchNameById(productId, build.getBranch_id()));
-		}
+//		for (Build build : builds) {
+//			build.setBranchName(this.branchService.getBranchNameById(productId, build.getBranch_id()));
+//		}
 		
 		return builds;
 	}	

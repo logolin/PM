@@ -32,13 +32,13 @@
 		  		<div class="heading">	      			
 		  			<i class="icon-tags"></i>
 	      			浏览计划
-	      			<span class="label label-info"><c:if test="${branchId == 0}">所有</c:if>${branchMap[branchId]}</span>     
+	      			<c:if test="${currentProduct.type != 'normal' && branchId != null}"><span class="label label-info"><c:if test="${branchId == 0}">所有</c:if>${branchMap[branchId]}</span></c:if>     
 	      		</div>
 	      		<div class="actions">
-	      			<a href="./plan_create_${productId}_0" class="btn "><i class="icon-release-create icon-plus"></i> 创建计划</a>
+	      			<a href="./plan_create_${productId}" class="btn "><i class="icon-release-create icon-plus"></i> 创建计划</a>
 	      		</div>	      		
 	      	</div>
-			<form method="post" id="productplanForm" action="./plan_batchEdit_${productId}_${branchId}_form">
+			<form method="post" id="productplanForm" action="./plan_batchEdit_${productId}_form">
 				<table class="table table-condensed table-hover table-striped tablesorter" id="productplan">
 				  	<thead>
 				    	<tr class="colhead">

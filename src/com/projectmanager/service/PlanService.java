@@ -35,9 +35,8 @@ public class PlanService implements LogInterfaceService<Plan>{
 		return fieldNameMap;
 	}
 	
-	public Plan create(int productId, int branchId, Plan plan) {
+	public Plan create(int productId, Plan plan) {
 		
-		plan.setBranch_id(branchId);
 		plan.setProduct(this.productRepository.findOne(productId));
 		
 		return this.planRepository.save(plan);

@@ -31,7 +31,7 @@ $(document).ready(function(){
 		  		<div class="heading">
 	      			<i class="icon-tags"></i>
 	      			浏览发布      
-	      			<span class="label label-info"><c:if test="${branchId == 0}">所有</c:if>${branchMap[branchId]}</span>    
+	      			<c:if test="${currentProduct.type != 'normal' && branchId != null}"><span class="label label-info"><c:if test="${branchId == 0}">所有</c:if>${branchMap[branchId]}</span></c:if>    
 	      		</div>
 	      		<div class="actions">
 	      			<shiro:hasPermission name="release:create">

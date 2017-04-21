@@ -48,7 +48,7 @@ table.copy td .form-control {border-right: 0}
 			<div class="row">
 				<div class="col-sm-4">
     				<div class="panel">
-      					<div class="panel-heading"><i class="icon icon-wrench"></i> <strong>${currentProduct.name}::维护项目视图模块</strong></div>
+      					<div class="panel-heading"><i class="icon icon-wrench"></i> <strong>${currentProduct.name}::维护产品视图模块</strong></div>
       					<div class="panel-body">
         					<div class="container">
           						<ul class="tree-lines tree" id="modulesTree" data-animate="true" data-ride="tree">

@@ -41,7 +41,7 @@ $(function(){
 	  		<div id="titlebar">
   				<div class="heading">批量编辑</div>
 			</div>
-			<form method="post" action="./plan_batchEdit_${productId}_${branchId}">
+			<form method="post" action="./plan_batchEdit_${productId}">
 				<table class="table table-form">
   					<thead>
 				    	<tr>

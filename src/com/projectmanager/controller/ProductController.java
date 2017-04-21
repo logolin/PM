@@ -111,7 +111,12 @@ import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXmlExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
 
-
+/**
+ * 以下是ProductController类方法参数说明（特殊情况会在方法注释说明）：
+ * @param productId 所属产品ID，通常为当前浏览的产品的ID
+ * @param branchId 所属分支或平台的ID，值为0表示所有，当该产品类型为正常，则值只能为0
+ * @return 返回需解析页面位置字符串或者附带数据的ModelAndView对象
+ */
 @Controller
 @RequestMapping("/product")
 @SessionAttributes("userAccount")
@@ -255,31 +260,24 @@ public class ProductController {
 		
 	}
 	
-//	@RequestMapping("/{subMenu:[a-z]+}_{action:[a-z]+}_{productId:\\d+}_{branchId:\\d+}")
-//	public String route(@PathVariable String subMenu, @PathVariable String action, @PathVariable int productId, @PathVariable int branchId) {
-//		
-//		switch (subMenu) {
-//		case "plan":
-//			if (action.equals("browse")) 
-//				return "forward:" + subMenu + "_browse_" + productId + "_" + branchId + "_id_sortUp_10_1";
-//			if (action.equals("create")) 
-//				return "forward:" + subMenu + "_create_" + productId + "_" + branchId;
-//		case "release":
-//			if (action.equals("create")) 
-//				return "forward:" + subMenu + "_create_" + productId + "_" + branchId;
-//		case "roadmap":
-//			return "forward:" + subMenu + "_browse_" + productId + "_" + branchId;
-//		case "story":
-//			if (action.equals("batchCreate")) 
-//				return "forward:" + subMenu + "_batchCreate_" + productId + "_" + branchId;
-//			if (action.equals("browse")) 
-//				return "forward:" + subMenu + "_browse_" + productId + "_" + branchId;
-//		case "module":
-//			return "forward:" + subMenu + "_" + action + "_" + productId + "_" + branchId + "_0";
-//		default:
-//			return "forward:" + subMenu + "_browse_" + productId;
-//		}
-//	}
+	@RequestMapping("/{subMenu:[a-z]+}_{action:[a-zA-Z]+}_{productId:\\d+}_{branchId:\\d+}")
+	public String route(@PathVariable String subMenu, @PathVariable String action, @PathVariable int productId, @PathVariable int branchId) {
+		
+		switch (subMenu) {
+		case "plan":
+			if (action.equals("browse")) 
+				return "forward:" + subMenu + "_browse_" + productId + "_" + branchId + "_id_sortUp_10_1";
+		case "story":
+			if (action.equals("batchCreate")) 
+				return "forward:" + subMenu + "_batchCreate_" + productId + "_" + branchId + "_0";
+			if (action.equals("browse")) 
+				return "forward:" + subMenu + "_browse_" + productId + "_" + branchId;
+		case "module":
+			return "forward:" + subMenu + "_" + action + "_" + productId + "_" + branchId + "_0";
+		default:
+			return "forward:" + subMenu + "_browse_" + productId;
+		}
+	}
 
 	/*
 	 * 配置导航栏地址
@@ -570,8 +568,8 @@ public class ProductController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value="/plan_create_{productId}_{branchId}", method=RequestMethod.GET)
-	public ModelAndView createPlanGet(@PathVariable int productId, @PathVariable int branchId, Model model) {
+	@RequestMapping(value="/plan_create_{productId}", method=RequestMethod.GET)
+	public ModelAndView createPlanGet(@PathVariable int productId, Model model) {
 		
 		model.addAttribute("operate", "create");
 		
@@ -581,10 +579,10 @@ public class ProductController {
 	/*
 	 * 创建计划
 	 */
-	@RequestMapping(value="/plan_create_{productId}_{branchId}", method=RequestMethod.POST) 
-	public String createPlanPost(@PathVariable int productId, @PathVariable int branchId, Plan plan, Model model) {
+	@RequestMapping(value="/plan_create_{productId}", method=RequestMethod.POST) 
+	public String createPlanPost(@PathVariable int productId, Plan plan, Model model) {
 		
-		int planId = this.planService.create(productId, branchId, plan).getId();
+		int planId = this.planService.create(productId, plan).getId();
 		
 		return "redirect:plan_view_" + productId + "_" + planId;
 	}	
@@ -618,22 +616,29 @@ public class ProductController {
 		return "redirect:plan_view_" + productId + "_" + planId;
 	}
 	
-	/*
-	 * 批量编辑计划
+	/**
+	 * 请求批量修改计划页面
+	 * @param planIdList 批量修改的多个计划ID
+	 * @param model 传递到页面的数据对象
+	 * @param productId 所属产品ID
+	 * @return 需解析的页面位置字符串
 	 */
-	@RequestMapping(value="/plan_batchEdit_{productId}_{branchId}_form")
-	public String batchEditPlansGet(Integer[] planIdList, Model model, @PathVariable String productId, @PathVariable String branchId) {
+	@RequestMapping(value="/plan_batchEdit_{productId}_form")
+	public String batchEditPlansGet(Integer[] planIdList, Model model, @PathVariable String productId) {
 		
 		model.addAttribute("planList", this.planRepository.findByIdIn(planIdList));
 		
 		return "product/plan_batchedit";
 	}
 	
-	/*
-	 * 批量编辑计划
+	/**
+	 * 处理批量修改计划请求
+	 * @param plans 表单绑定的多个计划
+	 * @param productId 所属产品ID
+	 * @return 跳转到浏览计划页面
 	 */
-	@RequestMapping(value="/plan_batchEdit_{productId}_{branchId}",method=RequestMethod.POST)
-	public String batchEditPlansPost(Plans plans, @PathVariable String productId, @PathVariable String branchId) {
+	@RequestMapping(value="/plan_batchEdit_{productId}",method=RequestMethod.POST)
+	public String batchEditPlansPost(Plans plans, @PathVariable String productId) {
 		
 //		for (Plan plan : plans.getPlans()) {
 //			MyUtil.copyProperties(plan, this.planRepository.findOne(plan.getId()));
@@ -643,8 +648,11 @@ public class ProductController {
 		return "redirect:plan_browse_" + productId;
 	}
 	
-	/*
-	 * 管理分支
+	/**
+	 * 请求管理分支或平台页面
+	 * @param productId 所属产品ID
+	 * @param model 传递到页面的数据对象
+	 * @return 页面对象
 	 */
 	@RequestMapping(value="/branch_manage_{productId}", method=RequestMethod.GET)
 	public ModelAndView manageBranchGet(@PathVariable int productId, Model model) {
@@ -660,8 +668,12 @@ public class ProductController {
 		return new ModelAndView("product/branch", "branchMap", this.branchService.getBranchesByProductIdMappingIdAndName(productId));
 	}
 	
-	/*
-	 * 管理分支
+	/**
+	 * 处理修改或者增加分支请求
+	 * @param productId 所属产品ID
+	 * @param newbranch 新增的一个或多个分支名字
+	 * @param modifiedBranch 修改的分支
+	 * @return 跳转到分支管理页面
 	 */
 	@RequestMapping(value="/branch_manage_{productId}", method=RequestMethod.POST)
 	public String manageBranchPost(@PathVariable int productId, @RequestParam("newbranch[]") String newbranch[], BranchMap modifiedBranch) {
@@ -671,8 +683,12 @@ public class ProductController {
 		return "redirect:/product/branch_manage_" + productId;
 	}
 	
-	/*
-	 * 路线图
+	/**
+	 * 请求浏览路线图页面
+	 * @param productId 所属产品ID
+	 * @param branchId 要浏览路线图的分支ID,0表示显示所有，如果该产品类型为normal则branchId为0
+	 * @param model
+	 * @return 页面
 	 */
 	@RequestMapping("/roadmap_browse_{productId}_{branchId}")
 	public ModelAndView roadmap(@PathVariable int productId, @PathVariable int branchId, Model model) {
@@ -682,8 +698,12 @@ public class ProductController {
 		return new ModelAndView("product/roadmap", "roadmap", this.roadmapService.getRoadmap(productId, branchId));
 	}
 	
-	/*
-	 * 浏览发布
+	/**
+	 * 请求浏览发布页面
+	 * @param productId 所属产品ID
+	 * @param branchId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/release_browse_{productId}_{branchId}")
 	public ModelAndView browseRelease(@PathVariable int productId, @PathVariable int branchId, Model model) {
@@ -1568,17 +1588,17 @@ public class ProductController {
 		if(this.docRepository.findByProuct_id(productId).size() > 0) {
 			List<Doc> docs = this.docRepository.findByProuct_id(productId);
 		
-			Set<Integer> moduleSet = new HashSet<Integer>();
+			//Set<Integer> moduleSet = new HashSet<Integer>();
 			Set<String> userSet = new HashSet<String>();
 			for (Doc doc : docs) {
 				//获得操作者列表
-				moduleSet.add(doc.getModule());
+				//moduleSet.add(doc.getModule());
 				userSet.add(doc.getAddedBy());
 			}
 	
 			model.addAttribute("docList", docs);
 			//模块map
-			model.addAttribute("moduleMap", this.moduleService.getModulesByIdInMappingIdAndName(moduleSet));
+			//model.addAttribute("moduleMap", this.moduleService.getModulesByIdInMappingIdAndName(moduleSet));
 			//用户map
 			model.addAttribute("userMap", this.userService.findByAccountIn(userSet));
 		}

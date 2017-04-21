@@ -45,7 +45,7 @@
 	    					<tr class="text-center text-top">
 							<c:forEach items="${roadmap}" var="year">
 								<c:forEach items="${year.value}" var="branch">							
-									<td><div class='roadmap branch'><c:if test="${branch.key == 0}">所有</c:if>${branchMap[branch.key]}</div>
+									<td><c:if test="${currentProduct.type != 'normal' && branchId != null}"><div class='roadmap branch'><c:if test="${branch.key == 0}">所有</c:if>${branchMap[branch.key]}</div></c:if>
 									<c:forEach items="${branch.value}" var="object" varStatus="c">
 										<c:choose>
 											<c:when test="${object.getClass().name == 'com.projectmanager.entity.Plan'}">
