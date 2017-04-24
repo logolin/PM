@@ -61,6 +61,15 @@ import com.projectmanager.service.ReleaseService;
 import com.projectmanager.service.StoryService;
 import com.projectmanager.service.TaskService;
 
+/**
+ * AjaxController用于处理各种Ajax请求
+ * 以下是AjaxController类方法参数说明（特殊情况会在方法注释说明）：
+ * @param productId 所属产品ID
+ * @param branchId 所属分支或平台的ID
+ * @param moduleId 所属模块ID
+ * @param storyId 需求ID
+ * @return 返回需解析成Json的对象
+ */
 @RestController
 @SessionAttributes("userAccount")
 @Transactional
@@ -138,13 +147,24 @@ public class AjaxController {
 	@Autowired
 	private PjPdRelationRepository pjPdRelationRepository;
 	
-	
+	/**
+	 * 按产品名称搜索有权限查看的产品
+	 * @param content 搜索值
+	 * @param account 用户名
+	 * @return
+	 */
 	@RequestMapping(value="/ajaxGetProducts/{account}", method=RequestMethod.GET)
 	public List<Object[]> getProducts(@RequestParam(value="content", defaultValue="", required=false) String content, @PathVariable String account) {
 		
 		return this.productRepository.findByPrivAndNameContaining(account, content);
 	}
 	
+	/**
+	 * 按分支名称搜索分支
+	 * @param content 搜索值
+	 * @param productId 产品Id
+	 * @return
+	 */
 	@JsonView(Branch.Public.class)
 	@RequestMapping(value="/ajaxGetBranches/{productId}", method=RequestMethod.GET)
 	public List<Branch> getBranches(@RequestParam(value="content", defaultValue="", required=false) String content, @PathVariable("productId") int productId) {
@@ -163,6 +183,13 @@ public class AjaxController {
 		return branches;
 	}	
 	
+	/**
+	 * 获取产品计划
+	 * @param isUnexpired 是否未过期
+	 * @param productId
+	 * @param branchId
+	 * @return
+	 */
 	@JsonView(Plan.Public.class)
 	@RequestMapping("/ajaxGetPlans/{isUnexpired}/{productId}/{branchId}")
 	public List<Plan> getPlans(@PathVariable boolean isUnexpired, @PathVariable int productId, @PathVariable int branchId) {
@@ -172,6 +199,12 @@ public class AjaxController {
 			return this.planService.getPlans(productId, branchId);
 	}
 	
+	/**
+	 * 按产品和产品分支获取模块
+	 * @param productId
+	 * @param branchId
+	 * @return
+	 */
 	@JsonView(Module.Public.class)
 	@RequestMapping("/ajaxGetModules/{productId:\\d+}/{branchId:\\d+}")
 	public List<Module> ajaxGetModules(@PathVariable("productId") int productId, @PathVariable("branchId") int branchId) {
@@ -179,6 +212,12 @@ public class AjaxController {
 		return this.moduleService.getModuleTree(productId, branchId);
 	}
 	
+	/**
+	 * 获取关联或细分的需求
+	 * @param linkOrChildStories 关联或细分需求
+	 * @param storyId
+	 * @return
+	 */
 	@JsonView(Story.Public.class)
 	@RequestMapping("/ajaxGet{linkOrChildStories}/{storyId}")
 	public List<Story> getLinkStories(@PathVariable String linkOrChildStories, @PathVariable("storyId") int storyId) {
@@ -195,6 +234,12 @@ public class AjaxController {
 		return this.storyRepository.findByIdIn(MyUtil.convertStrToList(storiesStr, ","));
 	}
 	
+	/**
+	 * 删除模块
+	 * @param moduleId
+	 * @param userAccount
+	 * @return
+	 */
 	@RequestMapping(value="/ajaxDeleteModule/{moduleId}",method=RequestMethod.DELETE,produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String ajaxDeleteModule(@PathVariable int moduleId, @ModelAttribute("userAccount") String userAccount) {
 		
@@ -221,9 +266,9 @@ public class AjaxController {
 	}
 
 	/**
-	 * 根据产品返回模块
+	 * 按产品获取模块
 	 * @param productId
-	 * @return tree
+	 * @return
 	 */
 	@JsonView(Module.Public.class)
 	@RequestMapping("/ajaxGetModulesForproduct/{productId:\\d+}")
@@ -322,7 +367,7 @@ public class AjaxController {
 	}
 	
 	/**
-	 * 根据product和module查找需求
+	 * 根据产品和产品模块查找需求
 	 * @param productId
 	 * @param moduleId
 	 * @return
@@ -360,6 +405,12 @@ public class AjaxController {
 		return storyList;
 	}
 
+	/**
+	 * 转移产品需求到目标产品计划
+	 * @param planId 源产品计划id
+	 * @param storyIds 一个或多个产品需求Id
+	 * @param replacePlanId 目标产品计划id
+	 */
 	@RequestMapping(value="/ajaxChangePlan/{planId}", method=RequestMethod.POST)
 	public void ajaxChangePlan(@PathVariable String planId, @RequestParam("storyIds[]") Integer[] storyIds, @RequestParam("replacePlanId") String replacePlanId) {
 		
@@ -378,6 +429,11 @@ public class AjaxController {
 		}
 	}
 	
+	/**
+	 * 关联计划到多个需求
+	 * @param planId
+	 * @param storyIds
+	 */
 	@RequestMapping(value="/ajaxLinkPlanToStories/{planId}", method=RequestMethod.POST)
 	public void ajaxLinkPlan2Stories(@PathVariable String planId, @RequestParam("ids[]") Integer[] storyIds) {
 		
@@ -407,6 +463,11 @@ public class AjaxController {
 		return this.planService.getPlans(productId, 0);
 	}
 	
+	/**
+	 * 从产品计划中取消关联Bug
+	 * @param planId
+	 * @param bugIds 
+	 */
 	@RequestMapping(value="/ajaxUnlinkPlanFromBugs/{planId}",method=RequestMethod.POST)
 	public void ajaxUnlinkPlanFromBugs(@PathVariable int planId, @RequestParam("bugIds[]") Integer[] bugIds) {
 		
@@ -417,6 +478,17 @@ public class AjaxController {
 		}
 	}
 	
+	/**
+	 * 关联或细分需求
+	 * @param field 关联或细分
+	 * @param storyId
+	 * @param storyIds
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 */
 	//LinkOrChildStories的值为LinkStories或ChildStories
 	@RequestMapping(value="/ajaxLink{LinkOrChildStories}ToStory/{storyId}",method=RequestMethod.POST)
 	public void ajaxLinkStories2Story(@PathVariable("LinkOrChildStories") String field, @PathVariable int storyId, @RequestParam("ids[]") String storyIds) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -432,6 +504,17 @@ public class AjaxController {
 		this.storyService.modifiedByColumn(field, fieldVal, new Integer[]{storyId}, field.toLowerCase());
 	}
 	
+	/**
+	 * 关联Bug或需求到产品发布
+	 * @param field Bug或需求
+	 * @param releaseId
+	 * @param ids bugID或产品ID
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 */
 	@RequestMapping(value="/ajaxLink{field}ToRelease/{releaseId}",method=RequestMethod.POST)
 	public void ajaxLinkBugsOrStories2Release(@PathVariable String field, @PathVariable int releaseId, @RequestParam("ids[]") String ids) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		
@@ -447,6 +530,17 @@ public class AjaxController {
 		this.releaseService.modify(source, target, "", "link" + field.toLowerCase());
 	}
 	
+	/**
+	 * 取消关联或取消细分需求
+	 * @param field
+	 * @param storyId
+	 * @param story2Unlink 取消关联的需求
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 */
 	@RequestMapping(value="/ajaxUn{linkOrChildStories}FromStory/{storyId}",method=RequestMethod.POST)
 	public void ajaxUnlinkStoryFromStory(@PathVariable("linkOrChildStories") String field, @PathVariable int storyId, @RequestParam("storyId") String story2Unlink) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		
@@ -456,6 +550,17 @@ public class AjaxController {
 		this.storyService.modifiedByColumn(field, fieldVal, new Integer[]{storyId}, "un" + field.toLowerCase());
 	}
 	
+	/**
+	 * 取消关联Bug或需求到产品发布
+	 * @param field
+	 * @param releaseId
+	 * @param ids
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 */
 	@RequestMapping(value="/ajaxUnlink{field}FromRelease/{releaseId}",method=RequestMethod.POST)
 	public void ajaxUnlinkFromRelease(@PathVariable String field, @PathVariable int releaseId, @RequestParam("ids[]") Integer[] ids) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		
@@ -471,6 +576,11 @@ public class AjaxController {
 		this.releaseService.modify(source, target, "", "unlink" + field.toLowerCase());
 	}
 	
+	/**
+	 * 关联产品计划到Bug
+	 * @param planId
+	 * @param bugIds 一个或多个Bug的ID
+	 */
 	@RequestMapping(value="/ajaxLinkPlanToBugs/{planId}",method=RequestMethod.POST)
 	public void ajaxLinkPlan2Bugs(@PathVariable Integer planId, @RequestParam("bugIds[]") List<Integer> bugIds) {
 		
@@ -489,6 +599,11 @@ public class AjaxController {
 		return this.projectService.getProductForProject(projectId);
 	}
 	
+	/**
+	 * 产品排序
+	 * @param ids
+	 * @param sorts 序数
+	 */
 	@RequestMapping(value="/ajaxSort",method=RequestMethod.POST)
 	public void sort(@RequestParam("ids[]") Integer[] ids, @RequestParam("sorts[]") Integer[] sorts) {
 		

@@ -115,6 +115,7 @@ import net.sf.jasperreports.engine.util.JRLoader;
  * 以下是ProductController类方法参数说明（特殊情况会在方法注释说明）：
  * @param productId 所属产品ID，通常为当前浏览的产品的ID
  * @param branchId 所属分支或平台的ID，值为0表示所有，当该产品类型为正常，则值只能为0
+ * @param model 传递到页面的数据对象
  * @return 返回需解析页面位置字符串或者附带数据的ModelAndView对象
  */
 @Controller
@@ -712,8 +713,12 @@ public class ProductController {
 		return new ModelAndView("product/release_browse", "releaseList", this.releaseService.getReleases(productId, branchId));
 }
 	
-	/*
-	 * 编辑发布
+	/**
+	 * 请求编辑发布页面
+	 * @param releaseId 需要编辑的发布ID
+	 * @param productId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/release_edit_{productId}_{releaseId}", method=RequestMethod.GET)
 	public String editReleaseGet(@PathVariable int releaseId, @PathVariable int productId, Model model) {
@@ -734,8 +739,16 @@ public class ProductController {
 		return "product/release_create";
 	}
 	
-	/*
-	 * 编辑发布
+	/**
+	 * 处理编辑发布请求
+	 * @param files 表单上传的附件
+	 * @param titles 附件的名字
+	 * @param releaseId
+	 * @param productId
+	 * @param release 表单绑定的发布对象
+	 * @param userAccount 操作的用户名
+	 * @return
+	 * @throws IOException
 	 */
 	@RequestMapping(value="/release_edit_{productId}_{releaseId}", method=RequestMethod.POST)
 	public String editReleasePost(@RequestParam(value="files", required=false) MultipartFile[] files, String[] titles, @PathVariable int releaseId, @PathVariable int productId, Release release, @ModelAttribute("userAccount") String userAccount) throws IOException {
@@ -749,8 +762,12 @@ public class ProductController {
 		return "redirect:release_view_" + productId + "_" + releaseId;
 	}
 	
-	/*
-	 * 创建发布
+	/**
+	 * 请求创建发布页面
+	 * @param productId
+	 * @param branchId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/release_create_{productId}_{branchId}", method=RequestMethod.GET)
 	public ModelAndView createReleaseGet(@PathVariable int productId, @PathVariable int branchId, Model model) {
@@ -767,8 +784,18 @@ public class ProductController {
 		return new ModelAndView("product/release_create", "buildList", builds);
 	}
 	
-	/*
-	 * 创建发布
+	/**
+	 * 处理创建发布请求
+	 * @param productId
+	 * @param files
+	 * @param titles
+	 * @param branchId
+	 * @param release
+	 * @param build_id 表单所选择的版本ID
+	 * @param model
+	 * @param userAccount
+	 * @return
+	 * @throws IOException
 	 */
 	@RequestMapping(value="/release_create_{productId}_{branchId}", method=RequestMethod.POST)
 	public String createReleasePost(@PathVariable int productId, @RequestParam(value="files", required=false) MultipartFile[] files, String[] titles, @PathVariable int branchId, Release release, Integer build_id, Model model, @ModelAttribute("userAccount") String userAccount) throws IOException {
@@ -780,8 +807,12 @@ public class ProductController {
 		return "redirect:/product/release_view_" + productId + "_" + releaseId;
 	}	
 	
-	/*
-	 * 维护和暂停发布
+	/**
+	 * 修改发布的状态
+	 * @param productId
+	 * @param releaseId
+	 * @param status 修改后发布的状态，normal为正常状态，terminate为暂停维护状态
+	 * @return
 	 */
 	@RequestMapping("/release_changeStatus_{productId}_{releaseId}_{status}")
 	public String changeStatusRelease(@PathVariable String productId, @PathVariable int releaseId, @PathVariable String status) {
@@ -795,8 +826,12 @@ public class ProductController {
 	}	
 	
 	//附件未完成
-	/*
+	/**
 	 * 查看发布详细信息
+	 * @param productId
+	 * @param releaseId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/release_view_{productId}_{releaseId}")
 	public String viewRelease(@PathVariable int productId, @PathVariable int releaseId, Model model) {
@@ -821,8 +856,12 @@ public class ProductController {
 		return "product/release_view";
 	}
 	
-	/*
-	 * 关联需求到发布
+	/**
+	 * 请求关联需求到发布页面
+	 * @param productId
+	 * @param releaseId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/release_linkStories_{productId}_{releaseId}")
 	public String linkStories2Release(@PathVariable int productId, @PathVariable int releaseId, Model model) {
@@ -842,8 +881,12 @@ public class ProductController {
 		return "product/linkstories";
 	}
 	
-	/*
-	 * 关联BUG到发布
+	/**
+	 * 请求关联Bug到发布页面
+	 * @param productId
+	 * @param releaseId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/release_linkBugs_{productId}_{releaseId}")
 	public String linkBugs2Release(@PathVariable int productId, @PathVariable int releaseId, Model model) {
@@ -862,8 +905,12 @@ public class ProductController {
 		return "product/linkbugs";
 	}
 	
-	/*
-	 * 关联剩余BUG到发布
+	/**
+	 * 请求关联剩余Bug到发布页面
+	 * @param productId
+	 * @param releaseId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/release_linkLeftBugs_{productId}_{releaseId}")
 	public String linkLeftBugs2Release(@PathVariable int productId, @PathVariable int releaseId, Model model) {
@@ -882,8 +929,11 @@ public class ProductController {
 		return "product/linkbugs";
 	}
 	
-	/*
-	 * 浏览项目
+	/**
+	 * 请求浏览项目页面
+	 * @param productId
+	 * @param branchId
+	 * @return
 	 */
 	@RequestMapping("/project_browse_{productId}_{branchId}")
 	public ModelAndView browseProject(@PathVariable int productId, @PathVariable int branchId) {
@@ -891,8 +941,11 @@ public class ProductController {
 		return new ModelAndView("product/project_browse", "projectList", this.projectService.getProjectsForProduct(productId, branchId));
 	}	
 
-	/*
+	/**
 	 * 根据分支浏览需求
+	 * @param productId
+	 * @param branchId
+	 * @return
 	 */
 	@RequestMapping("/story_browse_{productId:\\d+}_{branchId:\\d+}")
 	public String browseStoryByBranch(@PathVariable int productId, @PathVariable int branchId) {
@@ -900,8 +953,12 @@ public class ProductController {
 		return "forward:story_browse_" + productId + "_" + branchId + "_0_status_unclosed_id_up_10_1_true";
 	}
 	
-	/*
+	/**
 	 * 根据模块浏览需求
+	 * @param productId
+	 * @param branchId
+	 * @param moduleId 模块ID
+	 * @return
 	 */
 	@RequestMapping("/story_browse_{productId:\\d+}_{branchId:\\d+}_{moduleId:\\d+}")
 	public String browseStoryByModule(@PathVariable int productId, @PathVariable int branchId, @PathVariable int moduleId) {
@@ -909,8 +966,20 @@ public class ProductController {
 		return "forward:story_browse_" + productId + "_" + branchId + "_" + moduleId + "_status_unclosed_id_up_10_1_true";
 	}
 	
-	/*
-	 * 浏览需求
+	/**
+	 * 根据某列和列值浏览需求
+	 * @param productId
+	 * @param branchId
+	 * @param moduleId
+	 * @param column 列名
+	 * @param columnVal 列值
+	 * @param orderBy 按列排序
+	 * @param ascOrDesc 升序或降序
+	 * @param recPerPage 分页大小
+	 * @param page 页码
+	 * @param isComplex 是否详细模式
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/story_browse_{productId}_{branchId}_{moduleId}_{column}_{columnVal}_{orderBy}_{ascOrDesc}_{recPerPage}_{page}_{isComplex}")
 	public String browseStory(@PathVariable int productId, @PathVariable int branchId, @PathVariable int moduleId, @PathVariable String column, @PathVariable String columnVal, @PathVariable String orderBy, @PathVariable String ascOrDesc, @PathVariable int recPerPage, @PathVariable int page, @PathVariable Boolean isComplex, Model model) {
@@ -948,8 +1017,11 @@ public class ProductController {
 		return "product/story_browse";
 	}
 	
-	/*
-	 * 创建需求
+	/**
+	 * 请求创建需求页面
+	 * @param productId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/story_create_{productId:\\d+}", method=RequestMethod.GET)
 	public String createStoryGet(@PathVariable int productId, Model model) {
@@ -963,8 +1035,17 @@ public class ProductController {
 		return "product/story_create";
 	}
 	
-	/*
-	 * 创建需求
+	/**
+	 * 处理创建需求请求
+	 * @param productId
+	 * @param story 表单绑定的需求对象
+	 * @param storySpec 表单绑定的需求描述和验收标准对象
+	 * @param files 附件
+	 * @param titles 附件名字
+	 * @param userAccount 创建者
+	 * @param model
+	 * @return
+	 * @throws IOException
 	 */
 	@RequestMapping(value="/story_create_{productId:\\d+}", method=RequestMethod.POST)
 	public String createStoryPost(@PathVariable int productId, Story story, StorySpec storySpec, @RequestParam(value="files", required=false) MultipartFile[] files, String[] titles, @ModelAttribute("userAccount") String userAccount,Model model) throws IOException {
@@ -979,8 +1060,13 @@ public class ProductController {
 		return "redirect:story_view_" + productId + "_" + storyId;
 	}
 	
-	/*
-	 * 批量创建需求
+	/**
+	 * 请求批量创建需求页面
+	 * @param productId
+	 * @param branchId
+	 * @param moduleId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/story_batchCreate_{productId:\\d+}_{branchId:\\d+}_{moduleId:\\d+}", method=RequestMethod.GET)
 	public String batchCreateStoryGet(@PathVariable int productId, @PathVariable int branchId, @PathVariable int moduleId, Model model) {
@@ -991,8 +1077,12 @@ public class ProductController {
 		return "product/story_batchcreate";
 	}
 	
-	/*
-	 * 批量创建需求
+	/**
+	 * 处理批量创建需求请求
+	 * @param productId
+	 * @param branchId
+	 * @param stories 页面表单绑定的多个需求对象
+	 * @return
 	 */
 	@RequestMapping(value="/story_batchCreate_{productId:\\d+}_{branchId:\\d+}_{moduleId:\\d+}", method=RequestMethod.POST)
 	public String batchCreateStoryPost(@PathVariable int productId , @PathVariable int branchId, Stories stories) {
@@ -1004,6 +1094,12 @@ public class ProductController {
 		return "redirect:story_browse_" + productId;
 	}
 	
+	/**
+	 * 请求查看最新版本的需求页面
+	 * @param productId
+	 * @param storyId 要查看的需求ID
+	 * @return
+	 */
 	@RequestMapping("/story_view_{productId:\\d+}_{storyId:\\d+}")
 	public String viewStoryDefault(@PathVariable int productId, @PathVariable int storyId) {
 		
@@ -1012,8 +1108,12 @@ public class ProductController {
 		return "forward:story_view_" + productId + "_" + storyId + "_" + version;
 	}
 	
-	/*
-	 * 查看需求详细信息
+	/**
+	 * 请求查看需求页面
+	 * @param storyId
+	 * @param version 版本号，需求变更后version自动递增
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/story_view_{productId}_{storyId}_{version}",method=RequestMethod.GET)
 	public String viewStoryGet(@PathVariable int storyId, @PathVariable int version, Model model) {
@@ -1045,8 +1145,14 @@ public class ProductController {
 		return "product/story_view";
 	}
 	
-	/*
-	 * 查看需求详细信息
+	/**
+	 * 处理查看需求页面的添加备注请求
+	 * @param userAccount 当前用户
+	 * @param productId
+	 * @param storyId 需求ID
+	 * @param version 版本号
+	 * @param comment 备注内容
+	 * @return
 	 */
 	@RequestMapping(value="/story_view_{productId}_{storyId}_{version}",method=RequestMethod.POST)
 	public String viewStoryPost(@ModelAttribute("userAccount") String userAccount, @PathVariable int productId, @PathVariable int storyId, @PathVariable int version, String comment) {
@@ -1063,8 +1169,13 @@ public class ProductController {
 		return "redirect:story_view_" + productId + "_" + storyId + "_" + version;
 	}
 	
-	/*
-	 * 修改评论
+	/**
+	 * 处理编辑备注请求
+	 * @param storyOrProduct 需求备注或产品备注
+	 * @param productId
+	 * @param actionId 动态ID
+	 * @param lastComment 页面表单传递的备注
+	 * @return
 	 */
 	@RequestMapping("/action_edit{storyOrProduct}Comment_{productId}_{actionId}")
 	public String editActionComment(@PathVariable String storyOrProduct, @PathVariable int productId, @PathVariable int actionId, String lastComment) {
@@ -1081,8 +1192,11 @@ public class ProductController {
 		}
 	}
 	
-	/*
-	 * 关闭需求
+	/**
+	 * 请求关闭需求页面
+	 * @param storyId 要关闭的需求ID
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/story_close_{productId}_{storyId}",method=RequestMethod.GET)
 	public String closeStoryGet(@PathVariable int storyId, Model model) {
@@ -1097,8 +1211,12 @@ public class ProductController {
 		return "product/story_close";
 	}
 	
-	/*
-	 * 关闭需求
+	/**
+	 * 处理关闭需求请求
+	 * @param storyId
+	 * @param story
+	 * @param userAccount
+	 * @param comment 备注
 	 */
 	@RequestMapping(value="/story_close_{productId}_{storyId}",method=RequestMethod.POST)
 	@ResponseBody
@@ -1116,8 +1234,11 @@ public class ProductController {
 		this.storyService.modify(story, this.storyRepository.findOne(storyId), comment, "close");
 	}
 	
-	/*
-	 * 激活需求
+	/**
+	 * 请求激活需求页面
+	 * @param storyId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/story_activate_{productId}_{storyId}",method=RequestMethod.GET)
 	public String activateStoryGet(@PathVariable int storyId, Model model) {
@@ -1131,8 +1252,12 @@ public class ProductController {
 		return "product/story_activate";
 	}
 	
-	/*
-	 * 激活需求
+	/**
+	 * 处理激活需求请求
+	 * @param storyId
+	 * @param assignedTo 指派给某用户
+	 * @param comment 备注
+	 * @return
 	 */
 	@RequestMapping(value="/story_activate_{productId}_{storyId}",method=RequestMethod.POST)
 	public String activateStoryPost(@PathVariable int storyId, String assignedTo, String comment) {
@@ -1150,8 +1275,11 @@ public class ProductController {
 		return "product/story_activate";
 	}
 	
-	/*
-	 * 变更需求
+	/**
+	 * 请求变更需求页面
+	 * @param storyId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/story_change_{productId}_{storyId}", method=RequestMethod.GET)
 	public String changeStoryGet(@PathVariable int storyId, Model model) {
@@ -1166,8 +1294,18 @@ public class ProductController {
 		return "product/story_change";
 	}
 	
-	/*
-	 * 变更需求
+	/**
+	 * 处理变更需求请求
+	 * @param storyId
+	 * @param productId
+	 * @param story 表单绑定的需求对象
+	 * @param storySpec 表单绑定的需求描述和验收标准对象
+	 * @param files 附件
+	 * @param titles 附件名称
+	 * @param comment 备注
+	 * @param userAccount 当前用户
+	 * @return
+	 * @throws IOException
 	 */
 	@RequestMapping(value="/story_change_{productId}_{storyId}", method=RequestMethod.POST)
 	public String changeStoryPost(@PathVariable int storyId, @PathVariable int productId, Story story, StorySpec storySpec, @RequestParam(value="files", required=false) MultipartFile[] files, String[] titles, String comment, @ModelAttribute("userAccount") String userAccount) throws IOException {
@@ -1178,8 +1316,12 @@ public class ProductController {
 		return "redirect:story_view_" + productId + "_" + storyId;
 	}
 	
-	/*
-	 * 编辑需求
+	/**
+	 * 请求编辑需求页面
+	 * @param storyId
+	 * @param productId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/story_edit_{productId}_{storyId}",method=RequestMethod.GET)
 	public String editStoryGet(@PathVariable int storyId, @PathVariable int productId, Model model) {
@@ -1201,8 +1343,12 @@ public class ProductController {
 		return "product/story_edit";
 	}
 	
-	/*
-	 * 编辑需求
+	/**
+	 * 处理编辑需求请求
+	 * @param storyId
+	 * @param story 表单绑定的需求对象
+	 * @param comment 备注
+	 * @return
 	 */
 	@RequestMapping(value="/story_edit_{productId}_{storyId}",method=RequestMethod.POST)
 	public String editStoryPost(@PathVariable int storyId, Story story, String comment) {
@@ -1212,12 +1358,16 @@ public class ProductController {
 		return "redirect:story_view_" + story.getProduct().getId() + "_" + storyId;
 	}
 	
-	/*
-	 * 关联需求到需求
+	/**
+	 * 请求细分需求或关联需求页面
+	 * @param linkOrChild 关联需求或细分需求
+	 * @param productId
+	 * @param storyId 
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/story_{linkOrChild}Stories_{productId}_{storyId}")
 	public String linkStories2Story(@PathVariable String linkOrChild, @PathVariable int productId, @PathVariable int storyId, Model model) {
-		
 		
 		Story storyTemp = this.storyRepository.findOne(storyId);
 		String storiesStr = null;
@@ -1244,8 +1394,11 @@ public class ProductController {
 		return "product/linkstories";
 	}
 	
-	/*
-	 * 评审需求
+	/**
+	 * 请求评审需求页面
+	 * @param storyId 被评审的需求ID
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/story_review_{productId}_{storyId}",method=RequestMethod.GET)
 	public String reviewStoryGet(@PathVariable int storyId, Model model) {
@@ -1261,8 +1414,16 @@ public class ProductController {
 		return "product/story_review";
 	}
 	
-	/*
-	 * 评审需求
+	/**
+	 * 处理评审需求请求
+	 * @param userAccount 评审的用户
+	 * @param productId
+	 * @param storyId
+	 * @param story
+	 * @param result 评审结果
+	 * @param preVersion 如果评审结果为撤销变更，那么需求版本就会恢复到preVersion版本
+	 * @param comment
+	 * @return
 	 */
 	@RequestMapping(value="/story_review_{productId}_{storyId}",method=RequestMethod.POST)
 	public String reviewStoryPost(@ModelAttribute("userAccount") String userAccount, @PathVariable int productId, @PathVariable int storyId, Story story, @RequestParam("result") String result, @RequestParam(value="preVersion", required=false) Integer preVersion, String comment) {
@@ -1280,8 +1441,12 @@ public class ProductController {
 		return "redirect:story_view_" + productId + "_" + storyId;
 	}
 	
-	/*
-	 * 批量编辑需求
+	/**
+	 * 请求批量编辑需求页面
+	 * @param storyIds 要编辑的一个或多个需求ID
+	 * @param branchId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/story_batchEdit_{productId}_{branchId}_form",method=RequestMethod.POST)
 	public String batchEditStoriesForm(String storyIds, @PathVariable int branchId ,Model model) {
@@ -1296,8 +1461,11 @@ public class ProductController {
 		return "product/story_batchedit";
 	}	
 	
-	/*
-	 * 批量编辑需求
+	/**
+	 * 处理批量编辑需求请求
+	 * @param productId
+	 * @param stories 表单绑定的一个或多个需求对象
+	 * @return
 	 */
 	@RequestMapping(value="/story_batchEdit_{productId:\\d+}",method=RequestMethod.POST)
 	public String batchEditStoriesPost(@PathVariable int productId, Stories stories) {
@@ -1307,8 +1475,13 @@ public class ProductController {
 		return "forward:story_browse_" + productId;
 	}
 	
-	/*
-	 * 管理模块
+	/**
+	 * 请求管理模块页面
+	 * @param productId
+	 * @param branchId
+	 * @param moduleId 
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/module_manage_{productId}_{branchId}_{moduleId}",method=RequestMethod.GET)
 	public String manageModuleGet(@PathVariable int productId, @PathVariable int branchId, @PathVariable int moduleId, Model model) {
@@ -1353,8 +1526,16 @@ public class ProductController {
 		return "product/module";
 	}
 	
-	/*
-	 * 管理模块
+	/**
+	 * 处理管理模块请求，包括创建模块和修改模块
+	 * @param productId
+	 * @param branchId
+	 * @param moduleId
+	 * @param names 创建模块的名字
+	 * @param branch_ids 模块所属分支id
+	 * @param shortnames 模块简称
+	 * @param modules 页面表单绑定的模块对象
+	 * @return
 	 */
 	@RequestMapping(value="/module_manage_{productId}_{branchId}_{moduleId}",method=RequestMethod.POST)
 	public String manageModulePost(@PathVariable int productId, @PathVariable int branchId, @PathVariable int moduleId, String[] names, Integer[] branch_ids, String[] shortnames, Modules modules) {
@@ -1366,8 +1547,11 @@ public class ProductController {
 		return "redirect:module_manage_" + productId + "_" + branchId + "_" + moduleId;  
 	}
 	
-	/*
-	 * 编辑模块
+	/**
+	 * 请求编辑模块页面
+	 * @param moduleId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/module_edit_{productId}_{moduleId}",method=RequestMethod.GET)
 	public String editModuleGet(@PathVariable int moduleId, Model model) {
@@ -1381,8 +1565,11 @@ public class ProductController {
 	}
 	
 	//缺修改关联的task
-	/*
-	 * 编辑模块
+	/**
+	 * 处理编辑模块请求
+	 * @param productId
+	 * @param moduleId
+	 * @param module
 	 */
 	@ResponseBody
 	@RequestMapping(value="/module_edit_{productId}_{moduleId}",method=RequestMethod.POST)
@@ -1421,8 +1608,12 @@ public class ProductController {
 		this.moduleService.modify(module, moduleTarget, "", "edit");
 	}
 	
-	/*
-	 * 批量修改需求
+	/**
+	 * 处理批量编辑需求请求
+	 * @param productId
+	 * @param storyIds 需求的id
+	 * @param fieldName 要修改的需求的列名称
+	 * @param fieldVal 要修改的需求的列值
 	 */
 	@ResponseBody
 	@RequestMapping(value="/story_batchChange_{productId}",method=RequestMethod.POST)
@@ -1432,8 +1623,22 @@ public class ProductController {
 		
 	}
 	
-	/*
-	 * 导出需求
+	/**
+	 * 处理导出需求请求
+	 * @param productId
+	 * @param branchId
+	 * @param moduleId
+	 * @param column 按列名查找需求的列名
+	 * @param columnVal 按列名查找需求的列值
+	 * @param fileName 页面表单传递的导出文件名
+	 * @param fileType 页面表单传递的导出文件类型
+	 * @param encode 页面表单传递的导出文件字符编码
+	 * @param exportType 页面表单传递的导出类型
+	 * @param exportFields 页面表单传递的要导出字段
+	 * @param storyIds
+	 * @param resp 处理后返回的响应（即文件）
+	 * @throws JRException
+	 * @throws IOException
 	 */
 	@RequestMapping(value="/story_export_{productId}_{branchId}_{moduleId}_{column}_{columnVal}", method=RequestMethod.POST)
 	public void exportStories(@PathVariable int productId, @PathVariable int branchId, @PathVariable int moduleId, @PathVariable String column, @PathVariable String columnVal, String fileName, String fileType, String encode, String exportType, String exportFields, String storyIds, HttpServletResponse resp) throws JRException, IOException {
@@ -1503,8 +1708,14 @@ public class ProductController {
 		resp.flushBuffer();
 	}
 	
-	/*
-	 * 报表
+	/**
+	 * 请求报表页面
+	 * @param productId
+	 * @param branchId
+	 * @param moduleId
+	 * @param column
+	 * @param columnVal
+	 * @return
 	 */
 	@RequestMapping(value="/story_report_{productId}_{branchId}_{moduleId}_{column}_{columnVal}",method=RequestMethod.GET)
 	public String reportStoryGet(@PathVariable int productId, @PathVariable int branchId, @PathVariable int moduleId, @PathVariable String column, @PathVariable String columnVal) {
@@ -1512,8 +1723,16 @@ public class ProductController {
 		return "product/story_report";
 	}
 	
-	/*
-	 * 报表
+	/**
+	 * 处理显示报表请求
+	 * @param charts 表单传递的要查看的报表名字
+	 * @param productId
+	 * @param branchId
+	 * @param moduleId
+	 * @param column
+	 * @param columnVal
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/story_report_{productId}_{branchId}_{moduleId}_{column}_{columnVal}",method=RequestMethod.POST)
 	public String reportStoryPost(String[] charts, @PathVariable int productId, @PathVariable int branchId, @PathVariable int moduleId, @PathVariable String column, @PathVariable String columnVal, Model model) {
@@ -1579,8 +1798,11 @@ public class ProductController {
 		return "product/story_report";
 	}
 	
-	/*
-	 * 浏览文档
+	/**
+	 * 请求浏览文档页面
+	 * @param productId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/doc_browse_{productId}")
 	public String browseDoc(@PathVariable Integer productId, Model model) {
@@ -1616,8 +1838,16 @@ public class ProductController {
 		return "product/doc_create";
 	}
 	
-	/*
-	 * 浏览动态
+	/**
+	 * 请求浏览动态页面
+	 * @param productId
+	 * @param condition 查找动态的条件
+	 * @param orderBy 动态排序字段
+	 * @param ascOrDesc 升序或降序排序
+	 * @param recPerPage 分页大小
+	 * @param page 页码
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/dynamic_browse_{productId}_{condition}_{orderBy}_{ascOrDesc}_{recPerPage}_{page}")
 	public String browseDynamic(@PathVariable int productId, @PathVariable String condition, @PathVariable String orderBy, @PathVariable String ascOrDesc, @PathVariable int recPerPage, @PathVariable int page, Model model) {

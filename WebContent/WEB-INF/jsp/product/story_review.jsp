@@ -47,7 +47,7 @@ $(function(){
 	<%@ include file="/WEB-INF/jsp/include/kindeditor.jsp"%> 
 })
 </script>
-<title>审查</title>
+<title>评审需求::${story.title}</title>
 </head>
 <body>
 	<header id="header">
