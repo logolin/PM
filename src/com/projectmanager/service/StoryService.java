@@ -79,6 +79,9 @@ public class StoryService implements LogInterfaceService<Story>{
 	@Autowired
 	private ProjectService projectService;
 	
+	@Autowired
+	private MailService mailService;
+	
 	/**
 	 * 编辑需求
 	 * @param source
@@ -199,7 +202,12 @@ public class StoryService implements LogInterfaceService<Story>{
 		return fieldNameMap;
 	}
 	
-	//创建需求
+	/**
+	 * 创建需求
+	 * @param story 需求对象
+	 * @param storySpec 需求描述和验收标准对象
+	 * @return 创建的需求对象
+	 */
 	public Story create(Story story, StorySpec storySpec) {
 		
 		story = this.storyRepository.save(story);
@@ -209,12 +217,17 @@ public class StoryService implements LogInterfaceService<Story>{
 		
 		this.storySpecRepository.save(storySpec);
 		
-		return story;
+		//获取抄送用户名列表
+		List<String> accountList = Arrays.asList(story.getMailto().split(","));
 		
+		//抄送邮件
+		mailService.mailTo(accountList, "您有一条新动态", "您有一个新的需求，请登录项目管理系统查看！");
+		
+		return story;
 	}
 	
 	/**
-	 * 
+	 * 变更需求
 	 * @param storyId 需求ID
 	 * @param story 要变更的需求
 	 * @param storySpec 变更历史
@@ -237,6 +250,13 @@ public class StoryService implements LogInterfaceService<Story>{
 			source.setReviewedBy("");
 			target.setReviewedDate(null);
 			((StoryService)AopContext.currentProxy()).modify(source, target, comment, "change");
+			
+			//获取抄送用户名列表
+			List<String> accountList = Arrays.asList(target.getMailto().split(","));
+			
+			//抄送邮件
+			mailService.mailTo(accountList, "您有一条新动态", "您的一个需求已被变更，请登录项目管理系统查看！");
+			
 			return true;
 		} 
 		((StoryService)AopContext.currentProxy()).modify(target, target, comment, "change");
@@ -253,8 +273,12 @@ public class StoryService implements LogInterfaceService<Story>{
 //		MyUtil.copyProperties(source, target);
 //	}
 	
-	/*
-	 * 编辑
+	/**
+	 * @Description: 修改需求
+	 * @param source 带有修改值的需求
+	 * @param target 被修改的需求
+	 * @param comment 备注
+	 * @param action 操作
 	 */
 	@Override
 	public void modify(Story source, Story target, String comment, String action) {
@@ -273,10 +297,18 @@ public class StoryService implements LogInterfaceService<Story>{
 		} else {
 			MyUtil.copyProperties(source, target);
 		}
+		
+		//获取抄送用户名列表
+		List<String> accountList = Arrays.asList(target.getMailto().split(","));
+		
+		//抄送邮件
+		mailService.mailTo(accountList, "您有一条新动态", "您的一个需求已被修改，请登录项目管理系统查看！");
 	}
 	
-	/*
-	 * 传递受影响的项目，bug, 任务
+	/**
+	 * @Description: 获取受影响的用例、Bug、任务
+	 * @param storyId
+	 * @param model
 	 */
 	public void renderAffectItems(int storyId, Model model) {
 		
@@ -298,8 +330,10 @@ public class StoryService implements LogInterfaceService<Story>{
 		
 	}
 	
-	/*
-	 * 根据ids获取需求
+	/**
+	 * @Description: 根据多个需求ID获取需求ID和名称
+	 * @param idsStr 多个需求ID
+	 * @return 需求ID和名称
 	 */
 	public List<Object[]> getStoriesByIdsStr(String idsStr) {
 		
@@ -308,8 +342,12 @@ public class StoryService implements LogInterfaceService<Story>{
 		return stories;
 	}
 	
-	/*
-	 * 动态修改需求字段值
+	/**
+	 * @Description: 修改需求某列的值
+	 * @param fieldName 列名
+	 * @param fieldVal 列值
+	 * @param storyIds 多个需求ID
+	 * @param action 操作
 	 */
 	public void modifiedByColumn(String fieldName, Object fieldVal, Integer[] storyIds, String action) {
 		
@@ -337,8 +375,9 @@ public class StoryService implements LogInterfaceService<Story>{
 		((ConfigurableApplicationContext)ctx).close();
 	}
 	
-	/*
-	 * 批量创建需求
+	/**
+	 * @Description: 批量创建需求
+	 * @param stories 多个需求对象
 	 */
 	public void batchCreate(Stories stories) {
 		
@@ -377,8 +416,14 @@ public class StoryService implements LogInterfaceService<Story>{
 		
 	}
 	
-	/*
-	 * 构造查找条件
+	/**
+	 * @Description: 构造查询需求的条件
+	 * @param product 产品
+	 * @param branchId 分支ID
+	 * @param moduleId 模块ID
+	 * @param column 列名
+	 * @param columnVal 列值
+	 * @return 查询条件
 	 */
 	public Specification<Story> getSpecification(Product product, int branchId, int moduleId, String column, String columnVal) {
 		
