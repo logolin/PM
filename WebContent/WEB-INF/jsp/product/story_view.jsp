@@ -103,9 +103,9 @@ function setComment() {
 		      			<fieldset>
 		        			<legend>附件</legend>
 		        			<div class="list-group files-list">
-		        				<c:forTokens items="${story.filesStr}" delims=" " var="file">
-		        					${file}<br/>
-		        				</c:forTokens>
+		        				<c:forEach items="${fileList}" var="file">
+		        					<a href="../download/${file.id}" title="上传者：${userMap[file.addedBy]}&#10上传日期：${file.addedDate}&#10大小：${file.size}B&#10下载次数：${file.downloads}"><i class="icon-download-alt"></i>&nbsp;${file.title}.${file.extension}</a><br/>
+		        				</c:forEach>
 		        			</div>
 		      			</fieldset>     
 		      			<%@ include file="/WEB-INF/jsp/include/history.jsp"%> 

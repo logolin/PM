@@ -1,5 +1,6 @@
 package com.projectmanager.controller;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -7,6 +8,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -24,6 +29,7 @@ import com.projectmanager.entity.Action;
 import com.projectmanager.entity.Branch;
 import com.projectmanager.entity.Bug;
 import com.projectmanager.entity.Dept;
+import com.projectmanager.entity.File;
 import com.projectmanager.entity.Group;
 import com.projectmanager.entity.Module;
 import com.projectmanager.entity.PjPdRelation;
@@ -40,6 +46,7 @@ import com.projectmanager.repository.BranchRepository;
 import com.projectmanager.repository.BugRepository;
 import com.projectmanager.repository.CaseRepository;
 import com.projectmanager.repository.DeptRepository;
+import com.projectmanager.repository.FileRepository;
 import com.projectmanager.repository.GroupRepository;
 import com.projectmanager.repository.ModuleRepository;
 import com.projectmanager.repository.PjPdRelationRepository;
@@ -53,6 +60,7 @@ import com.projectmanager.repository.TaskRepository;
 import com.projectmanager.repository.UserRepository;
 import com.projectmanager.service.BranchService;
 import com.projectmanager.service.DeptService;
+import com.projectmanager.service.FileService;
 import com.projectmanager.service.ModuleService;
 import com.projectmanager.service.MyUtil;
 import com.projectmanager.service.PlanService;
@@ -147,6 +155,12 @@ public class AjaxController {
 	@Autowired
 	private PjPdRelationRepository pjPdRelationRepository;
 	
+	@Autowired
+	private FileRepository fileRepository;
+	
+	@Autowired
+	private FileService fileService;
+	
 	/**
 	 * 按产品名称搜索有权限查看的产品
 	 * @param content 搜索值
@@ -157,6 +171,27 @@ public class AjaxController {
 	public List<Object[]> getProducts(@RequestParam(value="content", defaultValue="", required=false) String content, @PathVariable String account) {
 		
 		return this.productRepository.findByPrivAndNameContaining(account, content);
+	}
+	
+	/**
+	 * @Description: 处理下载附件请求
+	 * @param fileId 文件ID
+	 * @param response 返回的响应
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/download/{fileId}", produces="application/octet-stream;charset=UTF-8")
+	public void downloadFile(@PathVariable int fileId, HttpServletResponse response) throws IOException {
+		
+		File file = this.fileRepository.findOne(fileId);
+		
+		response.setHeader("Content-Disposition","attachment;filename=" + file.getTitle() + "." + file.getExtension());
+		
+		ServletOutputStream out = response.getOutputStream();
+		
+		fileService.getFile(file.getPathName(), out);
+		
+		out.flush();
+		out.close();
 	}
 	
 	/**

@@ -1,6 +1,7 @@
 package com.projectmanager.service;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Date;
@@ -19,6 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.projectmanager.entity.File;
 import com.projectmanager.repository.FileRepository;
 
+/**
+ * @Description: FileService用于处理文件的上传及下载
+ */
 @Service
 public class FileService {
 	
@@ -43,7 +47,7 @@ public class FileService {
 		File file;
 		//系统当前时间
 		Date date = new Date(System.currentTimeMillis());
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMss");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMM");
 		String folderName = formatter.format(date);
 		//设置存储路径
 		String totalPath = request.getServletContext().getRealPath("/") + "upload/" + folderName;
@@ -85,6 +89,17 @@ public class FileService {
 			//保存用户上传的文件
 			this.fileRepository.save(fileList);
 		}
+	}
+	
+	/**
+	 * @Description: 获取文件输出到Http响应输出流流
+	 * @param path 文件所在文件夹和文件名
+	 * @param out 响应输出流
+	 * @throws IOException
+	 */
+	public void getFile(String path, OutputStream out) throws IOException {
+		
+		Files.copy(Paths.get(request.getServletContext().getRealPath("/"), "upload", path), out);
 	}
 	
 	/**

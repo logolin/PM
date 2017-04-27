@@ -217,11 +217,15 @@ public class StoryService implements LogInterfaceService<Story>{
 		
 		this.storySpecRepository.save(storySpec);
 		
-		//获取抄送用户名列表
-		List<String> accountList = Arrays.asList(story.getMailto().split(","));
+		String mailto = story.getMailto();
 		
-		//抄送邮件
-		mailService.mailTo(accountList, "您有一条新动态", "您有一个新的需求，请登录项目管理系统查看！");
+		if(mailto != null) {
+			//获取抄送用户名列表
+			List<String> accountList = Arrays.asList(mailto.split(","));
+			
+			//抄送邮件
+			mailService.mailTo(accountList, "您有一条新动态", "您有一个新的需求，请登录项目管理系统查看！");
+		}
 		
 		return story;
 	}
@@ -468,8 +472,11 @@ public class StoryService implements LogInterfaceService<Story>{
 		return specification;
 	}
 	
-	/*
-	 * 设置需求的详细信息
+	/**
+	 * @Description: 补全需求详细信息用于导出需求
+	 * @param story
+	 * @param userMap
+	 * @param moduleMap
 	 */
 	public void setDetailedInfo(Story story, Map<String, String> userMap, Map<Integer, String> moduleMap) {
 		

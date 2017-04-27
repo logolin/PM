@@ -261,6 +261,14 @@ public class ProductController {
 		
 	}
 	
+	/**
+	 * @Description: 产品导航栏产品选择框
+	 * @param subMenu 二层菜单名字
+	 * @param action 操作
+	 * @param productId
+	 * @param branchId
+	 * @return
+	 */
 	@RequestMapping("/{subMenu:[a-z]+}_{action:[a-zA-Z]+}_{productId:\\d+}_{branchId:\\d+}")
 	public String route(@PathVariable String subMenu, @PathVariable String action, @PathVariable int productId, @PathVariable int branchId) {
 		
@@ -280,8 +288,12 @@ public class ProductController {
 		}
 	}
 
-	/*
-	 * 配置导航栏地址
+	/**
+	 * @Description: 配置当前产品信息
+	 * @param productId
+	 * @param model
+	 * @param userAccount
+	 * @param session
 	 */
 	@ModelAttribute
 	public void pre(@PathVariable("productId") Integer productId, Model model, @ModelAttribute("userAccount") String userAccount, HttpSession session) {
@@ -302,8 +314,16 @@ public class ProductController {
 		}
 	}
 	
-	/*
-	 * 浏览产品列表
+	/**
+	 * @Description: 请求浏览产品页面
+	 * @param userAccount
+	 * @param status 产品状态
+	 * @param orderBy 排序字段
+	 * @param ascOrDesc 升序或降序
+	 * @param recPerPage 分页大小
+	 * @param page 页码
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/product_browse_{productId}_{status}_{orderBy}_{ascOrDesc}_{recPerPage}_{page}")
 	public String browseProduct(@ModelAttribute("userAccount") String userAccount, @PathVariable String status, @PathVariable String orderBy, @PathVariable String ascOrDesc, @PathVariable int recPerPage, @PathVariable int page, Model model) {
@@ -342,8 +362,11 @@ public class ProductController {
 		return "product/product_browse";
 	}
 	
-	/*
-	 * 批量编辑产品GET请求
+	/**
+	 * @Description: 请求批量编辑产品页面
+	 * @param productIdList 一个或多个产品ID
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/product_batchEdit_{productId}_form")
 	public String batchEditProductsGet(Integer[] productIdList, Model model) {
@@ -354,8 +377,11 @@ public class ProductController {
 		return "product/product_batchedit";
 	}
 	
-	/*
-	 * 批量编辑产品POST请求
+	/**
+	 * @Description: 处理批量添加产品请求
+	 * @param productId
+	 * @param products 页面表单传递的多个产品对象
+	 * @return
 	 */
 	@RequestMapping(value="/product_batchEdit_{productId}", method=RequestMethod.POST)
 	public String batchEditProductsPost(@PathVariable int productId, Products products) {
@@ -365,8 +391,10 @@ public class ProductController {
 		return "redirect:product_browse_" + productId;
 	}
 	
-	/*
-	 * 创建产品
+	/**
+	 * @Description: 请求创建产品页面
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/product_create_{productId}", method=RequestMethod.GET)
 	public String createProductGet(Model model) {
@@ -377,8 +405,10 @@ public class ProductController {
 		return "product/product_create";
 	}
 	
-	/*
-	 * 创建产品
+	/**
+	 * @Description: 处理创建产品请求
+	 * @param product 页面表单传递的产品对象
+	 * @return
 	 */
 	@RequestMapping(value="/product_create_{productId}", method=RequestMethod.POST) 
 	public String createProductPost(Product product) {  
@@ -386,8 +416,11 @@ public class ProductController {
 		return "redirect:story_browse_" + this.productService.create(product).getId();
 	}
 	
-	/*
-	 * 查看产品详细信息
+	/**
+	 * @Description: 请求查看产品详细信息页面
+	 * @param productId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/product_view_{productId:\\d+}", method=RequestMethod.GET)
 	public String viewProductGet(@PathVariable int productId, Model model) {
@@ -422,8 +455,11 @@ public class ProductController {
 		}
 	}
 	
-	/*
-	 * 编辑产品
+	/**
+	 * @Description: 请求编辑产品页面
+	 * @param productId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/product_edit_{productId}", method=RequestMethod.GET)
 	public String editProductGet(@PathVariable int productId, Model model) {
@@ -435,8 +471,11 @@ public class ProductController {
 		return "product/product_create";
 	}
 	
-	/*
-	 * 编辑产品
+	/**
+	 * @Description: 处理编辑产品请求
+	 * @param productId
+	 * @param product 页面表单传递的产品对象
+	 * @return
 	 */
 	@RequestMapping(value="/product_edit_{productId}", method=RequestMethod.POST)
 	public String editProductPost(@PathVariable int productId, Product product) {
@@ -446,8 +485,11 @@ public class ProductController {
 		return "redirect:product_view_" + productId;
 	}		
 	
-	/*
-	 * 关闭产品
+	/**
+	 * @Description: 请求关闭产品页面
+	 * @param productId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/product_close_{productId}",method=RequestMethod.GET)
 	public String closeProductGet(@PathVariable int productId, Model model) {
@@ -465,8 +507,10 @@ public class ProductController {
 		return "product/product_close";
 	}
 	
-	/*
-	 * 关闭产品
+	/**
+	 * @Description: 处理关闭产品请求
+	 * @param productId
+	 * @param comment 备注
 	 */
 	@RequestMapping(value="/product_close_{productId}",method=RequestMethod.POST)
 	@ResponseBody
@@ -475,8 +519,16 @@ public class ProductController {
 		this.productService.modify(new Product("closed"), this.productRepository.findOne(productId), comment, "close");
 	}
 	
-	/*
-	 * 浏览计划列表
+	/**
+	 * @Description: 请求浏览产品计划页面
+	 * @param productId
+	 * @param branchId
+	 * @param orderBy 排序字段
+	 * @param ascOrDesc 升序或降序
+	 * @param recPerPage 分页大小
+	 * @param page 页码
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/plan_browse_{productId}_{branchId}_{orderBy}_{ascOrDesc}_{recPerPage}_{page}")
 	public String browsePlan(@PathVariable int productId, @PathVariable int branchId, @PathVariable String orderBy, @PathVariable String ascOrDesc, @PathVariable int recPerPage, @PathVariable int page, Model model) {
@@ -496,8 +548,12 @@ public class ProductController {
 		return "product/plan_browse";
 	}
 	
-	/*
-	 * 查看产品详细信息
+	/**
+	 * @Description: 请求查看产品计划详细信息页面
+	 * @param productId
+	 * @param planId 产品计划ID
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/plan_view_{productId}_{planId}")
 	public String viewPlan(@PathVariable int productId, @PathVariable int planId, Model model) {
@@ -527,8 +583,12 @@ public class ProductController {
 		return "product/plan_view";
 	}
 	
-	/*
-	 * 关联计划到需求
+	/**
+	 * @Description: 请求关联多个需求到产品计划页面
+	 * @param productId
+	 * @param planId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/plan_linkStories_{productId}_{planId}",method=RequestMethod.GET)
 	public String linkStories2Plan(@PathVariable int productId, @PathVariable int planId, Model model) {
@@ -545,8 +605,12 @@ public class ProductController {
 		return "product/linkstories";
 	}
 	
-	/*
-	 * 关联BUG到计划
+	/**
+	 * @Description: 请求关联Bug到计划页面
+	 * @param productId
+	 * @param planId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/plan_linkBugs_{productId}_{planId}")
 	public String linkBugs2Plan(@PathVariable int productId, @PathVariable int planId, Model model) {
@@ -577,8 +641,12 @@ public class ProductController {
 		return new ModelAndView("product/plan_create", "branchMap", this.branchService.getBranchesByProductIdMappingIdAndName(productId));
 	}
 	
-	/*
-	 * 创建计划
+	/**
+	 * @Description: 处理创建产品计划请求
+	 * @param productId
+	 * @param plan 页面传递的产品计划对象
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/plan_create_{productId}", method=RequestMethod.POST) 
 	public String createPlanPost(@PathVariable int productId, Plan plan, Model model) {
@@ -588,8 +656,12 @@ public class ProductController {
 		return "redirect:plan_view_" + productId + "_" + planId;
 	}	
 	
-	/*
-	 * 编辑计划
+	/**
+	 * @Description: 请求编辑产品计划页面
+	 * @param productId
+	 * @param planId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping(value="/plan_edit_{productId}_{planId}", method=RequestMethod.GET)
 	public ModelAndView editPlanGet(@PathVariable int productId, @PathVariable int planId, Model model) {
@@ -606,8 +678,12 @@ public class ProductController {
 		return new ModelAndView("product/plan_create", "plan", plan);
 	}
 	
-	/*
-	 * 编辑计划
+	/**
+	 * @Description: 处理编辑产品计划请求
+	 * @param productId
+	 * @param planId
+	 * @param plan
+	 * @return
 	 */
 	@RequestMapping(value="/plan_edit_{productId}_{planId}", method=RequestMethod.POST)
 	public String editPlanPost(@PathVariable int productId, @PathVariable int planId, Plan plan) {
@@ -847,6 +923,7 @@ public class ProductController {
 		model.addAttribute("storyList", stories);
 		model.addAttribute("bugList", bugs);
 		model.addAttribute("leftBugList", leftBugs);
+		model.addAttribute("fileList", this.fileRepository.findByObjectTypeAndObjectId("release", releaseId));
 		model.addAttribute("storyStatusMap", this.storyService.getStatusMap());
 		model.addAttribute("bugStatusMap", this.bugService.statusMap);
 		model.addAttribute("stageMap", this.storyService.getStageMap());
@@ -1120,16 +1197,11 @@ public class ProductController {
 		
 		Story story = this.storyRepository.findOne(storyId);
 		int module_id = story.getModule_id();
-		String filesStr = "";
-		
-		for (com.projectmanager.entity.File file : this.fileRepository.findByObjectTypeAndObjectId("story", story.getId())) {
-			filesStr += file.getTitle() + "(#" + file.getId() +") ";
-		}
-		story.setFilesStr(filesStr);
 		
 		if (module_id != 0)
 			model.addAttribute("path", this.moduleRepository.findIdAndNameByIn(MyUtil.convertStrToList(this.moduleRepository.findOne(module_id).getPath(), ",")));
 		model.addAttribute("story", story);
+		model.addAttribute("fileList", this.fileRepository.findByObjectTypeAndObjectId("story", story.getId()));
 		model.addAttribute("planList", this.planRepository.findByIdIn(MyUtil.convertStrToArr(story.getPlan(), ",")));
 		model.addAttribute("storySpec", this.storySpecRepository.findByStoryIdAndVersion(storyId, version));
 		model.addAttribute("linkStoryList", this.storyService.getStoriesByIdsStr(story.getLinkStories()));
@@ -1500,12 +1572,12 @@ public class ProductController {
 			module.setBranchName(this.branchService.getBranchNameById(productId, 0));
 			((ConfigurableApplicationContext)applicationContext).close();
 			moduleIds.add(0);
-			children = this.moduleRepository.findByRootAndBranch_id(productId,branchId);
+			children = this.moduleRepository.findByRootAndBranch_idAndType(productId,branchId,"story");
 		} else {
 			module = this.moduleRepository.findOne(moduleId);
 			module.setBranchName(this.branchService.getBranchNameById(productId, module.getBranch_id()));
 			moduleIds.addAll(MyUtil.convertStrToList(module.getPath(), ","));
-			children = this.moduleRepository.findByRootAndParent(productId,moduleId);
+			children = this.moduleRepository.findByRootAndParentAndType(productId,moduleId,"story");
 		}
 		
 		children.forEach(item->item.setBranchName(branchMap.get(item.getBranch_id())));
@@ -1588,7 +1660,7 @@ public class ProductController {
 			module.setBranch_id(branch_id);
 			module.setGrade(grade + 1);
 			module.setPath(path + "," + moduleTarget.getId() + ",");
-			List<Module> childModules = this.moduleRepository.findByRootAndParent(productId, moduleId);
+			List<Module> childModules = this.moduleRepository.findByRootAndParentAndType(productId, moduleId, "story");
 			for (Module childModule : childModules) {
 				if (root != moduleTarget.getRoot()) {
 					moduleIds.add(childModule.getId());
@@ -1827,8 +1899,11 @@ public class ProductController {
 		return "product/doc_browse";
 	}
 	
-	/*
-	 * 创建文档
+	/**
+	 * @Description: 处理创建文档请求
+	 * @param model
+	 * @param userAccount
+	 * @return
 	 */
 	@RequestMapping("/doc_create_{productId}")
 	public String createDoc(Model model, @ModelAttribute("userAccount") String userAccount) {
