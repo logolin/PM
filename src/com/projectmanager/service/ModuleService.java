@@ -19,6 +19,9 @@ import com.projectmanager.entity.Module;
 import com.projectmanager.entity.Modules;
 import com.projectmanager.repository.ModuleRepository;
 
+/**
+ * @Description: ModuleService类封装了有关模块的一些操作
+ */
 @Service
 public class ModuleService implements LogInterfaceService<Module>{
 
@@ -28,6 +31,10 @@ public class ModuleService implements LogInterfaceService<Module>{
 	@Autowired
 	private BranchService branchService;
 	
+	/**
+	 * @Description: 获取模块所有列名
+	 * @return 列名集合
+	 */
 	public Map<String, String> getFieldNameMap() {
 		
 		@SuppressWarnings("serial")
@@ -44,6 +51,12 @@ public class ModuleService implements LogInterfaceService<Module>{
 		return fieldNameMap;
 	}
 	
+	/**
+	 * @Description: 创建模块
+	 * @param module 模块对象
+	 * @param path 模块路径
+	 * @return 已创建的模块对象
+	 */
 	public Module create(Module module, String path) {
 		
 		module = this.moduleRepository.save(module);
@@ -52,6 +65,15 @@ public class ModuleService implements LogInterfaceService<Module>{
 		return module;
 	}
 	
+	/**
+	 * @Description: 创建多个模块
+	 * @param root 根模块
+	 * @param names 多个模块名称
+	 * @param branch_ids 多个分支ID
+	 * @param parent 上级模块ID
+	 * @param type 模块类型
+	 * @param shortnames 模块简称
+	 */
 	public void createModules(int root, String[] names, Integer[] branch_ids, int parent, String type, String[] shortnames) {
 		
 		Module module;
@@ -83,6 +105,10 @@ public class ModuleService implements LogInterfaceService<Module>{
 		((ConfigurableApplicationContext)applicationContext).close();
 	}
 	
+	/**
+	 * @Description: 修改多个模块
+	 * @param modules 多个模块对象
+	 */
 	public void modifyModules(Modules modules) {
 		
 		for (Module source : modules.getModules()) {
@@ -90,11 +116,21 @@ public class ModuleService implements LogInterfaceService<Module>{
 		}
 	}
 	
+	/**
+	 * @Description: 根据目标模块ID集合获取模块Id和模块名称的映射集合
+	 * @param moduleIds 模块ID集合
+	 * @return 模块Id和模块名称的映射集合
+	 */
 	public Map<Integer, String> getModulesByIdInMappingIdAndName(Collection<Integer> moduleIds) {
 		
 		return mappingIdAndName(this.moduleRepository.findIdAndNameByIn(moduleIds));
 	}
 	
+	/**
+	 * @Description: 将模块ID和模块名称形成映射关系
+	 * @param modules 模块数据
+	 * @return
+	 */
 	public Map<Integer, String> mappingIdAndName(List<Object[]> modules) {
 		
 		Map<Integer, String> map = new HashMap<>();
@@ -104,6 +140,12 @@ public class ModuleService implements LogInterfaceService<Module>{
 		return map;
 	}
 	
+	/**
+	 * @Description: 获取模块名称为层级结构模块集合
+	 * @param productId 产品ID
+	 * @param branchId 分支ID
+	 * @return
+	 */
 	public List<Module> getModuleTree(int productId, int branchId) {
 		
 		List<Module> modules;
@@ -135,6 +177,12 @@ public class ModuleService implements LogInterfaceService<Module>{
 		return tree;
 	}
 	
+	/**
+	 * @Description: 获取模块Id和模块名称的映射集合
+	 * @param productId 产品ID
+	 * @param branchId 分支ID
+	 * @return
+	 */
 	public Map<Integer, String> getModulesMappingIdAndName(int productId, int branchId) {
 		
 		List<Module> tree = getModuleTree(productId, branchId);
@@ -146,8 +194,11 @@ public class ModuleService implements LogInterfaceService<Module>{
 		return map;
 	}
 	
-	/*
-	 * 遍历模块树
+	/**
+	 * @Description: 遍历子模块集合并形成层级结构的模块名称
+	 * @param children 子模块集合
+	 * @param name 模块名称
+	 * @param map 
 	 */
 	private void iterateTree(List<Module> children, String name, Map<Integer, String> map) {
 		String nameWithoutBranch, nameWithBranch,branchName;

@@ -772,7 +772,7 @@ public class ProductController {
 		
 		model.addAttribute("branchMap", this.branchService.getBranchesByProductIdMappingIdAndName(productId));
 		
-		return new ModelAndView("product/roadmap", "roadmap", this.roadmapService.getRoadmap(productId, branchId));
+		return new ModelAndView("product/roadmap", "roadmap", this.roadmapService.generateRoadmap(productId, branchId));
 	}
 	
 	/**

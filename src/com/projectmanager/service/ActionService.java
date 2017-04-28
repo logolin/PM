@@ -10,6 +10,9 @@ import com.projectmanager.entity.Action;
 import com.projectmanager.repository.ActionRepository;
 import com.projectmanager.repository.HistoryRepository;
 
+/**
+ * @Description: ActionService类用于处理动态和历史纪录
+ */
 @Service
 public class ActionService {
 
@@ -46,6 +49,12 @@ public class ActionService {
 	@Autowired
 	private BugService bugService;
 	
+	/**
+	 * @Description: 传递历史纪录到页面数据对象中
+	 * @param objectType 操作对象类型
+	 * @param objectId 操作对象ID
+	 * @param model 页面数据对象
+	 */
 	public void renderHistory(String objectType, int objectId, Model model) {
 		
 		List<Action> actions = this.actionRepository.findByObjectTypeAndObjectId(objectType, objectId);

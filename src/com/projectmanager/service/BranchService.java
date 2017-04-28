@@ -15,6 +15,9 @@ import com.projectmanager.entity.Product;
 import com.projectmanager.repository.BranchRepository;
 import com.projectmanager.repository.ProductRepository;
 
+/**
+ * @Description: BranchService类封装了一些有关分支的操作
+ */
 @Service
 @Transactional
 public class BranchService implements LogInterfaceService<Branch>{
@@ -25,6 +28,10 @@ public class BranchService implements LogInterfaceService<Branch>{
 	@Autowired
 	private ProductRepository productRepository;
 	
+	/**
+	 * @Description: 获取分支的所有列名
+	 * @return 列名集合
+	 */
 	public Map<String, String> getFieldNameMap() {
 		
 		@SuppressWarnings("serial")
@@ -36,6 +43,12 @@ public class BranchService implements LogInterfaceService<Branch>{
 		return fieldNameMap;
 	}
 	
+	/**
+	 * @Description: 创建分支
+	 * @param product 所属产品
+	 * @param name 分支名称
+	 * @return 已创建的分支对象
+	 */
 	public Branch create(Product product, String name) {
 		
 		Branch branch = new Branch();
@@ -44,6 +57,12 @@ public class BranchService implements LogInterfaceService<Branch>{
 		return this.branchRepository.save(branch);
 	}
 	
+	/**
+	 * @Description: 创建和修改分支
+	 * @param productId 所属产品对象
+	 * @param newbranch 创建的分支名称
+	 * @param modifiedBranch 修改的分支名称
+	 */
 	public void createAndUpadateBranch(int productId, String newbranch[], BranchMap modifiedBranch) {
 		
 		Product product = this.productRepository.findOne(productId);
@@ -60,6 +79,12 @@ public class BranchService implements LogInterfaceService<Branch>{
 		});			
 	}
 	
+	/**
+	 * @Description: 获取对应分支ID的分支名称
+	 * @param productId 所属产品ID
+	 * @param branchId 分支ID
+	 * @return 分支名称
+	 */
 	public String getBranchNameById(int productId, int branchId) {
 		
 		Product product = this.productRepository.findOne(productId);
@@ -75,6 +100,11 @@ public class BranchService implements LogInterfaceService<Branch>{
 		}
 	}
 	
+	/**
+	 * @Description: 获取某产品下的分支ID和分支名称集合
+	 * @param productId 所属产品ID
+	 * @return 分支ID和分支名称的映射集合
+	 */
 	public Map<Integer, String> getBranchesByProductIdMappingIdAndName(Integer productId) {
 		
 		Map<Integer, String> map = new HashMap<Integer, String>();

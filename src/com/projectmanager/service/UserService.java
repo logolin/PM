@@ -60,24 +60,28 @@ public class UserService {
 		this.userRepository.save(user);
 	}
 	
-	/*
-	 * 根据账号获取RealName
+	/**
+	 * @Description: 获取真实姓名
+	 * @param account 用户名
+	 * @return 真实姓名
 	 */
 	public String getRealNameByAccount(final String account) {
 		
 		return this.userRepository.findRealnameByAccount(account);
 	}
 	
-	/*
-	 * 获取所有的账号和Realname
+	/**
+	 * @Description: 获取所有用户的用户名和真实姓名映射对集合
+	 * @return
 	 */
 	public Map<String, String> getAllUsersMappingAccountAndRealname() {
 		
 		return mappingAccountAndRealname(this.userRepository.findAllAccountAndRealname());
 	}
 	
-	/*
-	 * 获取所有的分组
+	/**
+	 * @Description: 获取所有分组的ID和名称映射对集合
+	 * @return
 	 */
 	public Map<Integer, String> getAllGroupMapIdAndName() {
 		
@@ -97,8 +101,8 @@ public class UserService {
 	}
 	
 	/**
-	 * 返回用户对应的真实姓名
-	 * @param users
+	 * @Description: 形成用户名和真实姓名的映射对
+	 * @param users 多个用户
 	 * @return
 	 */
 	private Map<String, String> mappingAccountAndRealname(List<Object[]> users) {

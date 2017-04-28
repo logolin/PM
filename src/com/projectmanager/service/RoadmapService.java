@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import com.projectmanager.entity.Plan;
 import com.projectmanager.entity.Release;
 
+/**
+ * @Description: RoadmapService类主要是生成路线图所需的数据Map
+ */
 @Service
 public class RoadmapService {
 
@@ -21,10 +24,13 @@ public class RoadmapService {
 	@Autowired
 	private ReleaseService releaseService;
 	
-	/*
-	 * 获取路线图
+	/**
+	 * @Description: 生成多层结构Map路线图，第一层Map键为年份，值为Map，第二层Map键为分支ID，值为计划对象集合或发布对象集合
+	 * @param productId 产品ID
+	 * @param branchId 分支ID
+	 * @return
 	 */
-	public Map<String, Map<Integer,List<Object>>> getRoadmap(int productId, int branchId) {
+	public Map<String, Map<Integer,List<Object>>> generateRoadmap(int productId, int branchId) {
 		
 		Map<String, Map<Integer,List<Object>>> roadmap = new LinkedHashMap<String, Map<Integer,List<Object>>>();
 		List<Object> tempList = new ArrayList<Object>();
@@ -35,6 +41,7 @@ public class RoadmapService {
 		String year;	
 		
 		for (Release release : releases) {
+			//获得发布的发布年份用作第一层的键，值则是分支名称和发布或计划对象的键值对Map
 			year = release.getDate().toString().substring(0, 4);
 			branch_id = release.getBranch_id();
 			if (roadmap.containsKey(year)) {

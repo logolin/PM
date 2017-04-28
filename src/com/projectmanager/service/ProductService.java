@@ -9,12 +9,20 @@ import org.springframework.stereotype.Service;
 import com.projectmanager.entity.Product;
 import com.projectmanager.repository.ProductRepository;
 
+/**
+ * @Description: ProductService类封装了一些有关产品的操作
+ */
 @Service
 public class ProductService implements LogInterfaceService<Product>{
 
 	@Autowired
 	private ProductRepository productRepository;
 	
+	/**
+	 * @Description: 创建产品
+	 * @param product 产品对象
+	 * @return 已创建的产品对象
+	 */
 	public Product create(Product product) {
 		
 		product = this.productRepository.save(product);
@@ -23,6 +31,10 @@ public class ProductService implements LogInterfaceService<Product>{
 		return product;
 	}
 	
+	/**
+	 * @Description: 获取所有产品列名
+	 * @return 列名集合
+	 */
 	public Map<String, String> getFieldNameMap() {
 		
 		@SuppressWarnings("serial")

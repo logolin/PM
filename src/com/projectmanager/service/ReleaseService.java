@@ -16,6 +16,9 @@ import com.projectmanager.repository.BuildRepository;
 import com.projectmanager.repository.ProductRepository;
 import com.projectmanager.repository.ReleaseRepository;
 
+/**
+ * @Description: ReleaseService封装了一些有关发布的操作
+ */
 @Service
 public class ReleaseService implements LogInterfaceService<Release>{
 
@@ -31,6 +34,10 @@ public class ReleaseService implements LogInterfaceService<Release>{
 	@Autowired
 	private BuildService buildService;
 	
+	/**
+	 * @Description: 获取发布的所有列名
+	 * @return 列名集合
+	 */
 	public Map<String, String> getFieldNameMap() {
 		
 		@SuppressWarnings("serial")
@@ -50,6 +57,14 @@ public class ReleaseService implements LogInterfaceService<Release>{
 		return fieldNameMap;
 	}
 	
+	/**
+	 * @Description: 创建发布
+	 * @param productId 产品ID
+	 * @param branchId 分支ID
+	 * @param buildId 版本ID
+	 * @param release 发布对象
+	 * @return 已创建的发布对象
+	 */
 	public Release create(int productId, int branchId, Integer buildId, Release release) {
 		
 		Product product = this.productRepository.findOne(productId);
@@ -73,6 +88,12 @@ public class ReleaseService implements LogInterfaceService<Release>{
 		return this.releaseRepository.save(release);
 	}
 	
+	/**
+	 * @Description: 获取多个发布
+	 * @param productId 产品ID
+	 * @param branchId 分支ID
+	 * @return 发布对象集合
+	 */
 	public List<Release> getReleases(int productId, int branchId) {
 		
 		List<Release> releases = branchId == 0 ? this.releaseRepository.findByProductIdOrderByDate(productId) : this.releaseRepository.findByProductIdAndBranch_idOrderByDate(productId, branchId);
@@ -80,11 +101,23 @@ public class ReleaseService implements LogInterfaceService<Release>{
 		return releases;
 	}
 	
+	/**
+	 * @Description: 获取最新发布对象
+	 * @param productId 所属产品ID
+	 * @param branchId 所属分支ID
+	 * @return 发布对象
+	 */
 	public Release getLastRelease(int productId, int branchId) {
 		
 		return this.releaseRepository.findFirstByProductAndBranch_idOrderByDate(productId, branchId);
 	}
 	
+	/**
+	 * @Description: 获取某分支下的所有发布包括分支0
+	 * @param productId 产品ID
+	 * @param branchId 分支ID
+	 * @return 发布集合
+	 */
 	public List<Release> getReleasesIncludeBranch0(int productId, int branchId) {
 		
 		List<Release> releases = getReleases(productId, branchId);

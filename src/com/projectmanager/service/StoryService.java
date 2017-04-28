@@ -43,6 +43,9 @@ import com.projectmanager.repository.StoryRepository;
 import com.projectmanager.repository.StorySpecRepository;
 import com.projectmanager.repository.TaskRepository;
 
+/**
+ * @Description: StoryService类封装了一些有关需求的操作
+ */
 @Service
 public class StoryService implements LogInterfaceService<Story>{
 
@@ -94,7 +97,7 @@ public class StoryService implements LogInterfaceService<Story>{
 		MyUtil.copyProperties(source, target);
 	}
 	
-	//来源
+	//需求来源
 	public Map<String, String> getSourceMap() {
 		
 		@SuppressWarnings("serial")

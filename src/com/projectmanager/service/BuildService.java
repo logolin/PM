@@ -16,16 +16,15 @@ import com.projectmanager.repository.BranchRepository;
 import com.projectmanager.repository.BuildRepository;
 import com.projectmanager.repository.ProjectRepository;
 import com.projectmanager.repository.StoryRepository;
-import com.projectmanager.repository.UserRepository;
 
+/**
+ * @Description: BuildService类封装了一些有关版本的操作
+ */
 @Service
 public class BuildService {
 
 	@Autowired
 	private BuildRepository buildRepository;
-	
-	@Autowired
-	private BranchService branchService;
 	
 	@Autowired
 	private ReleaseService releaseService;
@@ -35,9 +34,6 @@ public class BuildService {
 	
 	@Autowired
 	private BranchRepository branchRepository;
-	
-	@Autowired
-	private UserRepository userRepository;
 	
 	@Autowired
 	private UserService userService;
@@ -50,8 +46,11 @@ public class BuildService {
 		return this.buildRepository.save(build);
 	}
 	
-	/*
-	 * 获取未发布的Build
+	/**
+	 * @Description: 获取未发布的版本
+	 * @param productId 产品ID
+	 * @param branchId 分支ID
+	 * @return 版本集合
 	 */
 	public List<Build> getUnreleasedBuild(int productId, int branchId) {
 		
@@ -80,6 +79,11 @@ public class BuildService {
 		return builds;
 	}	
 	
+	/**
+	 * @Description: 获取某版本所有版本
+	 * @param productId 产品ID
+	 * @return 版本集合
+	 */
 	public List<Build> getAllBuild(int productId) {
 		
 		List<Build> builds = this.buildRepository.findByProductId(productId);
@@ -88,9 +92,9 @@ public class BuildService {
 	}
 	
 	/**
-	 * 创建build
-	 * @param build
-	 * @return
+	 * 创建版本
+	 * @param build 版本对象
+	 * @return 已创建的版本对象
 	 */
 	public Build created(Build build) {
 		
@@ -99,11 +103,11 @@ public class BuildService {
 	}
 	
 	/**
-	 * 编辑build
-	 * @param source
-	 * @param target
-	 * @param comment
-	 * @param action
+	 * 修改版本信息
+	 * @param source 带有修改信息的版本对象
+	 * @param target 被修改版本对象
+	 * @param comment 备注
+	 * @param action 操作
 	 */
 	public void alter(Build source, Build target, String comment, String action) {
 		

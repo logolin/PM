@@ -22,6 +22,9 @@ import com.projectmanager.repository.ReleaseRepository;
 import com.projectmanager.repository.StoryRepository;
 import com.projectmanager.repository.TaskRepository;
 
+/**
+ * @Description: DynamicService类封装了一些有关动态的操作
+ */
 @Service
 public class DynamicService {
 
@@ -97,6 +100,10 @@ public class DynamicService {
 		}
 	}
 	
+	/**
+	 * @Description: 获取动态的操作
+	 * @return
+	 */
 	public Map<String, String> getActionMap() {
 		
 		@SuppressWarnings("serial")
@@ -140,7 +147,7 @@ public class DynamicService {
 	}
 	
 	/**
-	 * 返回对应的对象类型名称
+	 * 获取动态的对象类型名称
 	 * @return map
 	 */
 	public Map<String, String> getObjectTypeMap() {
@@ -166,6 +173,13 @@ public class DynamicService {
 		
 		return ojectTypeMap;
 	}
+	
+	/**
+	 * @Description: 根据动态操作对象类型和操作对象ID获取动态对象名称
+	 * @param objectType 操作对象类型
+	 * @param objectId 操作对象ID
+	 * @return
+	 */
 	public String getObjectName(String objectType, int objectId) {
 		
 		String objectName = null;
@@ -199,6 +213,10 @@ public class DynamicService {
 		return objectName;
 	}
 	
+	/**
+	 * @Description: 获取所有动态操作对象类型
+	 * @return
+	 */
 	public Map<String, String> getObjectTypeName() {
 		
 		@SuppressWarnings("serial")
@@ -278,6 +296,10 @@ public class DynamicService {
 		return objectName;
 	}
 	
+	/**
+	 * @Description: 获取所有动态操作
+	 * @return
+	 */
 	public Map<String, String> getActionName() {
 		
 		@SuppressWarnings("serial")

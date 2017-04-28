@@ -2,32 +2,29 @@ package com.projectmanager.aspect;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpSession;
 
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import com.projectmanager.entity.Action;
 import com.projectmanager.entity.History;
 import com.projectmanager.entity.Log;
 import com.projectmanager.entity.LogProject;
-import com.projectmanager.entity.Product;
 import com.projectmanager.entity.Story;
 import com.projectmanager.repository.ActionRepository;
 import com.projectmanager.repository.HistoryRepository;
 import com.projectmanager.service.BugService;
 import com.projectmanager.service.ProjectService;
 
+/**
+ * @author li
+ * @Description: LoggingAspect类用于记录创建和修改历史
+ */
 @Aspect
 public class LoggingAspect {
 
@@ -46,7 +43,11 @@ public class LoggingAspect {
 	@Autowired
 	private BugService bugService;
 	
-	
+	/**
+	 * @Description: 记录有关产品模块下的子模块对象创建记录
+	 * @param joinPoint
+	 * @param result
+	 */
 	@AfterReturning(value="execution(* com.projectmanager.service.*Service.create(..))",returning="result")
 	public void logCreateInProductCtl(JoinPoint joinPoint, Log result) {
 		
@@ -60,6 +61,14 @@ public class LoggingAspect {
 		this.actionRepository.save(action);
 	}
 	
+	/**
+	 * @Description: 记录有关产品模块下的子模块对象修改记录
+	 * @param joinPoint
+	 * @param source
+	 * @param target
+	 * @param comment 备注
+	 * @param action 操作
+	 */
 	@Before("execution(* com.projectmanager.service.LogInterfaceService.modify(..)) && args(source,target,comment,action)")
 	public void logModifyInProductCtl(JoinPoint joinPoint, Log source, Log target, String comment, String action) {
 		
